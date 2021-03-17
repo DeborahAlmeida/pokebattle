@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/deborahsoares/vinta/pokebattle/pokebattle-venv"
+VIRTUAL_ENV="/home/deborahsoares/vinta_projects/vinta/pokebattle/pokebattle-venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

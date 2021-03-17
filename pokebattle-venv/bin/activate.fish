@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/deborahsoares/vinta/pokebattle/pokebattle-venv"
+set -gx VIRTUAL_ENV "/home/deborahsoares/vinta_projects/vinta/pokebattle/pokebattle-venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
