@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +31,7 @@
         }
         
         .container2{
-            height:400px;
+            height:450px;
             background-color: white;
             border-radius: 10px;
             display: flex;
@@ -38,14 +39,13 @@
             box-shadow: 1px 7px 20px -6px #18092B;
 
         }
-
-        .button_battle{
-            width: 300px;
-            height: 70px;
-            font-size: 30px;
-            margin: 60px auto;
-            background-color: #fb8603;
-            border: 4px solid  #fb8603;
+        .button_next{
+            width: 70px;
+            height: 40px;
+            font-size: 20px;
+            margin: 0px auto;
+            background-color: #8f00cc;
+            border: 4px solid  #8f00cc;
             border-radius: 10px;
             color: rgba(255, 255, 255, 0.925);
             font-weight: bolder;
@@ -55,13 +55,13 @@
             text-align: center;
 
         }
-        .button_battle:hover{
-            width:330px;
-            height: 80px;
+        .button_next:hover{
+            width:90px;
+            height: 50px;
             background-color: white;
-            color: #fb8603;
+            color: #8f00cc;
             transition: 0.2s;
-            font-size: 32px;
+            font-size: 22px;
 
         }
         .text_button{
@@ -78,7 +78,7 @@
 
         }
         .form{
-            height:500px;
+            height:400px;
             width:400px;
             background-color: white;
             border-radius: 10px;
@@ -101,6 +101,72 @@
             text-align: center;
             padding: 10px;
         }
+        .container_select{
+            display: flex;
+            flex-direction: column;
+            /*border: 2px solid black;*/
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            padding-bottom: 20px;
+            border-radius: 10px;
+
+        }
+        .gamer{
+            width: 150px;
+            height: 40px;
+            border: none;
+            background-color: rgba(137, 43, 226, 0.877);
+            border-radius: 5px;
+            margin: 2px;
+            color: white;
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration:none; 
+
+        }
+        .gamer:hover{
+            background-color: rgba(137, 43, 226, 0.726);
+            transition: 0.2s;
+        }
+        .name_gamer{
+            margin-top: 12px;
+        }
+        .container4{
+            margin-top: 1000px;
+            background-color: white;
+        }
+        .top-menu{
+            background-color: white;
+            height:20px;
+            border: 2px solid black;
+            width:200px;
+            color: black;
+        }
+        .teste{
+            width:400px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .title_battle{
+            color: #8f00cc;
+            font-size: 25px;
+            padding: 0%;
+            font-weight: bold;
+        }
+        .subtitle_battle{
+            color: black;
+            margin-top: -20px;
+        }
+        .battle-form{
+            display: flex;
+            flex-direction: column;
+        }
         </style>
 </head>
 <body>
@@ -111,19 +177,16 @@
         <div class="container2">
             <img class="pokemon_img"  src="https://img.ibxk.com.br/2019/09/30/30091641838086.jpg?w=1120&h=420&mode=crop&scale=both
         " alt="pokemon">
-            <a class="button_battle" href="#form" role="button">
-                <p class="text_button">Create new battle</p>
-            </a>  
+        <div class="teste">
+            <p class="title_battle">Trainer 1</p>
+            <p class="subtitle_battle">Choose your pokemons!</p>
+            <form method="POST" class="battle-form">{% csrf_token %}
+                {{ formRound.as_p }}
+                <button class="button_next">Next</button>
+            </form>     
+        </div>
         </div>
 
-        <div class="container3" id ="form">
-            <div class="form">
-                <p class="select"> Selecione um jogador para competir com você!</p>
-                <div>
-                    <p class="users">aqui vai ter o campo de seleção que vai ser alimentado pela api de usuários</p>
-                </div>
-            </div>
-        </div>
     </div>
     
 </body>

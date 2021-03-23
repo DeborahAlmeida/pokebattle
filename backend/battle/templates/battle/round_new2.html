@@ -1,0 +1,220 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Battle</title>
+    <style>
+        body{
+            padding: 0px;
+            background: #1488CC;  /* fallback for old browsers */
+            font-family: Arial, Helvetica, sans-serif;
+
+
+        }
+        .container1 {
+          color: white;
+          margin: 20px;
+          padding: 20px;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .pokemon_img{
+            height:200px;
+            margin: 0px auto;
+            margin-left: 445px;
+
+        }
+        
+        .container2{
+            width:800px;
+            height:600px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 1px 7px 20px -6px #18092B;
+
+        }
+        .button_next{
+            width: 70px;
+            height: 40px;
+            font-size: 20px;
+            margin: 0px auto;
+            background-color: #8f00cc;
+            border: 4px solid  #8f00cc;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.925);
+            font-weight: bolder;
+            box-shadow: 1px 1px 14px 0px #8D36FF;
+            transition: 0.2s;
+            text-decoration:none; 
+            text-align: center;
+
+        }
+        .button_next:hover{
+            width:90px;
+            height: 50px;
+            background-color: white;
+            color: #8f00cc;
+            transition: 0.2s;
+            font-size: 22px;
+
+        }
+        .text_button{
+            margin: 20px auto;
+        }
+        h2{
+            margin-top: -10px;
+            margin-bottom: 50px;
+            font-weight: lighter;
+        }
+        .container3{
+            margin-top: 100px;
+            height: 80vh;
+
+        }
+        .form{
+            height:400px;
+            width:400px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 1px 7px 20px -6px #18092B;
+
+        }
+        .select{
+            color: #fb8603;
+            font-size: 24px;
+            font-weight: bolder;
+            text-align: center;
+            padding: 10px;
+
+
+        }
+        .users{
+            color: black;
+            text-align: center;
+            padding: 10px;
+        }
+        .container_select{
+            display: flex;
+            flex-direction: column;
+            /*border: 2px solid black;*/
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            padding-bottom: 20px;
+            border-radius: 10px;
+
+        }
+        .gamer{
+            width: 150px;
+            height: 40px;
+            border: none;
+            background-color: rgba(137, 43, 226, 0.877);
+            border-radius: 5px;
+            margin: 2px;
+            color: white;
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration:none; 
+
+        }
+        .gamer:hover{
+            background-color: rgba(137, 43, 226, 0.726);
+            transition: 0.2s;
+        }
+        .name_gamer{
+            margin-top: 12px;
+        }
+        .container4{
+            margin-top: 1000px;
+            background-color: white;
+        }
+        .top-menu{
+            background-color: white;
+            height:20px;
+            border: 2px solid black;
+            width:200px;
+            color: black;
+        }
+        .teste{
+            width:400px;
+            color: black;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+            margin-top: -130px;
+        }
+        .title_battle{
+            color: #8f00cc;
+            font-size: 25px;
+            padding: 0%;
+            font-weight: bold;
+        }
+        .subtitle_battle{
+            color: black;
+            margin-top: -20px;
+        }
+        .battle-form{
+            display: flex;
+            flex-direction: column;
+        }
+        .bla{
+            margin-top: 0px;
+            color: black;
+            
+        }
+        .battle_info{
+            color:#f53737;
+            font-size: 30px;
+            font-weight: bold;
+        }
+        .info{
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        </style>
+</head>
+<body>
+    <div class="container1" id="home">
+        
+        <div class="container2">
+            <img class="pokemon_img"  src="https://images.wallpapersden.com/image/download/pokemon-pikachu-art_a25tbW6UmZqaraWkpJRmbmdlrWZlbWU.jpg" alt="pokemon">
+        <div class="teste">
+            <div class="info">
+                <h2 class="battle_info">Battle Information</h2>
+                <p class='bla'> Criador da batalha: <strong>{{battle.player1}}</strong></p>
+                <p class='bla'>Pokemon 1: <strong>{{battle.pk11}}</strong></p>  
+                <p class='bla'>Pokemon 2: <strong>{{battle.pk21}}</strong></p>  
+                <p class='bla'>Pokemon 3: <strong>{{battle.pk31}}</strong></p>  
+      
+            </div>
+            <p class="title_battle">Trainer Opponent</p>
+            <p class="subtitle_battle">Choose your pokemons!</p>
+            <form method="post" class="battle-form">{% csrf_token %}
+                {{ formRound2.as_p }}
+                <input type="submit" value="Next" class="button_next">
+            </form>   
+        
+        </div>
+        
+        </div>
+
+    </div>
+    
+</body>
+</html>

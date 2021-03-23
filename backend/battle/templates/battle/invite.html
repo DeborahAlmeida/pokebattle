@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -78,7 +79,7 @@
 
         }
         .form{
-            height:500px;
+            height:400px;
             width:400px;
             background-color: white;
             border-radius: 10px;
@@ -101,6 +102,60 @@
             text-align: center;
             padding: 10px;
         }
+        .container_select{
+            display: flex;
+            flex-direction: column;
+            /*border: 2px solid black;*/
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            padding-bottom: 20px;
+            border-radius: 10px;
+
+        }
+        .gamer{
+            width: 150px;
+            height: 40px;
+            border: none;
+            background-color: rgba(137, 43, 226, 0.877);
+            border-radius: 5px;
+            margin: 2px;
+            color: white;
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration:none; 
+
+        }
+        .gamer:hover{
+            background-color: rgba(137, 43, 226, 0.726);
+            transition: 0.2s;
+        }
+        .name_gamer{
+            margin-top: 12px;
+        }
+        .container4{
+            margin-top: 1000px;
+            background-color: white;
+        }
+        .top-menu{
+            background-color: white;
+            height:20px;
+            border: 2px solid black;
+            width:200px;
+            color: black;
+        }
+        .test{
+            background-color: pink;
+            width:400px
+        }
+        .invite{
+            color: black;
+            margin: 0 auto;
+            margin-top: 50px;
+
+        }
         </style>
 </head>
 <body>
@@ -111,18 +166,8 @@
         <div class="container2">
             <img class="pokemon_img"  src="https://img.ibxk.com.br/2019/09/30/30091641838086.jpg?w=1120&h=420&mode=crop&scale=both
         " alt="pokemon">
-            <a class="button_battle" href="#form" role="button">
-                <p class="text_button">Create new battle</p>
+                <p class="invite">The invite has been sent!</p>
             </a>  
-        </div>
-
-        <div class="container3" id ="form">
-            <div class="form">
-                <p class="select"> Selecione um jogador para competir com você!</p>
-                <div>
-                    <p class="users">aqui vai ter o campo de seleção que vai ser alimentado pela api de usuários</p>
-                </div>
-            </div>
         </div>
     </div>
     

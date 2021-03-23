@@ -21,6 +21,8 @@ DEBUG = True
 ADMINS = (("Deborah", "deborah.mendonca@vinta.com.br"),)
 
 AUTH_USER_MODEL = "users.User"
+STATUS_MODEL = "sequence.Status"
+
 
 ALLOWED_HOSTS = []
 
@@ -36,6 +38,7 @@ INSTALLED_APPS = [
     "import_export",
     "common",
     "users",
+    "battle",
 ]
 
 MIDDLEWARE = [
