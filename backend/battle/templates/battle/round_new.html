@@ -31,7 +31,7 @@
         }
         
         .container2{
-            height:450px;
+            height:550px;
             background-color: white;
             border-radius: 10px;
             display: flex;
@@ -167,6 +167,31 @@
             display: flex;
             flex-direction: column;
         }
+        .select{
+            display: flex;
+        }
+        .option{
+            color:black;
+            font-size: 18px;
+            font-weight: lighter;
+            margin: 0%;
+        }
+        .box{
+            width:100px;
+            height:30px;
+            margin-top: -4px;
+            margin-left: 5px;
+        }
+        .pokemon_box{
+            padding: 0%;
+            margin: 0 auto;
+        }
+        .battle-form{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
         </style>
 </head>
 <body>
@@ -182,6 +207,7 @@
             <p class="subtitle_battle">Choose your pokemons!</p>
             <form method="POST" class="battle-form">{% csrf_token %}
                 {{ formRound.as_p }}
+                            
                 <button class="button_next">Next</button>
             </form>     
         </div>

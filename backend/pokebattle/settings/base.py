@@ -23,6 +23,9 @@ ADMINS = (("Deborah", "deborah.mendonca@vinta.com.br"),)
 AUTH_USER_MODEL = "users.User"
 STATUS_MODEL = "sequence.Status"
 
+POKE_API_URL = "https://pokeapi.co/api/v2/pokemon/"
+
+
 
 ALLOWED_HOSTS = []
 
