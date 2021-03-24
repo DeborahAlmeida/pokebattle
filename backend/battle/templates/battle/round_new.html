@@ -192,12 +192,22 @@
             justify-content: center;
             align-items: center;
         }
+        .error{
+            background-color: white;
+            color:black;
+            margin-top:-20px;
+        }
         </style>
-</head>
+    
 <body>
     <div class="container1" id="home">
         <h1>Welcome to Poke Battle!</h1>
         <h2>Choose your pokemons and fight!</h2>
+        <div>
+            {% if message %}
+                    <p class="error">{{message}}</p>
+            {% endif %}
+        </div>
 
         <div class="container2">
             <img class="pokemon_img"  src="https://img.ibxk.com.br/2019/09/30/30091641838086.jpg?w=1120&h=420&mode=crop&scale=both
