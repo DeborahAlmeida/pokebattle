@@ -32,7 +32,7 @@ def battle_new(request):
     return render(request, 'battle/battle_edit.html', {'form': form})
 
 def round_new(request):
-    url = urljoin(settings.POKE_API_URL, "?limit=20")
+    url = urljoin(settings.POKE_API_URL, "?limit=1118")
     response = requests.get(url)
     data = response.json()
     listPokemon = []
@@ -43,9 +43,9 @@ def round_new(request):
         formRound = RoundForm(request.POST)
         if formRound.is_valid():
             roundBattle = formRound.save(commit=False)
-            dataPK11 = get_pokemon_from_api(roundBattle.pk11)
-            dataPK21 = get_pokemon_from_api(roundBattle.pk21)
-            dataPK31 = get_pokemon_from_api(roundBattle.pk31)
+            dataPK11 = get_pokemon_from_api(roundBattle.pk1_creator)
+            dataPK21 = get_pokemon_from_api(roundBattle.pk2_creator)
+            dataPK31 = get_pokemon_from_api(roundBattle.pk3_creator)
             sumPK11 = sumValid(dataPK11)
             sumPK21 = sumValid(dataPK21)
             sumPK31 = sumValid(dataPK31)
@@ -67,14 +67,14 @@ def player2(request):
     return render(request, 'battle/opponent.html')
 
 def round_new2(request):
-    battleInfo = Battle.objects.get(id=43)
+    battleInfo = Battle.objects.get(id=50)
     if request.method == "POST":
         formRound2 = RoundForm2(request.POST, instance=battleInfo)
         if formRound2.is_valid():
-            teste = formRound2.save(commit=False)
-            dataPK11 = get_pokemon_from_api(teste.pk12)
-            dataPK21 = get_pokemon_from_api(teste.pk22)
-            dataPK31 = get_pokemon_from_api(teste.pk32)
+            round_opponent = formRound2.save(commit=False)
+            dataPK11 = get_pokemon_from_api(round_opponent.pk1_opponent)
+            dataPK21 = get_pokemon_from_api(round_opponent.pk2_opponent)
+            dataPK31 = get_pokemon_from_api(round_opponent.pk3_opponent)
             sumPK11 = sumValid(dataPK11)
             sumPK21 = sumValid(dataPK21)
             sumPK31 = sumValid(dataPK31)
@@ -90,8 +90,8 @@ def round_new2(request):
     return render(request, 'battle/round_new2.html', {'formRound2': formRound2, 'battle':battleInfo})
 
 
-def get_pokemon_from_api(poke_name):
-    url = urljoin(settings.POKE_API_URL, poke_name)
+def get_pokemon_from_api(poke_id):
+    url = urljoin(settings.POKE_API_URL, poke_id)
     response = requests.get(url)
     data = response.json()
     info = {

@@ -6,17 +6,17 @@ class BattleForm(forms.ModelForm):
 
     class Meta:
         model = Battle
-        fields = ('player1', 'player2')
+        fields = ('creator', 'opponent')
 
 class RoundForm(forms.ModelForm):
 
     class Meta:
         model = Battle
-        fields = ('player1', 'player2','pk11', 'pk21', 'pk31')
+        fields = ('creator', 'opponent','pk1_creator', 'pk2_creator', 'pk3_creator')
 
 
 class RoundForm2(forms.ModelForm):
 
     class Meta:
         model = Battle
-        fields = ('pk12', 'pk22', 'pk32')
+        fields = ('pk1_opponent', 'pk2_opponent', 'pk3_opponent')
