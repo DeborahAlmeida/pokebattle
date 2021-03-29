@@ -40,6 +40,7 @@ class Battle(models.Model):
     pk1_opponent = models.CharField(max_length=200,  null=True)
     pk2_opponent = models.CharField(max_length=200,  null=True)
     pk3_opponent = models.CharField(max_length=200,  null=True)
+    winner = models.CharField(max_length=200, null=True)
     def publish(self):
         self.save()
 

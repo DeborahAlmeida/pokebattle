@@ -14,6 +14,10 @@ import requests
 #from progress.bar import ChargingBar
 from django.conf import settings
 
+#email
+from templated_email import get_templated_mail
+
+
 
 # Create your views here.
 def home(request):
@@ -67,7 +71,7 @@ def player2(request):
     return render(request, 'battle/opponent.html')
 
 def round_new2(request):
-    battleInfo = Battle.objects.get(id=50)
+    battleInfo = Battle.objects.get(id=57)
     if request.method == "POST":
         formRound2 = RoundForm2(request.POST, instance=battleInfo)
         if formRound2.is_valid():
@@ -80,7 +84,13 @@ def round_new2(request):
             sumPK31 = sumValid(dataPK31)
             sumAll = sumPK11 + sumPK21 + sumPK31
             if (sumAll <= 600):
-                formRound2.save()
+                pokemons = [round_opponent.pk1_opponent, round_opponent.pk2_opponent, round_opponent.pk3_opponent]
+                result = battleRunning(53, pokemons)
+                #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>result", result)
+                round_opponent.winner = result
+                round_opponent.save()
+                sendEmail()
+
                 return redirect('home')
             if (sumAll > 600): 
                 message = "ERROR: The PKNs you selected sum more than 600 points, please choose again"
@@ -91,17 +101,147 @@ def round_new2(request):
 
 
 def get_pokemon_from_api(poke_id):
-    url = urljoin(settings.POKE_API_URL, poke_id)
-    response = requests.get(url)
-    data = response.json()
-    info = {
-        "defense": data["stats"][3]["base_stat"],
-        "attack": data["stats"][4]["base_stat"],
-        "hp": data["stats"][5]["base_stat"],
-    }
-    return info
+        url = urljoin(settings.POKE_API_URL, poke_id)
+        response = requests.get(url)
+        data = response.json()
+        
+        info = {
+            "defense": data["stats"][2]["base_stat"],
+            "attack": data["stats"][1]["base_stat"],
+            "hp": data["stats"][0]["base_stat"],
+        }
+        return info
 
 
 def sumValid(pokemon):
     sumResult = pokemon["attack"] +  pokemon["defense"] + pokemon["hp"]
     return sumResult
+
+def roundRunning(info):
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",info)
+
+    pokemon_creator = info[0]
+    pokemon_opponent = info[1]
+
+    winner = "nobody"
+    opponent = 0
+    creator = 0
+    if (pokemon_creator["attack"] > pokemon_opponent["defense"] ):
+        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo1_creator[attack]:", pokeInfo1_creator["attack"])
+        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo1_opponent[defense]:", pokeInfo1_opponent["defense"])
+        creator = creator + 1
+        winnerRoundOne = "creator"
+    if (pokemon_creator["attack"] == pokemon_opponent["defense"] ):
+        creator = creator + 1
+        opponent = opponent + 1
+        winnerRoundOne = "nobody"
+    else:
+        winnerRoundOne = "opponent"
+        opponent = opponent + 1
+
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_opponent[attack]:", pokeInfo2_opponent["attack"])
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_creator[defense]:", pokeInfo2_creator["defense"])
+
+    if (pokemon_opponent["attack"] > pokemon_creator["defense"] ):
+            winnerRoundTwo = "opponent"
+            opponent = opponent + 1
+    if (pokemon_opponent["attack"] == pokemon_creator["defense"] ):
+        creator = creator + 1
+        opponent = opponent + 1
+        winnerRoundTwo = "nobody"
+    else:
+        winnerRoundTwo = "creator"
+        creator = creator + 1
+
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_opponent[hp]:", pokeInfo2_opponent["hp"])
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_creator[hp]:", pokeInfo2_creator["hp"])
+
+    if (creator > opponent):
+        winner = "creator"
+    elif (creator < opponent):
+        winner = "opponent"
+    elif (creator == opponent):
+        if (pokemon_opponent["hp"] > pokemon_creator["hp"] ):
+            winner = "opponent"
+            opponent = opponent + 1
+        elif (pokemon_opponent["hp"] < pokemon_creator["hp"] ):
+            winner = "creator"
+        else: 
+            creator = creator + 1
+            opponent = opponent + 1
+            winnerRoundTwo = "nobody"
+    
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>aqui", creator, opponent, winner)
+
+    if (creator > opponent):
+        winner = "creator"
+    elif (creator < opponent):
+        winner = "opponent"
+    else:
+        winner = "creator"
+
+    return winner
+
+
+
+def battleRunning(poke_id, pokemons):
+    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", pokemons[0])
+    battleInfo = Battle.objects.get(id = poke_id)
+    pokeInfo1_creator = get_pokemon_from_api(battleInfo.pk1_creator)
+    pokeInfo2_creator = get_pokemon_from_api(battleInfo.pk2_creator)
+    pokeInfo3_creator = get_pokemon_from_api(battleInfo.pk3_creator)
+    pokeInfoCreatorList = [pokeInfo1_creator, pokeInfo2_creator, pokeInfo3_creator]
+    pokeInfo1_opponent = get_pokemon_from_api(pokemons[0])
+    pokeInfo2_opponent = get_pokemon_from_api(pokemons[1])
+    pokeInfo3_opponent = get_pokemon_from_api(pokemons[2])
+
+    roundOne = [pokeInfo1_creator, pokeInfo1_opponent]
+    roundTwo = [pokeInfo2_creator, pokeInfo2_opponent]
+    roundThree = [pokeInfo3_creator, pokeInfo3_opponent]
+
+    winner = "nobody"
+    opponent = 0
+    creator = 0
+
+    battleRounds = [roundOne, roundTwo, roundThree ]
+
+    for battleRound in battleRounds: 
+        result = roundRunning(battleRound)
+        if result == "creator":
+            creator = creator + 1
+        else:
+            opponent = opponent + 1
+
+    if (creator > opponent):
+        winner = "creator"
+    elif (creator < opponent):
+        winner = "opponent"
+    else:
+        winner = "creator"
+
+    return winner
+        
+
+'''
+result = battleRunning(53)
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>winner on def:", formRound2)
+                formRound2.winner = battleRunning(53)
+'''
+
+def sendEmail():
+    get_templated_mail(
+            template_name='results_battle',
+            from_email='deborahmendonca6@gmail.com',
+            to=['deborahsoares01@gmail.com'],
+            context={
+                'username':"teste",
+                'full_name':"teste",
+                'signup_date':"teste"
+            },
+            # Optional:
+            # cc=['cc@example.com'],
+            # bcc=['bcc@example.com'],
+            # headers={'My-Custom-Header':'Custom Value'},
+            # template_prefix="my_emails/",
+            # template_suffix="email",
+    )

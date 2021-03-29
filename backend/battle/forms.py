@@ -20,3 +20,4 @@ class RoundForm2(forms.ModelForm):
     class Meta:
         model = Battle
         fields = ('pk1_opponent', 'pk2_opponent', 'pk3_opponent')
+
