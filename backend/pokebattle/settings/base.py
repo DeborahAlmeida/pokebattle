@@ -4,6 +4,9 @@ import os
 
 from decouple import config  # noqa
 
+import dj_database_url
+
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -42,7 +45,6 @@ INSTALLED_APPS = [
     "common",
     "users",
     "battle",
-
 ]
 
 MIDDLEWARE = [
@@ -117,12 +119,3 @@ CELERY_TIMEZONE = TIME_ZONE
 # Sentry
 SENTRY_DSN = config("SENTRY_DSN", default="")
 COMMIT_SHA = config("HEROKU_SLUG_COMMIT", default="")
-
-
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
-
-TEMPLATED_EMAIL_AUTO_PLAIN = False
-
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-
-DATABASE_URL = 'postgres://jgynaanmwihthi:3e82cbd904e35b9d55b5bb34d31157614dcfabd7e8d9b27ed6494c79791fd0c8@ec2-54-164-22-242.compute-1.amazonaws.com:5432/d5pcf5p4nnug5f'
