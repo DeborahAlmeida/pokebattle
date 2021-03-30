@@ -1,0 +1,169 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Battle</title>
+    <style>
+        body{
+            padding: 0px;
+            background: #1488CC;  /* fallback for old browsers */
+            font-family: Arial, Helvetica, sans-serif;
+
+
+        }
+        .container1 {
+          color: white;
+          margin: 20px;
+          padding: 20px;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .pokemon_img{
+            height:150px;
+            margin: 0px auto;
+
+        }
+        
+        .container2{
+            height:400px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 1px 7px 20px -6px #18092B;
+
+        }
+
+        .button_battle{
+            width: 300px;
+            height: 70px;
+            font-size: 30px;
+            margin: 60px auto;
+            background-color: #fb8603;
+            border: 4px solid  #fb8603;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.925);
+            font-weight: bolder;
+            box-shadow: 1px 1px 14px 0px #8D36FF;
+            transition: 0.2s;
+            text-decoration:none; 
+            text-align: center;
+
+        }
+        .button_battle:hover{
+            width:330px;
+            height: 80px;
+            background-color: white;
+            color: #fb8603;
+            transition: 0.2s;
+            font-size: 32px;
+
+        }
+        .text_button{
+            margin: 20px auto;
+        }
+        h2{
+            margin-top: -10px;
+            margin-bottom: 50px;
+            font-weight: lighter;
+        }
+        .container3{
+            margin-top: 100px;
+            height: 80vh;
+
+        }
+        .form{
+            height:400px;
+            width:400px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 1px 7px 20px -6px #18092B;
+
+        }
+        .select{
+            color: #fb8603;
+            font-size: 24px;
+            font-weight: bolder;
+            text-align: center;
+            padding: 10px;
+
+
+        }
+        .users{
+            color: black;
+            text-align: center;
+            padding: 10px;
+        }
+        .container_select{
+            display: flex;
+            flex-direction: column;
+            /*border: 2px solid black;*/
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            padding-bottom: 20px;
+            border-radius: 10px;
+
+        }
+        .gamer{
+            width: 150px;
+            height: 40px;
+            border: none;
+            background-color: rgba(137, 43, 226, 0.877);
+            border-radius: 5px;
+            margin: 2px;
+            color: white;
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration:none; 
+
+        }
+        .gamer:hover{
+            background-color: rgba(137, 43, 226, 0.726);
+            transition: 0.2s;
+        }
+        .name_gamer{
+            margin-top: 12px;
+        }
+        .container4{
+            margin-top: 1000px;
+            background-color: white;
+        }
+        .top-menu{
+            background-color: white;
+            height:20px;
+            border: 2px solid black;
+            width:200px;
+            color: black;
+        }
+        .test{
+            background-color: pink;
+            width:400px
+        }
+        </style>
+</head>
+<body>
+    <div class="container1" id="home">
+        <h1>Welcome to Poke Battle!</h1>
+        <h2>Choose your pokemons and fight!</h2>
+
+        <div class="container2">
+            <img class="pokemon_img"  src="https://img.ibxk.com.br/2019/09/30/30091641838086.jpg?w=1120&h=420&mode=crop&scale=both
+        " alt="pokemon">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    
+</body>
+</html>
