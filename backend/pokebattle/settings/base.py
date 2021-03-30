@@ -4,6 +4,19 @@ import os
 
 from decouple import config  # noqa
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    },
+}
+
+'''
+DATABASES = {
+    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": base_dir_join("db.sqlite3"),}
+}
+
 import dj_database_url
 
 DATABASES = {
@@ -23,8 +36,7 @@ DATABASES = {
 'PORT': '5432', # 8000 is default
 
 },
-
-}
+}'''
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

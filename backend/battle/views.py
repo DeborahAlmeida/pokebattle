@@ -71,7 +71,7 @@ def player2(request):
     return render(request, 'battle/opponent.html')
 
 def round_new2(request):
-    battleInfo = Battle.objects.get(id=57)
+    battleInfo = Battle.objects.get(id=61)
     if request.method == "POST":
         formRound2 = RoundForm2(request.POST, instance=battleInfo)
         if formRound2.is_valid():
