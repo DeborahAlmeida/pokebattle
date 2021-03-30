@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "common",
     "users",
     "battle",
+
 ]
 
 MIDDLEWARE = [
@@ -121,3 +122,5 @@ COMMIT_SHA = config("HEROKU_SLUG_COMMIT", default="")
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
 
 TEMPLATED_EMAIL_AUTO_PLAIN = False
+
+SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
