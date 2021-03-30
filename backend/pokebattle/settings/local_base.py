@@ -8,7 +8,14 @@ HOST = "http://localhost:8000"
 SECRET_KEY = "secret"
 
 DATABASES = {
-    "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": base_dir_join("db.sqlite3"),}
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pokebattle',
+        'USER': 'deborah',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '', # 8000 is default
+    },
 }
 
 STATIC_ROOT = base_dir_join("staticfiles")

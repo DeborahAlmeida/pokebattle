@@ -124,3 +124,5 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBacke
 TEMPLATED_EMAIL_AUTO_PLAIN = False
 
 SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+
+DATABASE_URL = 'postgres://jgynaanmwihthi:3e82cbd904e35b9d55b5bb34d31157614dcfabd7e8d9b27ed6494c79791fd0c8@ec2-54-164-22-242.compute-1.amazonaws.com:5432/d5pcf5p4nnug5f'
