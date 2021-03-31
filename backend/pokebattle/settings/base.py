@@ -4,6 +4,7 @@ import os
 
 from decouple import config  # noqa
 
+import dj_database_url
 
 DATABASES = {
     'default': {
@@ -149,3 +150,11 @@ CELERY_TIMEZONE = TIME_ZONE
 # Sentry
 SENTRY_DSN = config("SENTRY_DSN", default="")
 COMMIT_SHA = config("HEROKU_SLUG_COMMIT", default="")
+
+'''
+SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+SECRET_KEY = os.environ.get('SECRET_KEY')
+SQLALCHEMY_TRACK_MODIFICATIONS = False
+'''
+db_from_env = dj.dj_database_url.config(conn_max_agr=600)
+DATABASES['default'].update(db_from_env)
