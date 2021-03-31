@@ -83,9 +83,10 @@ def round_new2(request):
             sumPK21 = sumValid(dataPK21)
             sumPK31 = sumValid(dataPK31)
             sumAll = sumPK11 + sumPK21 + sumPK31
+            currentId = battleInfo.id
             if (sumAll <= 600):
                 pokemons = [round_opponent.pk1_opponent, round_opponent.pk2_opponent, round_opponent.pk3_opponent]
-                result = battleRunning(53, pokemons)
+                result = battleRunning(currentId, pokemons)
                 #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>result", result)
                 round_opponent.winner = result
                 round_opponent.save()
