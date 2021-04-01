@@ -8,11 +8,6 @@ from django.conf import settings
 from .battles.rounds import roundRunning
 
 
-def home(request):
-    gamer = Gamer.objects.all()
-    return render(request, 'battle/home.html', {'gamer': gamer})
-
-
 def battle_new(request):
     if request.method == "POST":
         form = BattleForm(request.POST)
@@ -26,13 +21,6 @@ def battle_new(request):
 
 
 def round_new(request):
-    url = urljoin(settings.POKE_API_URL, "?limit=1118")
-    response = requests.get(url)
-    data = response.json()
-    list_pokemon = []
-    for pokemon in data["results"]:
-        list_pokemon.append(pokemon["name"])
-
     if request.method == "POST":
         form_round = RoundForm(request.POST)
         if form_round.is_valid():
@@ -95,15 +83,15 @@ def round_new2(request):
 
 
 def get_pokemon_from_api(poke_id):
-    url = urljoin(settings.POKE_API_URL, poke_id)
-    response = requests.get(url)
+    # url = urljoin(settings.POKE_API_URL, poke_id)
+    response = requests.get(urljoin(settings.POKE_API_URL, poke_id))
     data = response.json()
 
     info = {
         "defense": data["stats"][2]["base_stat"],
         "attack": data["stats"][1]["base_stat"],
         "hp": data["stats"][0]["base_stat"],
-    }
+            }
     return info
 
 
@@ -139,9 +127,9 @@ def battleRunning(poke_id, pokemons):
         else:
             opponent = opponent + 1
 
-    if (creator > opponent):
+    if creator > opponent:
         winner = "creator"
-    elif (creator < opponent):
+    elif creator < opponent:
         winner = "opponent"
     else:
         winner = "creator"
