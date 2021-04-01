@@ -46,10 +46,10 @@ def round_new(request):
             if (sum_pk11 + sum_pk21 + sum_pk31) <= 600:
                 round_battle.save()
                 return redirect('invite')
-            if (sum_pk11 + sum_pk21 + sum_pk31) > 600: 
+            if (sum_pk11 + sum_pk21 + sum_pk31) > 600:
                 message = "ERROR: PKNs you selected sum more than 600 points, please choose again"
                 return render(request, 'battle/round_new.html',
-                {'form_round': form_round, 'message': message})
+                    {'form_round': form_round, 'message': message})
     else:
         form_round = RoundForm()
     return render(request, 'battle/round_new.html', {'form_round': form_round})
