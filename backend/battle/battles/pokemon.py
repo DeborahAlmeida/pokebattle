@@ -1,4 +1,5 @@
 import requests
+from urllib.parse import urljoin
 
 
 def get_pokemon_from_api(poke_id):

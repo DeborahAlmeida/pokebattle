@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-from urllib.parse import urljoin
-import requests
 from .models import Battle
 from .forms import BattleForm, RoundForm, RoundForm2
 from .battles.battle import battleRunning
