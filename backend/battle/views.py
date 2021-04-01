@@ -1,19 +1,14 @@
+#available to pull request
 from django.shortcuts import render
 from django.shortcuts import redirect
-#from .models import Gamer
 from users.models import User
 from .models import Gamer, Battle
 from .forms import BattleForm, RoundForm, RoundForm2
-
 from django.utils.html import format_html
 from django.contrib import messages
-
 from urllib.parse import urljoin
-
 import requests
 from django.conf import settings
-
-#email
 from templated_email import get_templated_mail
 
 
