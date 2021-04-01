@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
-import requests
 from urllib.parse import urljoin
+import requests
 from .models import Gamer, Battle
 from .forms import BattleForm, RoundForm, RoundForm2
 from django.conf import settings
@@ -10,7 +10,7 @@ from .battles.rounds import battleRunning
 
 def home(request):
     gamer = Gamer.objects.all()
-    return render(request, 'battle/home.html', {'gamer':gamer})
+    return render(request, 'battle/home.html', {'gamer': gamer})
 
 
 def battle_new(request):
@@ -22,7 +22,7 @@ def battle_new(request):
             return redirect('round_new')
     else:
         form = BattleForm()
-    return render(request, 'battle/battle_edit.html', {'form':form})
+    return render(request, 'battle/battle_edit.html', {'form': form})
 
 
 def round_new(request):
@@ -32,7 +32,7 @@ def round_new(request):
     list_pokemon = []
     for pokemon in data["results"]:
         list_pokemon.append(pokemon["name"])
-        
+
     if request.method == "POST":
         form_round = RoundForm(request.POST)
         if form_round.is_valid():
@@ -84,7 +84,7 @@ def round_new2(request):
                 round_opponent.save()
 
                 return redirect('home')
-            if (sum_pk11 + sum_pk21 + sum_pk31) > 600: 
+            if (sum_pk11 + sum_pk21 + sum_pk31) > 600:
                 message = "ERROR: PKNs you selected sum more than 600 points, please choose again"
                 return render(request, 'battle/round_new2.html',
                             {'form_round2': form_round2, 'battle': battle_info, 'message': message})
@@ -98,7 +98,7 @@ def get_pokemon_from_api(poke_id):
     url = urljoin(settings.POKE_API_URL, poke_id)
     response = requests.get(url)
     data = response.json()
-        
+
     info = {
         "defense": data["stats"][2]["base_stat"],
         "attack": data["stats"][1]["base_stat"],
@@ -108,5 +108,5 @@ def get_pokemon_from_api(poke_id):
 
 
 def sumValid(pokemon):
-    sum_result = pokemon["attack"] +  pokemon["defense"] + pokemon["hp"]
+    sum_result = pokemon["attack"] + pokemon["defense"] + pokemon["hp"]
     return sum_result

@@ -4,8 +4,6 @@ from django.db import models
 
 class Gamer(models.Model):
     name = models.CharField(max_length=200)
-    
-
     def publish(self):
         self.save()
 
@@ -17,9 +15,9 @@ class Gamer(models.Model):
 class Battle(models.Model):
     id = models.AutoField(primary_key=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                related_name='+', null=True)
+related_name='+', null=True)
     opponent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                related_name='+', null=True)
+related_name='+', null=True)
     pk1_creator = models.CharField(max_length=200, null=True)
     pk2_creator = models.CharField(max_length=200, null=True)
     pk3_creator = models.CharField(max_length=200, null=True)
@@ -50,7 +48,6 @@ class Round(models.Model):
     pk12 = models.CharField(max_length=200, verbose_name='Pokemon 1:', null=True)
     pk22 = models.CharField(max_length=200, verbose_name='Pokemon 2:', null=True)
     pk32 = models.CharField(max_length=200, verbose_name='Pokemon 3:', null=True)
+
     def publish(self):
         self.save()
-
-
