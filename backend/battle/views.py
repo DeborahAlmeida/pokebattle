@@ -109,6 +109,7 @@ def sumValid(pokemon):
     sumResult = pokemon["attack"] +  pokemon["defense"] + pokemon["hp"]
     return sumResult
 
+
 def roundRunning(info):
     pokemon_creator = info[0]
     pokemon_opponent = info[1]
