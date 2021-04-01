@@ -1,6 +1,3 @@
-from ..models import Battle
-
-
 def roundRunning(info):
     pokemon_creator = info[0]
     pokemon_opponent = info[1]

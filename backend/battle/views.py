@@ -5,7 +5,12 @@ import requests
 from .models import Gamer, Battle
 from .forms import BattleForm, RoundForm, RoundForm2
 from django.conf import settings
-from .battles.rounds import roundRunning
+from .battles.battle import battleRunning
+from .battles.pokemon import get_pokemon_from_api
+
+
+def home(request):
+    return render(request, 'battle/home.html')
 
 
 def battle_new(request):
@@ -80,19 +85,6 @@ def round_new2(request):
         form_round2 = RoundForm2()
     return render(request, 'battle/round_new2.html', {'form_round2': form_round2,
                                                      'battle': battle_info})
-
-
-def get_pokemon_from_api(poke_id):
-    # url = urljoin(settings.POKE_API_URL, poke_id)
-    response = requests.get(urljoin(settings.POKE_API_URL, poke_id))
-    data = response.json()
-
-    info = {
-        "defense": data["stats"][2]["base_stat"],
-        "attack": data["stats"][1]["base_stat"],
-        "hp": data["stats"][0]["base_stat"],
-            }
-    return info
 
 
 def sumValid(pokemon):

@@ -28,26 +28,3 @@ class Battle(models.Model):
 
     def publish(self):
         self.save()
-
-
-class Status(models.Model):
-    sequence = models.IntegerField()
-
-    def publish(self):
-        self.save()
-
-
-class Round(models.Model):
-    winner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                related_name='winner_gamer_round', null=True)
-    id_batalha = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                    related_name='batalha_id', null=True)
-    pk11 = models.CharField(max_length=200, verbose_name='Pokemon 1:', null=True)
-    pk21 = models.CharField(max_length=200, verbose_name='Pokemon 2:', null=True)
-    pk31 = models.CharField(max_length=200, verbose_name='Pokemon 3:', null=True)
-    pk12 = models.CharField(max_length=200, verbose_name='Pokemon 1:', null=True)
-    pk22 = models.CharField(max_length=200, verbose_name='Pokemon 2:', null=True)
-    pk32 = models.CharField(max_length=200, verbose_name='Pokemon 3:', null=True)
-
-    def publish(self):
-        self.save()
