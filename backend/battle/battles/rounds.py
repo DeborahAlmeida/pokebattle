@@ -49,7 +49,6 @@ def roundRunning(info):
     return winner
 
 
-
 def battleRunning(poke_id, pokemons):
     battle_info = Battle.objects.get(id=poke_id)
     poke_info1_creator = get_pokemon_from_api(battle_info.pk1_creator)
