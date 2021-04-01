@@ -32,7 +32,7 @@ def roundRunning(info):
             opponent = opponent + 1
         elif (pokemon_opponent["hp"] < pokemon_creator["hp"]):
             winner = "creator"
-        else: 
+        else:
             creator = creator + 1
             opponent = opponent + 1
 
@@ -66,7 +66,7 @@ def battleRunning(poke_id, pokemons):
 
     battle_rounds = [round_one, round_two, round_three]
 
-    for battle_round in battle_rounds: 
+    for battle_round in battle_rounds:
         result = roundRunning(battle_round)
         if result == "creator":
             creator = creator + 1
