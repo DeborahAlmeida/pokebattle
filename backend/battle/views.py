@@ -11,7 +11,6 @@ from django.contrib import messages
 from urllib.parse import urljoin
 
 import requests
-#from progress.bar import ChargingBar
 from django.conf import settings
 
 #email
@@ -19,7 +18,6 @@ from templated_email import get_templated_mail
 
 
 
-# Create your views here.
 def home(request):
     gamer = Gamer.objects.all()
     return render(request, 'battle/home.html', { 'gamer' : gamer})
@@ -87,10 +85,8 @@ def round_new2(request):
             if (sumAll <= 600):
                 pokemons = [round_opponent.pk1_opponent, round_opponent.pk2_opponent, round_opponent.pk3_opponent]
                 result = battleRunning(currentId, pokemons)
-                #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>result", result)
                 round_opponent.winner = result
                 round_opponent.save()
-                sendEmail()
 
                 return redirect('home')
             if (sumAll > 600): 
@@ -119,7 +115,6 @@ def sumValid(pokemon):
     return sumResult
 
 def roundRunning(info):
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",info)
 
     pokemon_creator = info[0]
     pokemon_opponent = info[1]
@@ -128,8 +123,7 @@ def roundRunning(info):
     opponent = 0
     creator = 0
     if (pokemon_creator["attack"] > pokemon_opponent["defense"] ):
-        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo1_creator[attack]:", pokeInfo1_creator["attack"])
-        #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo1_opponent[defense]:", pokeInfo1_opponent["defense"])
+       
         creator = creator + 1
         winnerRoundOne = "creator"
     if (pokemon_creator["attack"] == pokemon_opponent["defense"] ):
@@ -140,8 +134,6 @@ def roundRunning(info):
         winnerRoundOne = "opponent"
         opponent = opponent + 1
 
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_opponent[attack]:", pokeInfo2_opponent["attack"])
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_creator[defense]:", pokeInfo2_creator["defense"])
 
     if (pokemon_opponent["attack"] > pokemon_creator["defense"] ):
             winnerRoundTwo = "opponent"
@@ -153,9 +145,6 @@ def roundRunning(info):
     else:
         winnerRoundTwo = "creator"
         creator = creator + 1
-
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_opponent[hp]:", pokeInfo2_opponent["hp"])
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> pokeInfo2_creator[hp]:", pokeInfo2_creator["hp"])
 
     if (creator > opponent):
         winner = "creator"
@@ -172,7 +161,6 @@ def roundRunning(info):
             opponent = opponent + 1
             winnerRoundTwo = "nobody"
     
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>aqui", creator, opponent, winner)
 
     if (creator > opponent):
         winner = "creator"
@@ -186,7 +174,6 @@ def roundRunning(info):
 
 
 def battleRunning(poke_id, pokemons):
-    #print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", pokemons[0])
     battleInfo = Battle.objects.get(id = poke_id)
     pokeInfo1_creator = get_pokemon_from_api(battleInfo.pk1_creator)
     pokeInfo2_creator = get_pokemon_from_api(battleInfo.pk2_creator)
@@ -222,27 +209,3 @@ def battleRunning(poke_id, pokemons):
 
     return winner
         
-
-'''
-result = battleRunning(53)
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>winner on def:", formRound2)
-                formRound2.winner = battleRunning(53)
-'''
-
-def sendEmail():
-    get_templated_mail(
-            template_name='results_battle',
-            from_email='deborahmendonca6@gmail.com',
-            to=['deborahsoares01@gmail.com'],
-            context={
-                'username':"teste",
-                'full_name':"teste",
-                'signup_date':"teste"
-            },
-            # Optional:
-            # cc=['cc@example.com'],
-            # bcc=['bcc@example.com'],
-            # headers={'My-Custom-Header':'Custom Value'},
-            # template_prefix="my_emails/",
-            # template_suffix="email",
-    )
