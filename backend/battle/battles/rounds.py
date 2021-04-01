@@ -81,4 +81,3 @@ def battleRunning(poke_id, pokemons):
         winner = "creator"
 
     return winner
-        
