@@ -1,15 +1,11 @@
 #available to pull request
 from django.shortcuts import render
 from django.shortcuts import redirect
-from users.models import User
+import requests
+from urllib.parse import urljoin
 from .models import Gamer, Battle
 from .forms import BattleForm, RoundForm, RoundForm2
-from django.utils.html import format_html
-from django.contrib import messages
-from urllib.parse import urljoin
-import requests
 from django.conf import settings
-from templated_email import get_templated_mail
 from .battles.rounds import battleRunning
 
 
@@ -47,10 +43,10 @@ def round_new(request):
             sumPK21 = sumValid(dataPK21)
             sumPK31 = sumValid(dataPK31)
             sumAll = sumPK11 + sumPK21 + sumPK31
-            if (sumAll <= 600):
+            if sumAll <= 600:
                 roundBattle.save()
                 return redirect('invite')
-            if (sumAll > 600): 
+            if sumAll > 600: 
                 message = "ERROR: The PKNs you selected sum more than 600 points, please choose again"
                 return render(request, 'battle/round_new.html', {'formRound': formRound, 'message': message})
     else:
@@ -77,7 +73,7 @@ def round_new2(request):
             sumPK31 = sumValid(dataPK31)
             sumAll = sumPK11 + sumPK21 + sumPK31
             currentId = battleInfo.id
-            if (sumAll <= 600):
+            if sumAll <= 600:
                 pokemons = [round_opponent.pk1_opponent, round_opponent.pk2_opponent, round_opponent.pk3_opponent]
                 result = battleRunning(currentId, pokemons)
                 round_opponent.winner = result
@@ -86,23 +82,23 @@ def round_new2(request):
                 return redirect('home')
             if (sumAll > 600): 
                 message = "ERROR: The PKNs you selected sum more than 600 points, please choose again"
-                return render(request, 'battle/round_new2.html', {'formRound2': formRound2, 'battle':battleInfo, 'message': message})
+                return render(request, 'battle/round_new2.html', {'formRound2': formRound2, 'battle': battleInfo, 'message': message})
     else:
         formRound2 = RoundForm2()
-    return render(request, 'battle/round_new2.html', {'formRound2': formRound2, 'battle':battleInfo})
+    return render(request, 'battle/round_new2.html', {'formRound2': formRound2, 'battle': battleInfo})
 
 
 def get_pokemon_from_api(poke_id):
-        url = urljoin(settings.POKE_API_URL, poke_id)
-        response = requests.get(url)
-        data = response.json()
+    url = urljoin(settings.POKE_API_URL, poke_id)
+    response = requests.get(url)
+    data = response.json()
         
-        info = {
-            "defense": data["stats"][2]["base_stat"],
-            "attack": data["stats"][1]["base_stat"],
-            "hp": data["stats"][0]["base_stat"],
-        }
-        return info
+    info = {
+        "defense": data["stats"][2]["base_stat"],
+        "attack": data["stats"][1]["base_stat"],
+        "hp": data["stats"][0]["base_stat"],
+    }
+    return info
 
 
 def sumValid(pokemon):

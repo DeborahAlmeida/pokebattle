@@ -55,7 +55,7 @@ def battleRunning(poke_id, pokemons):
     poke_info1_creator = get_pokemon_from_api(battle_info.pk1_creator)
     poke_info2_creator = get_pokemon_from_api(battle_info.pk2_creator)
     poke_info3_creator = get_pokemon_from_api(battle_info.pk3_creator)
-    poke_info_creator_list = [poke_info1_creator, poke_info2_creator, poke_info3_creator]
+    # poke_info_creator_list = [poke_info1_creator, poke_info2_creator, poke_info3_creator]
     poke_info1_opponent = get_pokemon_from_api(pokemons[0])
     poke_info2_opponent = get_pokemon_from_api(pokemons[1])
     poke_info3_opponent = get_pokemon_from_api(pokemons[2])
