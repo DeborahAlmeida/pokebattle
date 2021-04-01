@@ -1,12 +1,8 @@
+#available to pull request
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
-
-
-
-
 from urllib.parse import urljoin
-
 import requests
 
 class Gamer(models.Model):
