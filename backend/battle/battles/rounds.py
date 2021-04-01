@@ -38,7 +38,6 @@ def roundRunning(info):
         else: 
             creator = creator + 1
             opponent = opponent + 1
-            winnerRound_two = "nobody"
     
     if (creator > opponent):
         winner = "creator"
@@ -53,17 +52,17 @@ def roundRunning(info):
 
 def battleRunning(poke_id, pokemons):
     battle_info = Battle.objects.get(id=poke_id)
-    poke_info1_creator=get_pokemon_from_api(battle_info.pk1_creator)
-    poke_info2_creator=get_pokemon_from_api(battle_info.pk2_creator)
-    poke_info3_creator=get_pokemon_from_api(battle_info.pk3_creator)
-    poke_info_creator_list=[poke_info1_creator, poke_info2_creator, poke_info3_creator]
-    pokeInfo1_opponent=get_pokemon_from_api(pokemons[0])
-    pokeInfo2_opponent=get_pokemon_from_api(pokemons[1])
-    pokeInfo3_opponent=get_pokemon_from_api(pokemons[2])
+    poke_info1_creator = get_pokemon_from_api(battle_info.pk1_creator)
+    poke_info2_creator = get_pokemon_from_api(battle_info.pk2_creator)
+    poke_info3_creator = get_pokemon_from_api(battle_info.pk3_creator)
+    poke_info_creator_list = [poke_info1_creator, poke_info2_creator, poke_info3_creator]
+    poke_info1_opponent = get_pokemon_from_api(pokemons[0])
+    poke_info2_opponent = get_pokemon_from_api(pokemons[1])
+    poke_info3_opponent = get_pokemon_from_api(pokemons[2])
 
-    round_one = [poke_info1_creator, pokeInfo1_opponent]
-    round_two = [poke_info2_creator, pokeInfo2_opponent]
-    round_three = [poke_info3_creator, pokeInfo3_opponent]
+    round_one = [poke_info1_creator, poke_info1_opponent]
+    round_two = [poke_info2_creator, poke_info2_opponent]
+    round_three = [poke_info3_creator, poke_info3_opponent]
 
     winner = "nobody"
     opponent = 0
