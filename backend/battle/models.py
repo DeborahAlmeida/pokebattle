@@ -15,9 +15,9 @@ class Gamer(models.Model):
 class Battle(models.Model):
     id = models.AutoField(primary_key=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                                        related_name='+', null=True)
+                                                    related_name='+', null=True)
     opponent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                                        related_name='+', null=True)
+                                                    related_name='+', null=True)
     pk1_creator = models.CharField(max_length=200, null=True)
     pk2_creator = models.CharField(max_length=200, null=True)
     pk3_creator = models.CharField(max_length=200, null=True)
