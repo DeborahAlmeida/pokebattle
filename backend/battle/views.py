@@ -115,10 +115,8 @@ def sumValid(pokemon):
     return sumResult
 
 def roundRunning(info):
-
     pokemon_creator = info[0]
     pokemon_opponent = info[1]
-
     winner = "nobody"
     opponent = 0
     creator = 0
@@ -133,7 +131,6 @@ def roundRunning(info):
     else:
         winnerRoundOne = "opponent"
         opponent = opponent + 1
-
 
     if (pokemon_opponent["attack"] > pokemon_creator["defense"] ):
             winnerRoundTwo = "opponent"
@@ -161,7 +158,6 @@ def roundRunning(info):
             opponent = opponent + 1
             winnerRoundTwo = "nobody"
     
-
     if (creator > opponent):
         winner = "creator"
     elif (creator < opponent):
