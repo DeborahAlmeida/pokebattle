@@ -91,7 +91,7 @@ def round_new2(request):
     else:
         form_round2 = RoundForm2()
     return render(request, 'battle/round_new2.html',
-                {'form_round2': form_round2, 'battle': battle_info})
+                    {'form_round2': form_round2, 'battle': battle_info})
 
 
 def get_pokemon_from_api(poke_id):
