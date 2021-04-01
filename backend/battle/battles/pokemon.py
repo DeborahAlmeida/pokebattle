@@ -1,3 +1,5 @@
+import requests
+
 
 def get_pokemon_from_api(poke_id):
     # url = urljoin(settings.POKE_API_URL, poke_id)

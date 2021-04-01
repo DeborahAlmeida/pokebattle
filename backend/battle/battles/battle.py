@@ -1,5 +1,6 @@
 from ..models import Battle
 from .rounds import roundRunning
+from .pokemon import get_pokemon_from_api
 
 
 def battleRunning(poke_id, pokemons):
