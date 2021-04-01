@@ -12,5 +12,5 @@ def get_pokemon_from_api(poke_id):
         "defense": data["stats"][2]["base_stat"],
         "attack": data["stats"][1]["base_stat"],
         "hp": data["stats"][0]["base_stat"],
-        }
+    }
     return info

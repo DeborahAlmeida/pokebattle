@@ -41,7 +41,7 @@ def round_new(request):
                 return render(request, 'battle/round_new.html', {'form_round': form_round,
                                                                  'message': message})
     else:
-            form_round = RoundForm()
+        form_round = RoundForm()
     return render(request, 'battle/round_new.html', {'form_round': form_round})
 
 
@@ -79,9 +79,9 @@ def round_new2(request):
                 return render(request, 'battle/round_new2.html', {'form_round2': form_round2,
                                                                   'battle': battle_info, 'message': message})
     else:
-            form_round2 = RoundForm2()
+        form_round2 = RoundForm2()
     return render(request, 'battle/round_new2.html', {'form_round2': form_round2,
-                                                     'battle': battle_info})
+                                                      'battle': battle_info})
 
 
 def sumValid(pokemon):
