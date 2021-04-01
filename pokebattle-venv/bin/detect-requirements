@@ -1,3 +1,0 @@
-#!/home/deborahsoares/vinta/pokebattle/pokebattle-venv/bin/python3
-from requirements_detector.run import run
-run()
