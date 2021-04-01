@@ -9,22 +9,19 @@ def roundRunning(info):
     opponent = 0
     creator = 0
     if (pokemon_creator["attack"] > pokemon_opponent["defense"]):
-       
         creator = creator + 1
     if (pokemon_creator["attack"] == pokemon_opponent["defense"]):
         creator = creator + 1
         opponent = opponent + 1
     else:
         opponent = opponent + 1
-
     if (pokemon_opponent["attack"] > pokemon_creator["defense"]):
-            opponent = opponent + 1
+        opponent = opponent + 1
     if (pokemon_opponent["attack"] == pokemon_creator["defense"]):
         creator = creator + 1
         opponent = opponent + 1
     else:
         creator = creator + 1
-
     if (creator > opponent):
         winner = "creator"
     elif (creator < opponent):
@@ -38,7 +35,7 @@ def roundRunning(info):
         else: 
             creator = creator + 1
             opponent = opponent + 1
-    
+
     if (creator > opponent):
         winner = "creator"
     elif (creator < opponent):
