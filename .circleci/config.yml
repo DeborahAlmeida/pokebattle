@@ -61,10 +61,10 @@ jobs:
       # imports check
       - run:
           command: isort **/*.py --check-only
-      - run:
-          command: pre-commit run --all-files
-          environment:
-            SKIP: prospector,isort,eslint,missing-migrations
+      #- run:
+        #   command: pre-commit run --all-files
+        #   environment:
+        #    SKIP: prospector,isort,eslint,missing-migrations
       - run:
           command: (cd backend; python manage.py has_missing_migrations --ignore authtools)
           environment:
