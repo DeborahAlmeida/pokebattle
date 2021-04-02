@@ -56,8 +56,8 @@ jobs:
       - run:
           command: prospector --messages-only
       # security checks
-      - run:
-          command: bandit -r .
+      # - run:
+      #    command: bandit -r .
       # imports check
       - run:
           command: isort **/*.py --check-only
