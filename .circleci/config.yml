@@ -68,14 +68,14 @@ jobs:
       - run:
           command: (cd backend; python manage.py has_missing_migrations --ignore authtools)
           environment:
-            DJANGO_SETTINGS_MODULE: 'duda.settings.local_base'
+            DJANGO_SETTINGS_MODULE: 'pokebattle.settings.local_base'
       - run:
           command: (cd backend; python manage.py check --deploy)
           environment:
-            DJANGO_SETTINGS_MODULE: 'duda.settings.production'
+            DJANGO_SETTINGS_MODULE: 'pokebattle.settings.production'
             SECRET_KEY: "$(python -c 'import uuid; print(uuid.uuid4().hex + uuid.uuid4().hex)')"
             DATABASE_URL: 'sqlite:///'
-            ALLOWED_HOSTS: '.dudapokebattle.herokuapp.com, 127.0.0.1'
+            ALLOWED_HOSTS: '.pokebattlefirstproject.herokuapp.com, 127.0.0.1'
             SENDGRID_USERNAME: 'test'
             SENDGRID_PASSWORD: 'test'
             REDIS_URL: 'redis://'
