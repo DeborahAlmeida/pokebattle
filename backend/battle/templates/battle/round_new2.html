@@ -215,7 +215,7 @@
             <p class="title_battle">Trainer Opponent</p>
             <p class="subtitle_battle">Choose your pokemons!</p>
             <form method="post" class="battle-form">{% csrf_token %}
-                {{ formRound2.as_p }}
+                {{ form_round2.as_p }}
                 <input type="submit" value="Next" class="button_next">
             </form>   
         

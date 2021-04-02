@@ -4,10 +4,9 @@ def roundRunning(info):
     pokemon_opponent = info[1]
 
     result = runningBattle(pokemon_creator, pokemon_opponent)
-
-    if (result.creator > result.opponent):
+    if (result["creator"] > result["opponent"]):
         winner = "creator"
-    elif (result.creator < result.opponent):
+    elif (result["creator"] < result["opponent"]):
         winner = "opponent"
     else:
         winner = "creator"
