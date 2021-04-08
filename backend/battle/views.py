@@ -4,6 +4,7 @@ from .models import Battle
 from .forms import BattleForm, RoundForm, RoundForm2
 from .battles.battle import battleRunning
 from .battles.pokemon import get_pokemon_from_api
+from .battles.email import result_battle
 
 
 def home(request):
@@ -72,6 +73,7 @@ def round_new2(request):
                 result = battleRunning(current_id, pokemons)
                 round_opponent.winner = result
                 round_opponent.save()
+                result_battle()
 
                 return redirect('home')
             if (sum_pk11 + sum_pk21 + sum_pk31) > 600:

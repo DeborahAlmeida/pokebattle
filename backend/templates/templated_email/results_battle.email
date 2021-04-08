@@ -1,12 +1,9 @@
 {% block html %}
-  <p>Hi {{full_name}},</p>
+  <p>Hello player!</p>
 
-  <p>You just signed up for my website, using:
-      <dl>
-        <dt>username</dt><dd>{{username}}</dd>
-        <dt>join date</dt><dd>{{signup_date}}</dd>
-      </dl>
-  </p>
+  <p>You just finished a battle and the winner is... <strong>{{winner}}</strong> </p>
 
-  <p>Thanks, you rock!</p>
+  <p>Thanks for playing Pokebattle! Go battle again!</p>
+  <a href="http://pokebattlefirstproject.herokuapp.com/">Access the application here</a>
+
 {% endblock %}
