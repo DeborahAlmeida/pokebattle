@@ -26,9 +26,9 @@ MEDIA_URL = "/media/"
 SERVER_EMAIL = "deborah.mendonca@vinta.com.br"
 
 EMAIL_HOST = "smtp.sendgrid.net"
-EMAIL_HOST_USER = "default"
-EMAIL_HOST_PASSWORD = "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"
-EMAIL_PORT = 465
+EMAIL_HOST_USER = config("SENDGRID_USERNAME")
+EMAIL_HOST_PASSWORD = config("SENDGRID_PASSWORD")
+EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # Security
