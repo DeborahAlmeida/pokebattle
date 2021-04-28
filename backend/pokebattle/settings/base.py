@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     "common",
     "users",
     "battle",
+    "pokemon",
 ]
 
 
@@ -162,10 +163,3 @@ DATABASES['default'].update(db_from_env)
 
 
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
-
-# You can use a shortcut version
-TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django'
-
-# You can also use a class directly
-from templated_email.backends.vanilla_django import TemplateBackend
-TEMPLATED_EMAIL_BACKEND = TemplateBackend

@@ -1,92 +1,118 @@
 from django.shortcuts import render
+from django.views import View
 from django.shortcuts import redirect
 from .models import Battle
 from .forms import BattleForm, RoundForm, RoundForm2
-from .battles.battle import battleRunning
-from .battles.pokemon import get_pokemon_from_api
+from .battles.battle import battleRunning, message_error
+from pokemon.helpers import get_pokemon_from_api
 from .battles.email import result_battle
+from .battles.base_stats import get_total_point_pokemon
+from django.http import HttpResponseRedirect
 
 
-def home(request):
-    return render(request, 'battle/home.html')
+
+class Home(View):
+    template_name = 'battle/home.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
 
 
-def battle_new(request):
-    if request.method == "POST":
-        form = BattleForm(request.POST)
+class BattleNew(View):
+    form_class = BattleForm
+    initial = {'key': 'value'}
+    template_name = 'battle/battle_edit.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial = self.initial)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
         if form.is_valid():
             battle = form.save(commit=False)
             battle.save()
-            return redirect('round_new')
-    else:
-        form = BattleForm()
-    return render(request, 'battle/battle_edit.html', {'form': form})
+            return HttpResponseRedirect('round/new/')
 
 
-def round_new(request):
-    if request.method == "POST":
-        form_round = RoundForm(request.POST)
+class RoundNewCreator(View):
+    form_class = RoundForm
+    initial = {'key' : 'value'}
+    template_name = 'battle/round_new.html'
+
+    def get(self, request, *args, **kwargs):
+        form_round = self.form_class(initial = self.initial)
+        return render(request, self.template_name, {'form_round': form_round})
+
+    
+    def post(self, request, *args, **kwargs):
+        form_round = self.form_class(request.POST)
         if form_round.is_valid():
             round_battle = form_round.save(commit=False)
-            data_pk11 = get_pokemon_from_api(round_battle.pk1_creator)
-            data_pk21 = get_pokemon_from_api(round_battle.pk2_creator)
-            data_pk31 = get_pokemon_from_api(round_battle.pk3_creator)
-            sum_pk11 = sumValid(data_pk11)
-            sum_pk21 = sumValid(data_pk21)
-            sum_pk31 = sumValid(data_pk31)
-            if (sum_pk11 + sum_pk21 + sum_pk31) <= 600:
+            data_pokemons = [
+                round_battle.pk1_creator,
+                round_battle.pk2_creator,
+                round_battle.pk3_creator
+            ]
+            info = get_total_point_pokemon(data_pokemons)
+            if info == True:
                 round_battle.save()
-                return redirect('invite')
-            if (sum_pk11 + sum_pk21 + sum_pk31) > 600:
-                message = "ERROR: PKNs you selected sum more than 600 points, please choose again"
-                return render(request, 'battle/round_new.html', {'form_round': form_round,
-                                                                 'message': message})
-    else:
-        form_round = RoundForm()
-    return render(request, 'battle/round_new.html', {'form_round': form_round})
+                return HttpResponseRedirect('/invite/')
+            else:
+                error = message_error()
+                return render(request, self.template_name, {'form_round': form_round,
+                                                             'message': error})
 
 
-def invite(request):
-    return render(request, 'battle/invite.html')
-
-
-def player2(request):
-    return render(request, 'battle/opponent.html')
-
-
-def round_new2(request):
+class RoundNewOponnent(View):
+    form_class = RoundForm2
+    initial = {'key': 'value'}
+    template_name = 'battle/round_new2.html'
     battle_info = Battle.objects.latest('id')
-    if request.method == "POST":
-        form_round2 = RoundForm2(request.POST, instance=battle_info)
+
+
+    def get(self, request, *args, **kwargs):
+        form_round2 = self.form_class(initial = self.initial)
+        battle_get = self.battle_info
+        return render(request, self.template_name, {'form_round2': form_round2, 'battle': battle_get})
+    
+
+    def post(self, request, *args, **kwargs):
+        battle = self.battle_info
+        form_round2 = self.form_class(request.POST, instance = battle)
         if form_round2.is_valid():
             round_opponent = form_round2.save(commit=False)
-            data_pk11 = get_pokemon_from_api(round_opponent.pk1_opponent)
-            data_pk21 = get_pokemon_from_api(round_opponent.pk2_opponent)
-            data_pk31 = get_pokemon_from_api(round_opponent.pk3_opponent)
-            sum_pk11 = sumValid(data_pk11)
-            sum_pk21 = sumValid(data_pk21)
-            sum_pk31 = sumValid(data_pk31)
-            current_id = battle_info.id
-            if (sum_pk11 + sum_pk21 + sum_pk31) <= 600:
+            data_pokemons = [
+                round_opponent.pk1_opponent,
+                round_opponent.pk2_opponent,
+                round_opponent.pk3_opponent
+            ]
+            info = get_total_point_pokemon(data_pokemons)
+            current_id = battle.id
+            if info == True:
                 pokemons = [round_opponent.pk1_opponent,
                             round_opponent.pk2_opponent, round_opponent.pk3_opponent]
                 result = battleRunning(current_id, pokemons)
                 round_opponent.winner = result
                 round_opponent.save()
-                result_battle()
+                # result_battle()
 
-                return redirect('home')
-            if (sum_pk11 + sum_pk21 + sum_pk31) > 600:
-                message = "ERROR: PKNs you selected sum more than 600 points, please choose again"
-                return render(request, 'battle/round_new2.html',
+                return HttpResponseRedirect('/')
+            else:
+                error = message_error()
+                return render(request, self.template_name,
                               {'form_round2': form_round2,
-                               'battle': battle_info, 'message': message})
-    else:
-        form_round2 = RoundForm2()
-    return render(request, 'battle/round_new2.html', {'form_round2': form_round2,
-                                                      'battle': battle_info})
+                               'battle': battle_info, 'message': error})
+        
 
+class Invite(View):
+    template_name = 'battle/invite.html'
+    
+    def get(self, request):
+        return render(request, self.template_name)
 
-def sumValid(pokemon):
-    sum_result = pokemon["attack"] + pokemon["defense"] + pokemon["hp"]
-    return sum_result
+class Opponent(View):
+    template_name = 'battle/opponent.html'
+
+    def get(self, request):
+        return render(request, self.template_name)
