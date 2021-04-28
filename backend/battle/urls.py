@@ -1,12 +1,19 @@
 from django.urls import path
 from . import views
+from .views import (
+    Home,
+    RoundNewCreator,
+    RoundNewOponnent,
+    Invite,
+    Opponent,
+)
 
 urlpatterns = [
-    path('', views.home, name='home'),
-    path('battle/new/', views.battle_new, name='battle_new'),
-    path('round/new/', views.round_new, name='round_new'),
-    path('invite/', views.invite, name='invite'),
-    path('player2/', views.player2, name='player2'),
-    path('player2/round', views.round_new2, name='round_new2'),
+    path("", Home.as_view(), name="home"),
+    # path('battle/new/', BattleNew.as_view(), name='battle_new'),
+    path('round/new/', RoundNewCreator.as_view(), name='round_new'),
+    path('invite/', Invite.as_view(), name='invite'),
+    path('opponent/', Opponent.as_view(), name='opponent'),
+    path('player2/round', RoundNewOponnent.as_view() , name='round_new2'),
 
 ]

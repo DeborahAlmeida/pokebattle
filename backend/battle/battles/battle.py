@@ -1,6 +1,6 @@
 from ..models import Battle
 from .rounds import roundRunning
-from .pokemon import get_pokemon_from_api
+from pokemon.helpers import get_pokemon_from_api
 
 
 def battleRunning(poke_id, pokemons):
@@ -38,3 +38,8 @@ def battleRunning(poke_id, pokemons):
         winner = "creator"
 
     return winner
+
+
+def message_error():
+    message = "ERROR: PKNs you selected sum more than 600 points, please choose again"
+    return message
