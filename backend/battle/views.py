@@ -18,23 +18,6 @@ class Home(View):
         return render(request, self.template_name)
 
 
-class BattleNew(View):
-    form_class = BattleForm
-    initial = {'key': 'value'}
-    template_name = 'battle/battle_edit.html'
-
-    def get(self, request, *args, **kwargs):
-        form = self.form_class(initial = self.initial)
-        return render(request, self.template_name, {'form': form})
-
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            battle = form.save(commit=False)
-            battle.save()
-            return HttpResponseRedirect('round/new/')
-
-
 class RoundNewCreator(View):
     form_class = RoundForm
     initial = {'key' : 'value'}
@@ -70,10 +53,11 @@ class RoundNewOponnent(View):
     template_name = 'battle/round_new2.html'
     battle_info = Battle.objects.latest('id')
 
-
+# não está pegando o último id, porém quando é feita qualquer modificação no print abaixo, ele recarrega e funciona
     def get(self, request, *args, **kwargs):
         form_round2 = self.form_class(initial = self.initial)
         battle_get = self.battle_info
+        print(">>>>>>>>>>>>>>>>>>>>>>>>> a ultima batalha:", battle_get)
         return render(request, self.template_name, {'form_round2': form_round2, 'battle': battle_get})
     
 
@@ -116,3 +100,23 @@ class Opponent(View):
 
     def get(self, request):
         return render(request, self.template_name)
+
+
+'''
+class BattleNew(View):
+    form_class = BattleForm
+    initial = {'key': 'value'}
+    template_name = 'battle/battle_edit.html'
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class(initial = self.initial)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            battle = form.save(commit=False)
+            battle.save()
+            return HttpResponseRedirect('round/new/')
+
+'''

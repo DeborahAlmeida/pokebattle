@@ -10,7 +10,6 @@ from .views import (
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
-    # path('battle/new/', BattleNew.as_view(), name='battle_new'),
     path('round/new/', RoundNewCreator.as_view(), name='round_new'),
     path('invite/', Invite.as_view(), name='invite'),
     path('opponent/', Opponent.as_view(), name='opponent'),

@@ -63,6 +63,8 @@ POKE_API_URL = "https://pokeapi.co/api/v2/pokemon/"
 
 ALLOWED_HOSTS = []
 
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
