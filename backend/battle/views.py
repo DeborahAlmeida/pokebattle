@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.views import View
 from django.shortcuts import redirect
-from .models import Battle
+""" from .models import Battle
 from .forms import BattleForm, RoundForm, RoundForm2
 from .battles.battle import battleRunning, message_error
 from pokemon.helpers import get_pokemon_from_api
 from .battles.email import result_battle
-from .battles.base_stats import get_total_point_pokemon
+from .battles.base_stats import get_total_point_pokemon """
 from django.http import HttpResponseRedirect
 
 
@@ -16,7 +16,7 @@ class Home(View):
 
     def get(self, request):
         return render(request, self.template_name)
-
+""" 
 
 class RoundNewCreator(View):
     form_class = RoundForm
@@ -100,7 +100,7 @@ class Opponent(View):
 
     def get(self, request):
         return render(request, self.template_name)
-
+ """
 
 '''
 class BattleNew(View):
