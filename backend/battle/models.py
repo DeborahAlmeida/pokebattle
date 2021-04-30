@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from pokemon.models import Pokemon
 
+# this file didn't appear on pull request automatically
 
 class Battle(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="creator_battles")
