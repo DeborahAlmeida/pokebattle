@@ -3,7 +3,6 @@ from django.db import models
 from pokemon.models import Pokemon
 
 
-
 class Battle(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                 default="", related_name="creator_battles")

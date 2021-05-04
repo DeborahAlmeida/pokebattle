@@ -54,7 +54,8 @@ class Home(View):
 #     def get(self, request, *args, **kwargs):
 #             form_round2 = self.form_class(initial = self.initial)
 #             battle_get = self.battle_info
-#             return render(request, self.template_name, {'form_round2': form_round2, 'battle': battle_get})
+#             return render(request, self.template_name, {'form_round2': form_round2,
+#                                                         'battle': battle_get})
 
 #     def post(self, request, *args, **kwargs):
 #             battle = self.battle_info
