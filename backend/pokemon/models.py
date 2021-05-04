@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Pokemon(models.Model):
-    id = models.AutoField(primary_key=True)
+    pokemon_id = models.CharField(max_length=200, null=True)
     name = models.CharField(max_length=200, null=True)
     attack = models.CharField(max_length=200, null=True)
     defense = models.CharField(max_length=200, null=True)
