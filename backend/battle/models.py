@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from pokemon.models import Pokemon
+#here
 
 
 class Battle(models.Model):
