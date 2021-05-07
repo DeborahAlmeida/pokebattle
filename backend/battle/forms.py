@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Battle
+""" from .models import Battle
 
 
 class BattleForm(forms.ModelForm):
@@ -22,3 +22,4 @@ class RoundForm2(forms.ModelForm):
     class Meta:
         model = Battle
         fields = ('pk1_opponent', 'pk2_opponent', 'pk3_opponent')
+ """
