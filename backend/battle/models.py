@@ -5,11 +5,11 @@ from pokemon.models import Pokemon
 
 class Battle(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                default="", related_name="creator_battles")
+                                related_name="creator_battles")
     opponent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                 default="", related_name="opponent_battles")
+                                 related_name="opponent_battles")
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                               default="", related_name="battle_win", null=True)
+                               related_name="battle_win", null=True)
 
 
 class Team(models.Model):
