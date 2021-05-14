@@ -1,9 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.views import View
-from django.views.generic import RedirectView, TemplateView, CreateView
+from django.views.generic import TemplateView, CreateView
 from .models import Battle, Team, PokemonTeam
-from users.models import User
 # from django.views.decorators.http import require_POST
 # import requests
 # from django.shortcuts import redirect
