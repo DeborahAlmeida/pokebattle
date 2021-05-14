@@ -25,7 +25,7 @@ class BattleView(CreateView):
     # success_url = '/invite'
 
     def form_valid(self, form):
-        self.object = form.save()
+        form.save()
         Team.objects.create(battle=form.instance, trainer=self.request.user)
         return HttpResponseRedirect('/battle/pokemon')
 
@@ -36,7 +36,7 @@ class PokemonTeamView(CreateView):
     fields = ['team', 'pokemon', 'order']
 
     def form_valid(self, form):
-        self.object = form.save()
+        form.save()
         return HttpResponseRedirect('/battle/pokemon')
 
 # def team(request):
