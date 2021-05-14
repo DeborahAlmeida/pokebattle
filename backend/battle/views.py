@@ -1,6 +1,11 @@
-# from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
+from django.views.generic import RedirectView, TemplateView, CreateView
+from .models import Battle, Team, PokemonTeam
+from users.models import User
+# from django.views.decorators.http import require_POST
+# import requests
 # from django.shortcuts import redirect
 # from .models import Battle
 # from .forms import BattleForm, RoundForm, RoundForm2
@@ -9,12 +14,44 @@ from django.views import View
 # from .battles.base_stats import get_total_point_pokemon
 
 
-class Home(View):
+class Home(TemplateView):
     template_name = 'battle/home.html'
 
-    def get(self, request):
-        return render(request, self.template_name)
 
+class Invite(TemplateView):
+    template_name = 'battle/invite.html'
+
+
+class BattleView(CreateView):
+    model = Battle
+    fields = ['creator', 'opponent']
+    # success_url = '/invite'
+
+    def form_valid(self, form):
+        self.object = form.save()
+        Team.objects.create(battle=form.instance, trainer=self.request.user)
+        return HttpResponseRedirect('/battle/pokemon')
+
+
+class PokemonTeamView(CreateView):
+    template_name = "battle/pokemon_form.html"
+    model = PokemonTeam
+    fields = ['team', 'pokemon', 'order']
+
+    def form_valid(self, form):
+        self.object = form.save()
+        return HttpResponseRedirect('/battle/pokemon')
+
+# def team(request):
+#     user = Battle.objects.all()
+#     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> user", user)
+#     model = Team(battle_id=1, trainer_id=1)
+#     model.save()
+    # form.battle = battle_info.pk
+    # if form.is_valid():
+    #     form.save()
+    # print(">>>>>>hello", user)
+#     return True
 
 # class RoundNewCreator(View):
 #     form_class = RoundForm
