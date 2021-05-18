@@ -1,6 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView
 from .models import Battle, Team, PokemonTeam
+from django.urls import reverse_lazy
+from .forms import TeamForm
 # from django.views.decorators.http import require_POST
 # import requests
 # from django.shortcuts import redirect
@@ -21,23 +23,30 @@ class Invite(TemplateView):
 
 class BattleView(CreateView):
     model = Battle
-    fields = ['creator', 'opponent']
-    # success_url = '/invite'
+    fields = ['opponent']
 
     def form_valid(self, form):
+        form.instance.creator = self.request.user
         form.save()
-        Team.objects.create(battle=form.instance, trainer=self.request.user)
-        return HttpResponseRedirect('/battle/pokemon')
+        return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id,)))
 
-
-class PokemonTeamView(CreateView):
+class TeamView(CreateView):
     template_name = "battle/pokemon_form.html"
-    model = PokemonTeam
-    fields = ['team', 'pokemon', 'order']
+    form_class = TeamForm
+    success_url = reverse_lazy("home")
 
-    def form_valid(self, form):
-        form.save()
-        return HttpResponseRedirect('/battle/pokemon')
+    def get(self, request, pk):
+        self.object = None
+        battle_object = Battle.objects.get(pk=pk)        
+        Team.objects.create(battle=battle_object, trainer=battle_object.creator)
+        Team.objects.create(battle=battle_object, trainer=battle_object.opponent)
+        return super().get(request, pk)
+
+
+    # def form_invalid(self, form):
+    #     print(">>>>>>>>>>>>>>>>>", form)
+    #     return self.render_to_response(self.get_context_data(form=form))
+    
 
 # def team(request):
 #     user = Battle.objects.all()
