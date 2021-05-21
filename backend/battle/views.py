@@ -30,7 +30,6 @@ class TeamView(CreateView):
     success_url = reverse_lazy("home")
 
     def get(self, request, *args, **kwargs):
-        self.object = None
         battle_id = kwargs['pk']
         battle_object = Battle.objects.get(pk=battle_id)
         Team.objects.create(battle=battle_object, trainer=battle_object.creator)
