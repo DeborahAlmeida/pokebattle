@@ -37,7 +37,7 @@ class TeamForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         return cleaned_data
-  
+
     def save(self, commit=True):
         data = self.clean()
         team = Team.objects.get(pk=143)
