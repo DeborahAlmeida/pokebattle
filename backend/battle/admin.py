@@ -14,4 +14,3 @@ class TeamAdmin(admin.ModelAdmin):
 admin.site.register(Battle)
 admin.site.register(Team, TeamAdmin)
 admin.site.register(PokemonTeam)
-

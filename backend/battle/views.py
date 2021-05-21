@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView, CreateView
-from .models import Battle, Team, PokemonTeam
+from .models import Battle, Team
 from django.urls import reverse_lazy
 from .forms import TeamForm, BattleForm
 
@@ -29,9 +29,10 @@ class TeamView(CreateView):
     form_class = TeamForm
     success_url = reverse_lazy("home")
 
-    def get(self, request, pk):
+    def get(self, request, *args, **kwargs):
         self.object = None
-        battle_object = Battle.objects.get(pk=pk)        
+        battle_id = kwargs['pk']
+        battle_object = Battle.objects.get(pk=battle_id)
         Team.objects.create(battle=battle_object, trainer=battle_object.creator)
         Team.objects.create(battle=battle_object, trainer=battle_object.opponent)
-        return super().get(request, pk)
+        return super().get(request, *args, **kwargs)

@@ -1,13 +1,12 @@
 from django import forms
-
-from .models import Battle, PokemonTeam, Team
 from pokemon.models import Pokemon
+from .models import Battle, PokemonTeam, Team
 
 
 class BattleForm(forms.ModelForm):
     class Meta:
         model = Battle
-        fields = ['opponent',]
+        fields = ['opponent', ]
 
 
 class TeamForm(forms.ModelForm):
@@ -35,12 +34,10 @@ class TeamForm(forms.ModelForm):
         required=True,
     )
 
-
     def clean(self):
         cleaned_data = super().clean()
         return cleaned_data
-            
-        
+  
     def save(self, commit=True):
         data = self.clean()
         team = Team.objects.get(pk=143)
