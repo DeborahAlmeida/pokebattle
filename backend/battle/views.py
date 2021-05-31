@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
-from django.views.generic import TemplateView, CreateView
+from django.db.models import Q
+from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DetailView
 from .models import Battle, Team
 from django.urls import reverse_lazy
 from .forms import TeamForm, BattleForm
@@ -13,25 +14,51 @@ class Invite(TemplateView):
     template_name = 'battle/invite.html'
 
 
+
 class BattleView(CreateView):
     model = Battle
+    template_name = 'battle/battle_form.html'
     form_class = BattleForm
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
-        form.save()
-        return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id,)))
+        battle_object = form.save()
+        return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, 1, )))
 
 
 class TeamView(CreateView):
     model = Team
     template_name = "battle/pokemon_form.html"
     form_class = TeamForm
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("invite")
 
-    def get(self, request, *args, **kwargs):
-        battle_id = kwargs['pk']
-        battle_object = Battle.objects.get(pk=battle_id)
-        Team.objects.create(battle=battle_object, trainer=battle_object.creator)
-        Team.objects.create(battle=battle_object, trainer=battle_object.opponent)
-        return super().get(request, *args, **kwargs)
+
+    def get_initial(self):
+        super(TeamView, self).get_initial()
+        self.initial = {"battle": self.kwargs['pk'], "user" : self.kwargs['user']}
+        return self.initial
+    
+    def get_success_url(self):
+        if self.initial['user'] == 1:
+            return str(self.success_url)
+        else:
+            return reverse_lazy('home')
+
+     
+
+
+
+class BattleList(ListView):
+    model = Battle
+
+    def get_queryset(self):
+        queryset = Battle.objects.filter(
+            Q(creator=self.request.user) | Q(opponent=self.request.user)
+        )
+        return queryset
+
+
+class BattleDetail(DetailView):
+    model = Battle
+    template_name = "battle/battle_detail.html"
+
