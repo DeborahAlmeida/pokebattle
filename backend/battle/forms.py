@@ -34,19 +34,25 @@ class TeamForm(forms.ModelForm):
         required=True,
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def clean(self):
         cleaned_data = super().clean()
         return cleaned_data
 
-    def save(self, commit=True):
-        data = self.clean()
-        team = Team.objects.get(pk=143)
-        team.pokemons.add(data["pokemon_1"])
-        team.pokemons.add(data["pokemon_2"])
-        team.pokemons.add(data["pokemon_3"])
-        PokemonTeam.objects.filter(team=team, pokemon=data["pokemon_1"]).update(order=1)
-        PokemonTeam.objects.filter(team=team, pokemon=data["pokemon_2"]).update(order=2)
-        PokemonTeam.objects.filter(team=team, pokemon=data["pokemon_3"]).update(order=3)
+    def save(self):
+        data = self.clean()        
+        battle_object = Battle.objects.get(pk=self.initial['battle'])
+        if self.initial['user'] == 1:
+            team = Team.objects.create(battle=battle_object, trainer=battle_object.creator)
+        else:
+            team = Team.objects.create(battle=battle_object, trainer=battle_object.opponent)
+        PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=18), order=1)
+        PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=16), order=2)
+        PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=15), order=3)
+        teams = Team.objects.filter(battle=battle_object)
+        if teams.count() > 1:
+            battle_update = Battle.objects.filter(pk=self.initial['battle']).update(winner=battle_object.creator)
         instance = super().save(commit=False)
-        instance.some_flag = True
         return instance
