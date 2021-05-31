@@ -14,7 +14,6 @@ class Invite(TemplateView):
     template_name = 'battle/invite.html'
 
 
-
 class BattleView(CreateView):
     model = Battle
     template_name = 'battle/battle_form.html'
