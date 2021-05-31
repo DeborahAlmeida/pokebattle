@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Pokebattle</title>
+  <style>
+    body{
+        padding: 0px;
+        background: #1488CC;  /* fallback for old browsers */
+        font-family: Arial, Helvetica, sans-serif;
+
+
+    }
+    .list{
+      list-style: none;
+      margin-left: -40px;
+    }
+    .battle_container{
+      background-color: white;
+      margin: auto;
+      padding: 20px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      margin-top: 50px;
+      width:1000px;
+      border-radius: 20px; 
+    }
+    .battle_id{
+      text-decoration: none;
+      background-color: #fb8603;
+      color: black;
+      padding: 6px;
+      border-radius: 6px;
+      }
+    .item{
+      margin-bottom: 20px;
+    }
+    .subtitle{
+      font-size: 16px;
+      font-weight: normal;
+      margin-top: -10px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="battle_container">
+    <h1>Battle information</h1>
+    <h2 class="subtitle">Creator: {{battle.creator}}</h2> 
+    <h2 class="subtitle">Opponent: {{battle.opponent}}</h2> 
+    {% if battle.winner %}
+        <h2 class="subtitle">Winner: {{battle.winner}}</h2> 
+    {% endif %}
+
+  </div>
+  
+</body>
+</html>
