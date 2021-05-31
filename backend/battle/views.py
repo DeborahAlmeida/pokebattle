@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.db.models import Q
-from django.views.generic import TemplateView, CreateView, ListView, UpdateView, DetailView
+from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from .models import Battle, Team
 from django.urls import reverse_lazy
 from .forms import TeamForm, BattleForm
@@ -22,7 +22,7 @@ class BattleView(CreateView):
 
     def form_valid(self, form):
         form.instance.creator = self.request.user
-        battle_object = form.save()
+        form.save()
         return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, 1, )))
 
 
@@ -32,20 +32,15 @@ class TeamView(CreateView):
     form_class = TeamForm
     success_url = reverse_lazy("invite")
 
-
     def get_initial(self):
         super(TeamView, self).get_initial()
-        self.initial = {"battle": self.kwargs['pk'], "user" : self.kwargs['user']}
+        self.initial = {"battle": self.kwargs['pk'], "user": self.kwargs['user']}
         return self.initial
-    
+
     def get_success_url(self):
         if self.initial['user'] == 1:
             return str(self.success_url)
-        else:
-            return reverse_lazy('home')
-
-     
-
+        return reverse_lazy('home')
 
 
 class BattleList(ListView):
@@ -61,4 +56,3 @@ class BattleList(ListView):
 class BattleDetail(DetailView):
     model = Battle
     template_name = "battle/battle_detail.html"
-

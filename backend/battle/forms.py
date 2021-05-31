@@ -41,8 +41,7 @@ class TeamForm(forms.ModelForm):
         cleaned_data = super().clean()
         return cleaned_data
 
-    def save(self):
-        data = self.clean()        
+    def save(self, commit=True):
         battle_object = Battle.objects.get(pk=self.initial['battle'])
         if self.initial['user'] == 1:
             team = Team.objects.create(battle=battle_object, trainer=battle_object.creator)
@@ -53,6 +52,6 @@ class TeamForm(forms.ModelForm):
         PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=15), order=3)
         teams = Team.objects.filter(battle=battle_object)
         if teams.count() > 1:
-            battle_update = Battle.objects.filter(pk=self.initial['battle']).update(winner=battle_object.creator)
+            Battle.objects.filter(pk=self.initial['battle']).update(winner=battle_object.creator)
         instance = super().save(commit=False)
         return instance
