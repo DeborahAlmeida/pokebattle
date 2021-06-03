@@ -1,18 +1,26 @@
 from django import forms
 from pokemon.models import Pokemon
-from .models import Battle, PokemonTeam, Team
+from battle.models import Battle, PokemonTeam, Team
+from battle.battles.battle import validate_sum_pokemons
 
 
 class BattleForm(forms.ModelForm):
     class Meta:
         model = Battle
         fields = ['opponent', ]
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        if cleaned_data['opponent'] == self.initial['creator']:
+            raise forms.ValidationError("ERROR: You can't challenge yourself.")
 
 
 class TeamForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = [
+            "battle",
+            "trainer",
             "pokemon_1",
             "pokemon_2",
             "pokemon_3",
@@ -35,23 +43,35 @@ class TeamForm(forms.ModelForm):
     )
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(TeamForm, self).__init__(*args, **kwargs)
+        self.fields['battle'].widget = forms.HiddenInput()
+        self.fields['trainer'].widget = forms.HiddenInput()
 
     def clean(self):
         cleaned_data = super().clean()
+        valid_pokemons = validate_sum_pokemons(
+            [
+                cleaned_data['pokemon_1'],
+                cleaned_data['pokemon_2'],
+                cleaned_data['pokemon_3']
+                
+            ]
+        )
+        obj_battle = cleaned_data['battle']
+
+        if cleaned_data['trainer'] != obj_battle.creator:
+            if cleaned_data['trainer'] != obj_battle.opponent:
+                raise forms.ValidationError("ERROR: You do not have permission for this action.")
+
+        if not valid_pokemons:
+            raise forms.ValidationError("ERROR: Your pokemons sum more than 600 points. Please select again.")
+
         return cleaned_data
 
     def save(self, commit=True):
-        battle_object = Battle.objects.get(pk=self.initial['battle'])
-        if self.initial['user'] == 1:
-            team = Team.objects.create(battle=battle_object, trainer=battle_object.creator)
-        else:
-            team = Team.objects.create(battle=battle_object, trainer=battle_object.opponent)
-        PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=18), order=1)
-        PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=16), order=2)
-        PokemonTeam.objects.create(team=team, pokemon=Pokemon.objects.get(pokemon_id=15), order=3)
-        teams = Team.objects.filter(battle=battle_object)
-        if teams.count() > 1:
-            Battle.objects.filter(pk=self.initial['battle']).update(winner=battle_object.creator)
-        instance = super().save(commit=False)
+        data = self.clean()
+        instance = super().save()
+        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_1'], order=1)
+        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_2'], order=2)
+        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_3'], order=3)
         return instance
