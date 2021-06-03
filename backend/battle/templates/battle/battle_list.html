@@ -75,7 +75,7 @@
       {% if not battle.winner %}
         {% if battle.opponent == user %}
         <li class="item">
-          <a class="battle_ongoing" href="{% url 'team_create' pk=battle.pk user=2 %}">Battle ID {{ battle.pk }}</a> 
+          <a class="battle_ongoing" href="{% url 'team_create' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
         </li>
         {% endif %}
       {% endif %}
