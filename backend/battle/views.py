@@ -1,9 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
-from .models import Battle, Team
+from battle.models import Battle, Team
+from users.models import User
 from django.urls import reverse_lazy
-from .forms import TeamForm, BattleForm
+from battle.forms import TeamForm, BattleForm
+from django.shortcuts import get_object_or_404
+from battle.battles.battle import battleRunning, setWinner
+
 
 
 class Home(TemplateView):
@@ -19,10 +23,15 @@ class BattleView(CreateView):
     template_name = 'battle/battle_form.html'
     form_class = BattleForm
 
+    def get_initial(self):
+        obj_creator = get_object_or_404(User, email=self.request.user)
+        self.initial = {"creator": obj_creator,}
+        return self.initial
+
     def form_valid(self, form):
         form.instance.creator = self.request.user
         form.save()
-        return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, 1, )))
+        return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
 
 class TeamView(CreateView):
@@ -32,14 +41,20 @@ class TeamView(CreateView):
     success_url = reverse_lazy("invite")
 
     def get_initial(self):
-        super(TeamView, self).get_initial()
-        self.initial = {"battle": self.kwargs['pk'], "user": self.kwargs['user']}
+        obj_battle = get_object_or_404(Battle, pk=self.kwargs['pk'])
+        obj_trainer = get_object_or_404(User, email=self.request.user)
+        self.initial = {"battle": obj_battle, "trainer": obj_trainer,}
         return self.initial
-
-    def get_success_url(self):
-        if self.initial['user'] == 1:
-            return str(self.success_url)
-        return reverse_lazy('home')
+    
+    def form_valid(self, form):
+        team = form.save()
+        if team.battle.creator == team.trainer:
+            return HttpResponseRedirect(reverse_lazy("invite"))
+        if team.battle.opponent == team.trainer:
+            result = battleRunning(team)
+            print(">>>>>>>>", result)
+            setWinner(result, team.battle)
+            return HttpResponseRedirect(reverse_lazy("home"))
 
 
 class BattleList(ListView):
