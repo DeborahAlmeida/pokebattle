@@ -1,4 +1,3 @@
-from ..models import Battle
 from templated_email import send_templated_mail
 
 
