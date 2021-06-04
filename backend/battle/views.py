@@ -1,13 +1,13 @@
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+
 from battle.models import Battle, Team
 from users.models import User
-from django.urls import reverse_lazy
 from battle.forms import TeamForm, BattleForm
-from django.shortcuts import get_object_or_404
 from battle.battles.battle import battleRunning, setWinner
-
 
 
 class Home(TemplateView):
@@ -25,7 +25,7 @@ class BattleView(CreateView):
 
     def get_initial(self):
         obj_creator = get_object_or_404(User, email=self.request.user)
-        self.initial = {"creator": obj_creator,}
+        self.initial = {"creator": obj_creator}
         return self.initial
 
     def form_valid(self, form):
@@ -43,18 +43,18 @@ class TeamView(CreateView):
     def get_initial(self):
         obj_battle = get_object_or_404(Battle, pk=self.kwargs['pk'])
         obj_trainer = get_object_or_404(User, email=self.request.user)
-        self.initial = {"battle": obj_battle, "trainer": obj_trainer,}
+        self.initial = {"battle": obj_battle, "trainer": obj_trainer}
         return self.initial
-    
+
     def form_valid(self, form):
         team = form.save()
         if team.battle.creator == team.trainer:
             return HttpResponseRedirect(reverse_lazy("invite"))
         if team.battle.opponent == team.trainer:
             result = battleRunning(team)
-            print(">>>>>>>>", result)
             setWinner(result, team.battle)
             return HttpResponseRedirect(reverse_lazy("home"))
+        return True
 
 
 class BattleList(ListView):

@@ -8,7 +8,7 @@ class BattleForm(forms.ModelForm):
     class Meta:
         model = Battle
         fields = ['opponent', ]
-    
+
     def clean(self):
         cleaned_data = super().clean()
         if cleaned_data['opponent'] == self.initial['creator']:
@@ -54,7 +54,6 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_1'],
                 cleaned_data['pokemon_2'],
                 cleaned_data['pokemon_3']
-                
             ]
         )
         obj_battle = cleaned_data['battle']
@@ -64,7 +63,7 @@ class TeamForm(forms.ModelForm):
                 raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:
-            raise forms.ValidationError("ERROR: Your pokemons sum more than 600 points. Please select again.")
+            raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
         return cleaned_data
 

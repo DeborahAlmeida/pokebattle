@@ -2,6 +2,7 @@ from battle.models import Battle
 from battle.battles.rounds import roundRunning
 from battle.models import PokemonTeam, Team
 
+
 def battleRunning(team):
     battle_info = team.battle
     pokemon_team_opponent = PokemonTeam.objects.filter(team=team)
@@ -9,6 +10,7 @@ def battleRunning(team):
     pokemon_team_creator = PokemonTeam.objects.filter(team=team_creator)
     winner = get_points(pokemon_team_opponent, pokemon_team_creator)
     return winner
+
 
 def get_points(pokemons_creator, pokemons_opponent):
     battle_rounds = [
