@@ -4,8 +4,9 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
-from battle.models import Battle, Team
 from users.models import User
+
+from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm
 from battle.battles.battle import battleRunning, setWinner
 
