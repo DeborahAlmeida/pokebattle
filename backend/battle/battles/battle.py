@@ -1,6 +1,7 @@
 from battle.models import Battle
 from battle.battles.rounds import roundRunning
 from battle.models import PokemonTeam, Team
+from battle.battles.email import result_battle
 
 
 def battleRunning(team):
@@ -43,3 +44,4 @@ def setWinner(winner, battle):
         Battle.objects.filter(pk=battle.pk).update(winner=battle.creator)
     else:
         Battle.objects.filter(pk=battle.pk).update(winner=battle.opponent)
+    result_battle(battle)

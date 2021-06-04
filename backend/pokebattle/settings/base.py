@@ -79,6 +79,7 @@ INSTALLED_APPS = [
     "users",
     "battle",
     "pokemon",
+    'templated_email',
 ]
 
 
