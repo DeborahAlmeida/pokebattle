@@ -7,11 +7,15 @@ from battle.battles.battle import validate_sum_pokemons
 class BattleForm(forms.ModelForm):
     class Meta:
         model = Battle
-        fields = ['opponent', ]
+        fields = ['creator', 'opponent', ]
+
+    def __init__(self, *args, **kwargs):
+        super(BattleForm, self).__init__(*args, **kwargs)
+        self.fields['creator'].widget = forms.HiddenInput()
 
     def clean(self):
         cleaned_data = super().clean()
-        if cleaned_data['opponent'] == self.initial['creator']:
+        if cleaned_data['opponent'] == cleaned_data['creator']:
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
 
 
@@ -58,9 +62,8 @@ class TeamForm(forms.ModelForm):
         )
         obj_battle = cleaned_data['battle']
 
-        if cleaned_data['trainer'] != obj_battle.creator:
-            if cleaned_data['trainer'] != obj_battle.opponent:
-                raise forms.ValidationError("ERROR: You do not have permission for this action.")
+        if cleaned_data['trainer'] != obj_battle.creator and cleaned_data['trainer'] != obj_battle.opponent:
+            raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
