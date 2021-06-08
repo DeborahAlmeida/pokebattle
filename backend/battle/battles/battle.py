@@ -1,6 +1,5 @@
-from battle.models import Battle
 from battle.battles.rounds import run_round
-from battle.models import PokemonTeam, Team
+from battle.models import Team
 from battle.battles.email import result_battle
 
 
@@ -23,7 +22,7 @@ def get_winner_for(team_creator, team_opponent):
             creator_won += 1
         else:
             opponent_won += 1
-        
+
     if creator_won > opponent_won:
         return team_creator
 
