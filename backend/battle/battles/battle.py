@@ -1,34 +1,33 @@
 from battle.models import Battle
-from battle.battles.rounds import roundRunning
+from battle.battles.rounds import run_round
 from battle.models import PokemonTeam, Team
 from battle.battles.email import result_battle
 
 
-def battleRunning(team):
-    battle_info = team.battle
-    pokemon_team_opponent = PokemonTeam.objects.filter(team=team)
-    team_creator = Team.objects.get(battle=battle_info, trainer=battle_info.creator)
-    pokemon_team_creator = PokemonTeam.objects.filter(team=team_creator)
-    winner = get_points(pokemon_team_opponent, pokemon_team_creator)
-    return winner
+def run_battle(battle):
+    teams = battle.teams.all()
+    assert teams.count() == 2, "Unexpected error. Battle has more than two teams."
+    team_winner = get_winner_for(teams[0], teams[1])
+    return team_winner
 
 
-def get_points(pokemons_creator, pokemons_opponent):
-    battle_rounds = [
-        [pokemons_creator[0].pokemon, pokemons_opponent[0].pokemon],
-        [pokemons_creator[1].pokemon, pokemons_opponent[1].pokemon],
-    ]
-    winner = ""
-    result = []
-    for battle_round in battle_rounds:
-        result_round = roundRunning(battle_round)
-        result.append(result_round)
-    if result[0] == result[1]:
-        winner = result[0]
-    else:
-        result_draw = roundRunning([pokemons_creator[2].pokemon, pokemons_opponent[2].pokemon])
-        winner = result_draw
-    return winner
+def get_winner_for(team_creator, team_opponent):
+    creator_pokemons = team_creator.pokemons.all()
+    opponent_pokemons = team_opponent.pokemons.all()
+
+    creator_won = 0
+    opponent_won = 0
+    for creator_pokemon, opponent_pokemon in zip(creator_pokemons, opponent_pokemons):
+        winner_key = run_round(creator_pokemon, opponent_pokemon)
+        if winner_key == "creator_won":
+            creator_won += 1
+        else:
+            opponent_won += 1
+        
+    if creator_won > opponent_won:
+        return team_creator
+
+    return team_opponent
 
 
 def validate_sum_pokemons(pokemons):
@@ -39,9 +38,7 @@ def validate_sum_pokemons(pokemons):
     return total_points <= 600
 
 
-def setWinner(winner, battle):
-    if winner == 'creator':
-        Battle.objects.filter(pk=battle.pk).update(winner=battle.creator)
-    else:
-        Battle.objects.filter(pk=battle.pk).update(winner=battle.opponent)
+def set_winner(winner, battle):
+    battle.winner = winner
+    battle.save()
     result_battle(battle)
