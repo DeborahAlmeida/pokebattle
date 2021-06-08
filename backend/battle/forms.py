@@ -61,8 +61,7 @@ class TeamForm(forms.ModelForm):
             ]
         )
         obj_battle = cleaned_data['battle']
-        trainer = cleaned_data['trainer']
-        if trainer != obj_battle.creator and trainer != obj_battle.opponent:
+        if cleaned_data['trainer'] not in (obj_battle.creator, obj_battle.opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:

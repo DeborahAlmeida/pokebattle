@@ -1,5 +1,4 @@
 from battle.battles.rounds import run_round
-from battle.models import Team
 from battle.battles.email import result_battle
 
 
