@@ -8,7 +8,7 @@ from users.models import User
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm
-from battle.battles.battle import battleRunning, setWinner
+from battle.battles.battle import run_battle, set_winner
 
 
 class Home(TemplateView):
@@ -30,7 +30,6 @@ class BattleView(CreateView):
         return self.initial
 
     def form_valid(self, form):
-        form.instance.creator = self.request.user
         form.save()
         return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
@@ -49,13 +48,12 @@ class TeamView(CreateView):
 
     def form_valid(self, form):
         team = form.save()
-        if team.battle.creator == team.trainer:
-            return HttpResponseRedirect(reverse_lazy("invite"))
-        if team.battle.opponent == team.trainer:
-            result = battleRunning(team)
-            setWinner(result, team.battle)
+        if team.battle.teams.count() == 2:
+            team_winner = run_battle(team.battle)
+            set_winner(team_winner.trainer, team.battle)
             return HttpResponseRedirect(reverse_lazy("home"))
-        return True
+
+        return HttpResponseRedirect(reverse_lazy("invite"))
 
 
 class BattleList(ListView):
