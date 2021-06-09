@@ -66,12 +66,12 @@ class BattleList(ListView):
         return queryset
 
 
-class BattleDetail(DetailView): # pylint: disable=attribute-defined-outside-init
+class BattleDetail(DetailView):
     model = Battle
     template_name = "battle/battle_detail.html"
 
     def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
         team = Team.objects.filter(battle=self.object, trainer=self.request.user)
         context = self.get_context_data(object=self.object, team=team)
         return self.render_to_response(context)
