@@ -66,7 +66,7 @@ class BattleList(ListView):
         return queryset
 
 
-class BattleDetail(DetailView):
+class BattleDetail(DetailView): # pylint: disable=attribute-defined-outside-init
     model = Battle
     template_name = "battle/battle_detail.html"
 
