@@ -3,8 +3,8 @@ from battle.battles.email import result_battle
 
 
 def run_battle(battle):
-    teams = battle.teams.all()
-    assert teams.count() == 2, "Unexpected error. Battle has more than two teams."
+    teams = list(battle.teams.all())
+    assert len(teams) == 2, "Unexpected error. Battle has more than two teams."
     team_winner = get_winner_for(teams[0], teams[1])
     return team_winner
 
