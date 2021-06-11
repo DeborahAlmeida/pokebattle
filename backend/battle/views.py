@@ -25,7 +25,7 @@ class BattleView(CreateView):
     form_class = BattleForm
 
     def get_initial(self):
-        obj_creator = get_object_or_404(User, email=self.request.user)
+        obj_creator = self.request.user
         self.initial = {"creator": obj_creator}
         return self.initial
 
@@ -42,7 +42,7 @@ class TeamView(CreateView):
 
     def get_initial(self):
         obj_battle = get_object_or_404(Battle, pk=self.kwargs['pk'])
-        obj_trainer = get_object_or_404(User, email=self.request.user)
+        obj_trainer = self.request.user
         self.initial = {"battle": obj_battle, "trainer": obj_trainer}
         return self.initial
 
