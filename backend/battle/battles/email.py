@@ -9,10 +9,4 @@ def result_battle(battle):
         context={
             'winner': battle.winner,
         },
-        # Optional:
-        # cc=['cc@example.com'],
-        # bcc=['bcc@example.com'],
-        # headers={'My-Custom-Header':'Custom Value'},
-        # template_prefix="my_emails/",
-        # template_suffix="email",
     )
