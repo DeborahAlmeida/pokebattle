@@ -15,7 +15,7 @@ class BattleForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if not 'creator' in cleaned_data:
+        if 'creator' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to be logged.")
 
         if cleaned_data['opponent'] == cleaned_data['creator']:
