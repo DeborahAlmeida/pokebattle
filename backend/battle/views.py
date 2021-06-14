@@ -1,98 +1,69 @@
-# from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.views import View
-# from django.shortcuts import redirect
-# from .models import Battle
-# from .forms import BattleForm, RoundForm, RoundForm2
-# from .battles.battle import battleRunning, message_error
-# from pokemon.helpers import get_pokemon_from_api
-# from .battles.base_stats import get_total_point_pokemon
+from django.http import HttpResponseRedirect
+from django.db.models import Q
+from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
+
+from battle.models import Battle, Team
+from battle.forms import TeamForm, BattleForm
+from battle.battles.battle import run_battle, set_winner
 
 
-class Home(View):
+class Home(TemplateView):
     template_name = 'battle/home.html'
 
-    def get(self, request):
-        return render(request, self.template_name)
+
+class Invite(TemplateView):
+    template_name = 'battle/invite.html'
 
 
-# class RoundNewCreator(View):
-#     form_class = RoundForm
-#     initial = {'key' : 'value'}
-#     template_name = 'battle/round_new.html'
+class BattleView(CreateView):
+    model = Battle
+    template_name = 'battle/battle_form.html'
+    form_class = BattleForm
 
-#     def get(self, request, *args, **kwargs):
-#         form_round = self.form_class(initial = self.initial)
-#         return render(request, self.template_name, {'form_round': form_round})
+    def get_initial(self):
+        obj_creator = self.request.user
+        self.initial = {"creator": obj_creator}
+        return self.initial
 
-
-#     def post(self, request, *args, **kwargs):
-#         form_round = self.form_class(request.POST)
-#         if form_round.is_valid():
-#             round_battle = form_round.save(commit=False)
-#             data_pokemons = [
-#                 round_battle.pk1_creator,
-#                 round_battle.pk2_creator,
-#                 round_battle.pk3_creator
-#             ]
-#             info = get_total_point_pokemon(data_pokemons)
-#             if info == True:
-#                 round_battle.save()
-#                 return HttpResponseRedirect('/invite/')
-#             else:
-#                 error = message_error()
-#                 return render(request, self.template_name, {'form_round': form_round,
-#                                                              'message': error})
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
 
-# class RoundNewOponnent(View):
-#     form_class = RoundForm2
-#     initial = {'key': 'value'}
-#     template_name = 'battle/round_new2.html'
-#     battle_info = Battle.objects.latest('id')
+class TeamView(CreateView):
+    model = Team
+    template_name = "battle/pokemon_form.html"
+    form_class = TeamForm
+    success_url = reverse_lazy("invite")
 
-#     def get(self, request, *args, **kwargs):
-#             form_round2 = self.form_class(initial = self.initial)
-#             battle_get = self.battle_info
-#             return render(request, self.template_name, {'form_round2': form_round2,
-#                                                         'battle': battle_get})
+    def get_initial(self):
+        obj_battle = get_object_or_404(Battle, pk=self.kwargs['pk'])
+        obj_trainer = self.request.user
+        self.initial = {"battle": obj_battle, "trainer": obj_trainer}
+        return self.initial
 
-#     def post(self, request, *args, **kwargs):
-#             battle = self.battle_info
-#             form_round2 = self.form_class(request.POST, instance = battle)
-#             if form_round2.is_valid():
-#                 round_opponent = form_round2.save(commit=False)
-#                 data_pokemons = [
-#                     round_opponent.pk1_opponent,
-#                     round_opponent.pk2_opponent,
-#                     round_opponent.pk3_opponent
-#                 ]
-#                 info = get_total_point_pokemon(data_pokemons)
-#                 current_id = battle.id
-#                 if info == True:
-#                     pokemons = [round_opponent.pk1_opponent,
-#                                 round_opponent.pk2_opponent, round_opponent.pk3_opponent]
-#                     result = battleRunning(current_id, pokemons)
-#                     round_opponent.winner = result
-#                     round_opponent.save()
-#                     #result_battle()
+    def form_valid(self, form):
+        team = form.save()
+        if team.battle.teams.count() == 2:
+            team_winner = run_battle(team.battle)
+            set_winner(team_winner.trainer, team.battle)
+            return HttpResponseRedirect(reverse_lazy("home"))
 
-#                     return HttpResponseRedirect('/')
-#                 else:
-#                     error = message_error()
-#                     return render(request, self.template_name,
-#                                 {'battle': battle_info, 'message': error})
+        return HttpResponseRedirect(reverse_lazy("invite"))
 
 
-# class Invite(View):
-#     template_name = 'battle/invite.html'
+class BattleList(ListView):
+    model = Battle
 
-#     def get(self, request):
-#         return render(request, self.template_name)
+    def get_queryset(self):
+        queryset = Battle.objects.filter(
+            Q(creator=self.request.user) | Q(opponent=self.request.user)
+        )
+        return queryset
 
 
-# class Opponent(View):
-#     template_name = 'battle/opponent.html'
-
-#     def get(self, request):
-#         return render(request, self.template_name)
+class BattleDetail(DetailView):
+    model = Battle
+    template_name = "battle/battle_detail.html"

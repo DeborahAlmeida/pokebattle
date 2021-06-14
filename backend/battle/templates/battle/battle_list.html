@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Pokebattle</title>
+  <style>
+    body{
+        padding: 0px;
+        background: #1488CC;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .list{
+      list-style: none;
+      margin-left: -40px;
+      display: flex;
+      width:700px;
+      justify-content: space-between;
+    }
+    .battle_container{
+      background-color: white;
+      margin: auto;
+      padding: 20px;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      margin-top: 50px;
+      width:1000px;
+      border-radius: 20px; 
+    }
+    .battle_ongoing, .battle_settled{
+      text-decoration: none;
+      background-color: #fb8603;
+      color: black;
+      padding: 6px;
+      border-radius: 6px;
+    }
+    .battle_settled{
+      background-color: #10c20a;
+    }
+    .item{
+      margin-bottom: 20px;
+    }
+    .subtitle{
+      font-size: 16px;
+      font-weight: normal;
+      margin-top: -10px;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="battle_container">
+    <h1>Your battles</h1>
+    <h2 class="subtitle">Click to see more information</h2>
+  {% if battle_list %}
+  <ul class="list">
+    <div class="settled">
+      <h3>Settled battles</h3>
+      {% for battle in battle_list %}
+        {% if battle.winner %}
+        <li class="item">
+          <a class="battle_settled" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
+        </li>
+        {% endif %}
+      {% endfor %}
+  
+    </div>
+  
+    <div class="wwaiting_you">
+      <h3>Waiting for you</h3>
+    {% for battle in battle_list %}
+      {% if not battle.winner %}
+        {% if battle.opponent == user %}
+        <li class="item">
+          <a class="battle_ongoing" href="{% url 'team_create' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
+        </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    </div>
+
+    <div class="your_opponent">
+      <h3>Waiting your opponent</h3>
+    {% for battle in battle_list %}
+      {% if not battle.winner %}
+        {% if not battle.opponent == user %}
+        <li class="item">
+          <a class="battle_ongoing" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
+        </li>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    </div>
+  </ul>
+  {% else %}
+    <p>There are no battle in the database.</p>
+  {% endif %} 
+
+  </div>
+  
+</body>
+</html>

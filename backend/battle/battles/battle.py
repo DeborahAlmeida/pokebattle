@@ -1,29 +1,42 @@
-# from ..models import Battle
-# from .rounds import roundRunning
-# from pokemon.helpers import get_pokemon_from_api
+from battle.battles.rounds import run_round
+from battle.battles.email import result_battle
 
 
-# def battleRunning(poke_id, pokemons):
-#     battle_info = Battle.objects.get(id=poke_id)
-#     poke_info1_creator = get_pokemon_from_api(battle_info.pk1_creator)
-#     poke_info2_creator = get_pokemon_from_api(battle_info.pk2_creator)
-#     poke_info3_creator = get_pokemon_from_api(battle_info.pk3_creator)
-#     # poke_info_creator_list = [poke_info1_creator, poke_info2_creator, poke_info3_creator]
-#     poke_info1_opponent = get_pokemon_from_api(pokemons[0])
-#     poke_info2_opponent = get_pokemon_from_api(pokemons[1])
-#     poke_info3_opponent = get_pokemon_from_api(pokemons[2])
-#     round_one = [poke_info1_creator, poke_info1_opponent]
-#     round_two = [poke_info2_creator, poke_info2_opponent]
-#     round_three = [poke_info3_creator, poke_info3_opponent]
-#     winner = "nobody"
-#     opponent = 0
-#     creator = 0
-#     battle_rounds = [round_one, round_two, round_three]
-#     for battle_round in battle_rounds:
-#         winner = "creator"
+def run_battle(battle):
+    teams = list(battle.teams.all())
+    assert len(teams) == 2, "Unexpected error. Battle has more than two teams."
+    team_winner = get_winner_for(teams[0], teams[1])
+    return team_winner
 
-#     return winner
 
-# def message_error():
-#     message = "ERROR: PKNs you selected sum more than 600 points, please choose again"
-#     return message
+def get_winner_for(team_creator, team_opponent):
+    creator_pokemons = team_creator.pokemons.all()
+    opponent_pokemons = team_opponent.pokemons.all()
+
+    creator_won = 0
+    opponent_won = 0
+    for creator_pokemon, opponent_pokemon in zip(creator_pokemons, opponent_pokemons):
+        winner_key = run_round(creator_pokemon, opponent_pokemon)
+        if winner_key == "creator_won":
+            creator_won += 1
+        else:
+            opponent_won += 1
+
+    if creator_won > opponent_won:
+        return team_creator
+
+    return team_opponent
+
+
+def validate_sum_pokemons(pokemons):
+    total_points = 0
+    for pokemon in pokemons:
+        pokemon_point = pokemon.attack + pokemon.defense + pokemon.hp
+        total_points += pokemon_point
+    return total_points <= 600
+
+
+def set_winner(winner, battle):
+    battle.winner = winner
+    battle.save()
+    result_battle(battle)
