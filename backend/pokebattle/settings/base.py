@@ -168,3 +168,5 @@ DATABASES['default'].update(db_from_env)
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
+
+FROM_EMAIL = config('FROM_EMAIL', default='deborah.mendonca@vinta.com.br')
