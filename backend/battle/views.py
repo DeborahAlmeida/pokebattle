@@ -70,11 +70,6 @@ class BattleDetail(DetailView):
     model = Battle
     template_name = "battle/battle_detail.html"
 
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
-
     def get_context_data(self, **kwargs):
         context = {}
         if self.object:
