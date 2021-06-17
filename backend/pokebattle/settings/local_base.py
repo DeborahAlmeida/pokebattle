@@ -47,4 +47,6 @@ LOGGING = {
 
 JS_REVERSE_JS_MINIFY = False
 
-FROM_EMAIL = "deborah.mendonca@vinta.com.br"
+FROM_EMAIL = {
+    "default": "deborah.mendonca@vinta.com.br"
+}
