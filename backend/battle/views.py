@@ -71,13 +71,7 @@ class BattleDetail(DetailView):
     template_name = "battle/battle_detail.html"
 
     def get_context_data(self, **kwargs):
-        context = {}
-        if self.object:
-            context['object'] = self.object
-            context_object_name = self.get_context_object_name(self.object)
-            if context_object_name:
-                context[context_object_name] = self.object
+        context = super().get_context_data(**kwargs)
         team = Team.objects.filter(battle=self.object, trainer=self.request.user)
-        kwargs['team'] = team
-        context.update(kwargs)
-        return super().get_context_data(**context)
+        context['team'] = team
+        return context
