@@ -70,11 +70,9 @@
       <h3>On goind Battles</h3>
     {% for battle in battle_list %}
       {% if not battle.winner %}
-        {% if not battle.opponent == user %}
         <li class="item">
           <a class="battle_ongoing" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
         </li>
-        {% endif %}
       {% endif %}
     {% endfor %}
     </div>
