@@ -72,6 +72,17 @@ class BattleDetail(DetailView):
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
-        team = Team.objects.filter(battle=self.object, trainer=self.request.user)
-        context = self.get_context_data(object=self.object, team=team)
+        context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        if self.object:
+            context['object'] = self.object
+            context_object_name = self.get_context_object_name(self.object)
+            if context_object_name:
+                context[context_object_name] = self.object
+        team = Team.objects.filter(battle=self.object, trainer=self.request.user)
+        kwargs['team'] = team
+        context.update(kwargs)
+        return super().get_context_data(**context)
