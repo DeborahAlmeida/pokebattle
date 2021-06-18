@@ -1,7 +1,7 @@
 from django import forms
 from pokemon.models import Pokemon
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import validate_sum_pokemons
+from battle.battles.battle import validate_sum_pokemons, get_pokemon_object
 
 
 class BattleForm(forms.ModelForm):
@@ -70,9 +70,9 @@ class TeamForm(forms.ModelForm):
         data = self.clean()
         instance = super().save()
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=Pokemon.objects.get(pokemon_id=data['pokemon_1']), order=1)
+                                   pokemon=get_pokemon_object(data['pokemon_1']), order=1)
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=Pokemon.objects.get(pokemon_id=data['pokemon_2']), order=2)
+                                   pokemon=get_pokemon_object(data['pokemon_2']), order=2)
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=Pokemon.objects.get(pokemon_id=data['pokemon_3']), order=3)
+                                   pokemon=get_pokemon_object(data['pokemon_3']), order=3)
         return instance

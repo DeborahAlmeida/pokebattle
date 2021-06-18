@@ -80,3 +80,8 @@ def set_winner(winner, battle):
     battle.winner = winner
     battle.save()
     result_battle(battle)
+
+
+def get_pokemon_object(pokemon_id):
+    pokemon_object = Pokemon.objects.get(pokemon_id=pokemon_id)
+    return pokemon_object
