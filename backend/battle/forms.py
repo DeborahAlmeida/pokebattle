@@ -1,5 +1,4 @@
 from django import forms
-from pokemon.models import Pokemon
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, get_pokemon_object
 
