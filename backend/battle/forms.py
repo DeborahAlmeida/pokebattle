@@ -70,7 +70,7 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_3']
             ]
         )
-        
+
         cleaned_data['pokemon_1_object'] = get_pokemon_object(cleaned_data['pokemon_1'])
         cleaned_data['pokemon_2_object'] = get_pokemon_object(cleaned_data['pokemon_2'])
         cleaned_data['pokemon_3_object'] = get_pokemon_object(cleaned_data['pokemon_3'])
