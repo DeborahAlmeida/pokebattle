@@ -1,8 +1,7 @@
 from battle.battles.rounds import run_round
 from battle.battles.email import result_battle
-from pokemon.models  import Pokemon
+from pokemon.models import Pokemon
 from pokemon.helpers import get_pokemon_from_api
-
 
 
 def run_battle(battle):
@@ -72,14 +71,12 @@ def sum_points_pokemon_on_database(pokemon):
 def create_pokemon_on_database(pokemon):
     data_from_api_save = get_pokemon_from_api(pokemon)
     Pokemon.objects.create(pokemon_id=pokemon, name=data_from_api_save['name'],
-                           attack=data_from_api_save['attack'], defense=data_from_api_save['defense'], hp=data_from_api_save['hp'] )
+                           attack=data_from_api_save['attack'],
+                           defense=data_from_api_save['defense'],
+                           hp=data_from_api_save['hp'])
 
 
 def set_winner(winner, battle):
     battle.winner = winner
     battle.save()
     result_battle(battle)
-#         on_database = get_object_or_404(Pokemon, pokemon_id=pokemon)
-
-# pokemon_saved = Pokemon.objects.create(pokemon_id=pokemon, name=data_from_api['name'],
-#                                                   attack=data_from_api['attack'], defense=data_from_api['defense'], hp=data_from_api['hp'] )
