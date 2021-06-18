@@ -30,19 +30,16 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = forms.ModelChoiceField(
+    pokemon_1 = forms.IntegerField(
         label="Pokemon 1",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_2 = forms.ModelChoiceField(
+    pokemon_2 = forms.IntegerField(
         label="Pokemon 2",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_3 = forms.ModelChoiceField(
+    pokemon_3 = forms.IntegerField(
         label="Pokemon 3",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
 
@@ -72,7 +69,7 @@ class TeamForm(forms.ModelForm):
     def save(self, commit=True):
         data = self.clean()
         instance = super().save()
-        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_1'], order=1)
-        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_2'], order=2)
-        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_3'], order=3)
+        PokemonTeam.objects.create(team=instance, pokemon=Pokemon.objects.get(pokemon_id=data['pokemon_1']), order=1)
+        PokemonTeam.objects.create(team=instance, pokemon=Pokemon.objects.get(pokemon_id=data['pokemon_2']), order=2)
+        PokemonTeam.objects.create(team=instance, pokemon=Pokemon.objects.get(pokemon_id=data['pokemon_3']), order=3)
         return instance
