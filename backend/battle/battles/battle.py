@@ -38,11 +38,10 @@ def validate_sum_pokemons(pokemons):
 
 
 def verify_pokemon_is_saved(pokemons):
-    pokemons_not_saved = []
     for pokemon in pokemons:
         on_database = verify_pokemon_exists_on_database(pokemon)
         if not on_database:
-            create_pokemon_on_database(pokemon)    
+            create_pokemon_on_database(pokemon)
 
 
 def verify_pokemon_exists_on_database(pokemon):

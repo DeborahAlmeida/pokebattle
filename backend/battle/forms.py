@@ -62,24 +62,27 @@ class TeamForm(forms.ModelForm):
 
         if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
-        else:
-            verify_pokemon_is_saved(
-                [
-                    cleaned_data['pokemon_1'],
-                    cleaned_data['pokemon_2'],
-                    cleaned_data['pokemon_3']
-                ]
-            )
 
+        verify_pokemon_is_saved(
+            [
+                cleaned_data['pokemon_1'],
+                cleaned_data['pokemon_2'],
+                cleaned_data['pokemon_3']
+            ]
+        )
+        
+        cleaned_data['pokemon_1_object'] = get_pokemon_object(cleaned_data['pokemon_1'])
+        cleaned_data['pokemon_2_object'] = get_pokemon_object(cleaned_data['pokemon_2'])
+        cleaned_data['pokemon_3_object'] = get_pokemon_object(cleaned_data['pokemon_3'])
         return cleaned_data
 
     def save(self, commit=True):
         data = self.clean()
         instance = super().save()
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=get_pokemon_object(data['pokemon_1']), order=1)
+                                   pokemon=data['pokemon_1_object'], order=1)
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=get_pokemon_object(data['pokemon_2']), order=2)
+                                   pokemon=data['pokemon_2_object'], order=2)
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=get_pokemon_object(data['pokemon_3']), order=3)
+                                   pokemon=data['pokemon_3_object'], order=3)
         return instance
