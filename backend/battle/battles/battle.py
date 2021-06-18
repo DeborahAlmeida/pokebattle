@@ -31,27 +31,18 @@ def get_winner_for(team_creator, team_opponent):
 
 
 def validate_sum_pokemons(pokemons):
-    pokemons_saved = []
-    total_api_pokemon_point = 0
-    pokemons_not_saved = []
     total_points = 0
+    for pokemon in pokemons:
+        total_points += sum_point_from_api(pokemon)
+    return total_points <= 600
+
+
+def verify_pokemon_is_saved(pokemons):
+    pokemons_not_saved = []
     for pokemon in pokemons:
         on_database = verify_pokemon_exists_on_database(pokemon)
         if not on_database:
-            pokemons_not_saved.append(pokemon)
-            each_api_pokemon_point = sum_point_from_api(pokemon)
-            total_api_pokemon_point += each_api_pokemon_point
-        else:
-            pokemons_saved.append(on_database)
-    for pokemon in pokemons_saved:
-        pokemon_point = sum_points_pokemon_on_database(pokemon)
-        total_points += pokemon_point
-    if total_api_pokemon_point:
-        total_points += total_api_pokemon_point
-    if total_points <= 600:
-        for pokemon in pokemons_not_saved:
-            create_pokemon_on_database(pokemon)
-    return total_points <= 600
+            create_pokemon_on_database(pokemon)    
 
 
 def verify_pokemon_exists_on_database(pokemon):

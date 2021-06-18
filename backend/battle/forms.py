@@ -1,6 +1,6 @@
 from django import forms
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import validate_sum_pokemons, get_pokemon_object
+from battle.battles.battle import validate_sum_pokemons, get_pokemon_object, verify_pokemon_is_saved
 
 
 class BattleForm(forms.ModelForm):
@@ -62,6 +62,14 @@ class TeamForm(forms.ModelForm):
 
         if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
+        else:
+            verify_pokemon_is_saved(
+                [
+                    cleaned_data['pokemon_1'],
+                    cleaned_data['pokemon_2'],
+                    cleaned_data['pokemon_3']
+                ]
+            )
 
         return cleaned_data
 
