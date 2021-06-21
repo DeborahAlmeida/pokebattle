@@ -67,3 +67,9 @@ class BattleList(ListView):
 class BattleDetail(DetailView):
     model = Battle
     template_name = "battle/battle_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        team = Team.objects.filter(battle=self.object, trainer=self.request.user)
+        context['team'] = team
+        return context
