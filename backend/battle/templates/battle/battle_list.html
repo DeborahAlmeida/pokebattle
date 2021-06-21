@@ -65,29 +65,14 @@
       {% endfor %}
   
     </div>
-  
-    <div class="wwaiting_you">
-      <h3>Waiting for you</h3>
-    {% for battle in battle_list %}
-      {% if not battle.winner %}
-        {% if battle.opponent == user %}
-        <li class="item">
-          <a class="battle_ongoing" href="{% url 'team_create' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
-        </li>
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-    </div>
 
     <div class="your_opponent">
-      <h3>Waiting your opponent</h3>
+      <h3>On goind Battles</h3>
     {% for battle in battle_list %}
       {% if not battle.winner %}
-        {% if not battle.opponent == user %}
         <li class="item">
           <a class="battle_ongoing" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
         </li>
-        {% endif %}
       {% endif %}
     {% endfor %}
     </div>
