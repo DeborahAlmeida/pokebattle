@@ -1,7 +1,6 @@
 from django import forms
-from pokemon.models import Pokemon
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import validate_sum_pokemons
+from battle.battles.battle import validate_sum_pokemons, get_pokemon_object, verify_pokemon_is_saved
 
 
 class BattleForm(forms.ModelForm):
@@ -30,19 +29,16 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = forms.ModelChoiceField(
+    pokemon_1 = forms.IntegerField(
         label="Pokemon 1",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_2 = forms.ModelChoiceField(
+    pokemon_2 = forms.IntegerField(
         label="Pokemon 2",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
-    pokemon_3 = forms.ModelChoiceField(
+    pokemon_3 = forms.IntegerField(
         label="Pokemon 3",
-        queryset=Pokemon.objects.all(),
         required=True,
     )
 
@@ -67,12 +63,26 @@ class TeamForm(forms.ModelForm):
         if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
+        verify_pokemon_is_saved(
+            [
+                cleaned_data['pokemon_1'],
+                cleaned_data['pokemon_2'],
+                cleaned_data['pokemon_3']
+            ]
+        )
+
+        cleaned_data['pokemon_1_object'] = get_pokemon_object(cleaned_data['pokemon_1'])
+        cleaned_data['pokemon_2_object'] = get_pokemon_object(cleaned_data['pokemon_2'])
+        cleaned_data['pokemon_3_object'] = get_pokemon_object(cleaned_data['pokemon_3'])
         return cleaned_data
 
     def save(self, commit=True):
         data = self.clean()
         instance = super().save()
-        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_1'], order=1)
-        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_2'], order=2)
-        PokemonTeam.objects.create(team=instance, pokemon=data['pokemon_3'], order=3)
+        PokemonTeam.objects.create(team=instance,
+                                   pokemon=data['pokemon_1_object'], order=1)
+        PokemonTeam.objects.create(team=instance,
+                                   pokemon=data['pokemon_2_object'], order=2)
+        PokemonTeam.objects.create(team=instance,
+                                   pokemon=data['pokemon_3_object'], order=3)
         return instance
