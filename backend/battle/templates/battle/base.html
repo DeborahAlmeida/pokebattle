@@ -169,13 +169,12 @@
 
         }
         .user{
-            margin-left:90%;
+            margin-left:85%;
         }
         .img_user{
             width: 30px;
             height: 30px;
             border-radius: 50%;
-
         }
         .p_user{
             font-size: 12px;
@@ -190,12 +189,14 @@
         </style>
 </head>
 <body>
+    {% if user.is_authenticated %}
     <div class="user">
         <a class ="anchor_user" href="{% url 'battle_list' %}">
-            <img class="img_user" src="https://www.pngjoy.com/pngm/136/2750635_gray-circle-login-user-icon-png-transparent-png.png">
-            <p class="p_user">Visualizar Perfil</p>
+            <img class="img_user" src="https://s2.coinmarketcap.com/static/img/coins/200x200/8303.png">
+            <p class="p_user">{{user}}</p>
         </a>
     </div>
+    {% endif %}
     <div class="container1" id="home">
         <h1>Welcome to Poke Battle!</h1>
         <h2>Choose your pokemons and fight!</h2>

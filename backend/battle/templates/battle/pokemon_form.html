@@ -31,7 +31,7 @@
         }
         
         .container2{
-            height:550px;
+            height:580px;
             background-color: white;
             border-radius: 10px;
             display: flex;
@@ -40,10 +40,11 @@
 
         }
         .button_next{
-            width: 70px;
-            height: 40px;
-            font-size: 20px;
+            width: 90px;
+            height: 50px;
+            font-size: 24px;
             margin: 0px auto;
+            margin-top:40px;
             background-color: #8f00cc;
             border: 4px solid  #8f00cc;
             border-radius: 10px;
@@ -56,12 +57,12 @@
 
         }
         .button_next:hover{
-            width:90px;
-            height: 50px;
+            width:100px;
+            height: 60px;
             background-color: white;
             color: #8f00cc;
             transition: 0.2s;
-            font-size: 22px;
+            font-size: 26px;
 
         }
         .text_button{
@@ -104,7 +105,6 @@
         .container_select{
             display: flex;
             flex-direction: column;
-            /*border: 2px solid black;*/
             justify-content: center;
             align-items: center;
             background-color: white;
@@ -163,10 +163,6 @@
             color: black;
             margin-top: -20px;
         }
-        .battle-form{
-            display: flex;
-            flex-direction: column;
-        }
         .select{
             display: flex;
         }
@@ -191,6 +187,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            margin-top: 40px;
         }
         .error{
             background-color: white;
@@ -201,8 +198,6 @@
     
 <body>
     <div class="container1" id="home">
-        <h1>Welcome to Poke Battle!</h1>
-        <h2>Choose your pokemons and fight!</h2>
         <div>
             {% if message %}
                     <p class="error">{{message}}</p>
@@ -213,7 +208,7 @@
             <img class="pokemon_img"  src="https://img.ibxk.com.br/2019/09/30/30091641838086.jpg?w=1120&h=420&mode=crop&scale=both
         " alt="pokemon">
         <div class="teste">
-            <p class="title_battle">Trainer 1</p>
+            <p class="title_battle">Trainer</p>
             <p class="subtitle_battle">Choose your pokemons!</p>
             <form method="POST" class="battle-form">{% csrf_token %}
                 {{ form.as_p }}
