@@ -8,6 +8,8 @@ from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm
 from battle.battles.battle import run_battle, set_winner
 
+from users.models import User
+
 
 class Home(TemplateView):
     template_name = 'battle/home.html'
@@ -73,3 +75,7 @@ class BattleDetail(DetailView):
         team = Team.objects.filter(battle=self.object, trainer=self.request.user)
         context['team'] = team
         return context
+
+
+class BattleSignUp(CreateView):
+    model = User

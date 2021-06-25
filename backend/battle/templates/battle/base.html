@@ -196,6 +196,13 @@
             <p class="p_user">{{user}}</p>
         </a>
     </div>
+    {% else %}
+    <div class="user">
+        <a class ="anchor_user" href="{% url 'signup' %}">
+            <img class="img_user" style="width:60px; height:60px" src="https://www.greatmining.com/images/signup.png">
+            <p class="p_user" style="font-weight: bold;">SIGN UP</p>
+        </a>
+    </div>
     {% endif %}
     <div class="container1" id="home">
         <h1>Welcome to Poke Battle!</h1>
