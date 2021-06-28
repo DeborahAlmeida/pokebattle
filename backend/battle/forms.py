@@ -105,6 +105,4 @@ class UserForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'password1' ,'password2' )
-
-
+        fields = ('email', 'password1', 'password2', )
