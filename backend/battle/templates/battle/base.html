@@ -9,9 +9,10 @@
     <style>
         body{
             padding: 0px;
-            background: #1488CC;  /* fallback for old browsers */
             font-family: Arial, Helvetica, sans-serif;
-
+            background-image: url('https://data.whicdn.com/images/309000416/original.gif');
+            background-repeat: no-repeat;
+            background-size: cover;
 
         }
         .container1 {
@@ -32,12 +33,14 @@
         }
         
         .container2{
-            height:400px;
+            height:300px;
             background-color: white;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
             box-shadow: 1px 7px 20px -6px #18092B;
+            width:400px;
+            margin-top: 80px;
 
         }
 
@@ -46,8 +49,8 @@
             height: 70px;
             font-size: 30px;
             margin: 60px auto;
-            background-color: #fb8603;
-            border: 4px solid  #fb8603;
+            background-color: #b64a7e;
+            border: 4px solid  #b64a7e;
             border-radius: 10px;
             color: rgba(255, 255, 255, 0.925);
             font-weight: bolder;
@@ -61,7 +64,7 @@
             width:330px;
             height: 80px;
             background-color: white;
-            color: #fb8603;
+            color: #b64a7e;
             transition: 0.2s;
             font-size: 32px;
 
@@ -90,7 +93,7 @@
 
         }
         .select{
-            color: #fb8603;
+            color: #b64a7e;
             font-size: 24px;
             font-weight: bolder;
             text-align: center;
@@ -199,18 +202,17 @@
     {% else %}
     <div class="user">
         <a class ="anchor_user" href="{% url 'signup' %}">
-            <img class="img_user" style="width:60px; height:60px" src="https://www.greatmining.com/images/signup.png">
+            <img class="img_user" style="width:50px; height:50px" src="https://www.greatmining.com/images/signup.png">
             <p class="p_user" style="font-weight: bold;">SIGN UP</p>
         </a>
     </div>
     {% endif %}
     <div class="container1" id="home">
-        <h1>Welcome to Poke Battle!</h1>
-        <h2>Choose your pokemons and fight!</h2>
-
         <div class="container2">
-            <img class="pokemon_img"  src="https://img.ibxk.com.br/2019/09/30/30091641838086.jpg?w=1120&h=420&mode=crop&scale=both
-        " alt="pokemon">
+            <div style="font-size: 12px; margin: 0px auto; margin-top:20px; margin-bottom: -50px;">
+                <h1 style="color:black">Welcome to Poke Battle!</h1>
+                <h2 style="color:black">Choose your pokemons and fight!</h2>
+            </div>
             {% block content %}
             {% endblock %}
         </div>
