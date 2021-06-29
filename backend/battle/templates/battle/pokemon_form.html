@@ -10,43 +10,6 @@
     <style>
         body{
             background-image: url('https://wallpapercave.com/wp/wp8797776.png');
-
-        }
-        .container1 {
-          color: white;
-          margin: 20px;
-          padding: 20px;
-          justify-content: center;
-          align-items: center;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .container2{
-            height:480px;
-            background-color: white;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 1px 7px 20px -6px #18092B;
-            margin-top: 60px;
-
-        }
-        h2{
-            margin-top: -10px;
-            margin-bottom: 50px;
-            font-weight: lighter;
-        }
-        .teste{
-            width:400px;
-            color: black;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .battle-form{
-            margin-top: 40px;
         }
         </style>
     
@@ -58,11 +21,11 @@
             {% endif %}
         </div>
 
-        <div class="container2">
-        <div class="teste">
+        <div class="container2 container2-pokemon">
+        <div class="pokemon">
             <p class="title_battle">Trainer</p>
             <p class="subtitle_battle">Choose your pokemons!</p>
-            <form method="POST" class="battle-form">{% csrf_token %}
+            <form method="POST" class="battle-form battle-form-pokemon">{% csrf_token %}
                 {{ form.as_p }}
                             
                 <button type="submit" class="button_next">Next</button>

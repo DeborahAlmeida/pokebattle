@@ -236,3 +236,97 @@ h2{
 .home{
     margin: 20px auto;
 }
+.p_user{
+    font-weight: bold;
+}
+.container1-low{
+    margin-top: 80px;
+  }
+.container2-bigger{
+    height:380px;
+}
+.text{
+    font-size: 12px;
+    margin: 0px auto;
+    margin-top:20px;
+    margin-bottom: -50px;
+    color: black;
+}
+.battle_container_detail{
+    background-color: white;
+    margin: auto;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    width:1000px;
+    border-radius: 20px; 
+}  
+.subtitle_detail{
+    font-size: 16px;
+    font-weight: normal;
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+.img_detail{
+    margin-top: -10px; 
+    margin-bottom: 10px;
+}
+.link_home_detail{
+    margin: 20px auto;
+}
+.list_battle{
+    list-style: none;
+    margin-left: -40px;
+    display: flex;
+    width:700px;
+    justify-content: space-between;
+}
+.battle_container{
+    background-color: white;
+    margin: auto;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    width:1000px;
+    border-radius: 20px; 
+}
+.battle_ongoing, .battle_settled{
+    text-decoration: none;
+    background-color: #fb8603;
+    color: black;
+    padding: 6px;
+    border-radius: 6px;
+}
+.battle_settled{
+    background-color: #10c20a;
+}
+.item{
+    margin-bottom: 20px;
+}
+.subtitle{
+    font-size: 16px;
+    font-weight: normal;
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+.container2-pokemon{
+    height:480px;
+    margin-top: 60px;
+}
+.pokemon{
+    width:400px;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.battle-form-pokemon{
+    margin-top: 40px;
+}

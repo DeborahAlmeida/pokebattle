@@ -12,23 +12,17 @@
         body{
             background-image: url('https://i.pinimg.com/originals/ca/e0/1a/cae01ab5cce960db0d7819cc96e97ce8.png');
         }
-        .container1 {
-          margin-top: 100px;
-        }
-        .container2{
-            height:380px;
-        }
     </style>
     
 <body>
-    <div class="container1" id="home">
+    <div class="container1 container1-low" id="home">
         <div>
             {% if message %}
                     <p class="error">{{message}}</p>
             {% endif %}
         </div>
 
-        <div class="container2">
+        <div class="container2 container2">
         <div class="div_trainer">
             <p class="title_battle">Trainer</p>
             <p class="subtitle_battle">Choose your opponent!</p>
