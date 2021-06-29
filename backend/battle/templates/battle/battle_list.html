@@ -1,49 +1,38 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Pokebattle</title>
-  <link rel="stylesheet" href="{% static './css/style.css' %}" >
-  <style>
-    body{
-        background-image: url('https://pbs.twimg.com/media/DVMT-6OXcAE2rZY.jpg');
-    }
-  </style>
-</head>
-<body>
-  <div class="battle_container">
-    <h1>Your battles</h1>
-    <h2 class="subtitle">Click to see more information</h2>
-  {% if battle_list %}
-  <ul class="list_battle">
-    <div class="settled">
-      <h3>Settled battles</h3>
-      {% for battle in battle_list %}
-        {% if battle.winner %}
-        <li class="item">
-          <a class="battle_settled" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
-        </li>
-        {% endif %}
-      {% endfor %}
-  
-    </div>
+{% extends "battle/base.html" %}
 
-    <div class="your_opponent">
-      <h3>On goind Battles</h3>
+{% block content %}
+<div class="battle_container battle_container-list">
+  <h1>Your battles</h1>
+  <h2 class="subtitle">Click to see more information</h2>
+{% if battle_list %}
+<ul class="list_battle">
+  <div class="settled">
+    <h3>Settled battles</h3>
     {% for battle in battle_list %}
-      {% if not battle.winner %}
-        <li class="item">
-          <a class="battle_ongoing" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
-        </li>
+      {% if battle.winner %}
+      <li class="item">
+        <a class="battle_settled" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
+      </li>
       {% endif %}
     {% endfor %}
-    </div>
-  </ul>
-  {% else %}
-    <p>There are no battle in the database.</p>
-  {% endif %} 
 
   </div>
-  
-</body>
-</html>
+
+  <div class="your_opponent">
+    <h3>On goind Battles</h3>
+  {% for battle in battle_list %}
+    {% if not battle.winner %}
+      <li class="item">
+        <a class="battle_ongoing" href="{% url 'battle_detail' pk=battle.pk %}">Battle ID {{ battle.pk }}</a> 
+      </li>
+    {% endif %}
+  {% endfor %}
+  </div>
+</ul>
+{% else %}
+  <p>There are no battle in the database.</p>
+{% endif %} 
+
+</div>
+
+{% endblock %}

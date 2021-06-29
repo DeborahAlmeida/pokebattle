@@ -1,7 +1,13 @@
 {% extends "battle/base.html" %}
 
 {% block content %}
-    <a class="button_battle"  href="{% url 'battle' %}" role="button">
-        <p class="text_button">Create new battle</p>
-    </a>  
+    <div class="container2">
+        <div class="text">
+            <h1>Welcome to Poke Battle!</h1>
+            <h2>Choose your pokemons and fight!</h2>
+        </div>
+        <a class="button_battle"  href="{% url 'battle' %}" role="button">
+            <p class="text_button">Create new battle</p>
+        </a>
+
 {% endblock %}

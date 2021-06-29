@@ -1,33 +1,23 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Pokebattle</title>
-  <link rel="stylesheet" href="{% static 'css/style.css' %}" >
-  <style>
-    body{
-        background-image: url('https://pbs.twimg.com/media/DVMT-6OXcAE2rZY.jpg');
-    }
-  </style>
-</head>
-<body>
-  <div class="battle_container_detail">
-    <h1>Battle information</h1>
-    <h2 class="subtitle_detail">Creator: {{battle.creator}}</h2> 
-    <h2 class="subtitle_detail">Opponent: {{battle.opponent}}</h2> 
-    {% if battle.winner %}
-        <img width=60 height=60 class="img_detail" src="https://image.flaticon.com/icons/png/512/2119/2119019.png" alt="trofeu">
-        <h2 class="subtitle_detail">The winner is {{battle.winner}}</h2> 
-    {% endif %}
-    {% if not team %}
-        <a class="button_battle"  href="{% url 'team_create' pk=battle.pk %}" role="button">
-          <p class="text_button">Create your team</p>
-        </a> 
-    {% endif %}
-    <a href="{% url 'home' %}" class="link_home_detail">
-      <img width=60 height=60 src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
-    </a>
-  </div>
-  
-</body>
-</html>
+{% extends "battle/base.html" %}
+
+{% block content %}
+<div class="battle_container_detail">
+  <h1>Battle information</h1>
+  <h2 class="subtitle_detail">Creator: {{battle.creator}}</h2> 
+  <h2 class="subtitle_detail">Opponent: {{battle.opponent}}</h2> 
+  {% if battle.winner %}
+      <img width=60 height=60 class="img_detail" src="https://image.flaticon.com/icons/png/512/2119/2119019.png" alt="trofeu">
+      <h2 class="subtitle_detail">The winner is {{battle.winner}}</h2> 
+  {% endif %}
+  {% if not team %}
+      <a class="button_battle button_battle_detail"  href="{% url 'team_create' pk=battle.pk %}" role="button">
+        <p class="text_button text_button_detail">Create your team</p>
+      </a> 
+  {% endif %}
+  <a href="{% url 'home' %}" class="link_home_detail">
+    <img width=60 height=60 src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
+  </a>
+</div>
+
+{% endblock %}
+

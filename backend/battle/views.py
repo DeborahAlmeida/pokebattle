@@ -81,7 +81,7 @@ class BattleSignUp(CreateView):
     model = User
     form_class = UserForm
     template_name = "battle/user/signup_form.html"
-    success_url = reverse_lazy("invite")
+    success_url = reverse_lazy("signup_sucess")
 
 
 class SignUpSucess(TemplateView):

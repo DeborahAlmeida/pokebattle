@@ -136,6 +136,7 @@ h2{
     margin-top: 50px;
 
 }
+
 .list{
     color: black;
     margin: 0 auto;
@@ -227,8 +228,9 @@ h2{
 .signup{
     background-color: white;
     width:400px;
-    height:200px;
-    margin-top: -30px;
+    height:100px;
+    margin-top: 10px;
+    margin-bottom: -10px;
 }
 .signup_message{
     margin-top: 10px;
@@ -239,9 +241,7 @@ h2{
 .p_user{
     font-weight: bold;
 }
-.container1-low{
-    margin-top: 80px;
-  }
+
 .container2-bigger{
     height:380px;
 }
@@ -262,7 +262,9 @@ h2{
     flex-direction: column;
     margin-top: 50px;
     width:1000px;
-    border-radius: 20px; 
+    border-radius: 20px;
+    color: black;
+
 }  
 .subtitle_detail{
     font-size: 16px;
@@ -329,4 +331,38 @@ h2{
 }
 .battle-form-pokemon{
     margin-top: 40px;
+}
+.battle_container-list{
+    color: black;
+}
+.button_next_signup{
+    margin: 10px auto;
+}
+.battle_form_signup{
+    width:200px;
+    margin: 0px auto;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+}
+.container2_signup{
+    height:500px;
+    margin-top: 10px;
+}
+.container1-pokemon{
+    margin-top: -50px;
+}
+.button_battle_detail{
+    margin-top: -10px;
+    width: 150px;
+    height: 35px;
+    font-size: 16px;
+}
+.button_battle_detail:hover{
+    width: 180px;
+    height: 45px;
+    font-size: 20px;
+}
+.text_button_detail{
+    margin-top: 10px;
 }

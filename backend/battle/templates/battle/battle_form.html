@@ -1,40 +1,25 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poke Battle</title>
-    <link rel="stylesheet" href="{% static './css/style.css' %}" >
+{% extends "battle/base.html" %}
 
-    <style>
-        body{
-            background-image: url('https://i.pinimg.com/originals/ca/e0/1a/cae01ab5cce960db0d7819cc96e97ce8.png');
-        }
-    </style>
-    
-<body>
-    <div class="container1 container1-low" id="home">
-        <div>
-            {% if message %}
-                    <p class="error">{{message}}</p>
-            {% endif %}
-        </div>
-
-        <div class="container2 container2">
-        <div class="div_trainer">
-            <p class="title_battle">Trainer</p>
-            <p class="subtitle_battle">Choose your opponent!</p>
-            <form method="POST" class="battle-form">{% csrf_token %}
-                {{ form.as_p }}
-                            
-                <button type="submit" class="button_next">Next</button>
-            </form>     
-        </div>
-        </div>
-
+{% block content %}
+<div class="container1" id="home">
+    <div>
+        {% if message %}
+                <p class="error">{{message}}</p>
+        {% endif %}
     </div>
-    
-</body>
-</html>
+
+    <div class="container2 container2-bigger">
+    <div class="div_trainer">
+        <p class="title_battle">Trainer</p>
+        <p class="subtitle_battle">Choose your opponent!</p>
+        <form method="POST" class="battle-form">{% csrf_token %}
+            {{ form.as_p }}
+                        
+            <button type="submit" class="button_next">Next</button>
+        </form>     
+    </div>
+    </div>
+
+</div>
+
+{% endblock %}
