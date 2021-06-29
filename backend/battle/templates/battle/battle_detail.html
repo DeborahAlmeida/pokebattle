@@ -26,13 +26,6 @@
       width:1000px;
       border-radius: 20px; 
     }
-    .battle_id{
-      text-decoration: none;
-      background-color: #fb8603;
-      color: black;
-      padding: 6px;
-      border-radius: 6px;
-      }
     .item{
       margin-bottom: 20px;
     }
@@ -68,6 +61,13 @@
     .text_button{
       margin: 20px auto;
     }
+    .img_detail{
+      margin-top: -10px; 
+      margin-bottom: 10px;
+    }
+    .link_home{
+      margin: 20px auto;
+    }
   </style>
 </head>
 <body>
@@ -76,7 +76,7 @@
     <h2 class="subtitle">Creator: {{battle.creator}}</h2> 
     <h2 class="subtitle">Opponent: {{battle.opponent}}</h2> 
     {% if battle.winner %}
-        <img style="width:60px; height:60px; margin-top: -10px; margin-bottom: 10px;" src="https://image.flaticon.com/icons/png/512/2119/2119019.png" alt="trofeu">
+        <img width=60 height=60 class="img_detail" src="https://image.flaticon.com/icons/png/512/2119/2119019.png" alt="trofeu">
         <h2 class="subtitle">The winner is {{battle.winner}}</h2> 
     {% endif %}
     {% if not team %}
@@ -84,8 +84,8 @@
           <p class="text_button">Create your team</p>
         </a> 
     {% endif %}
-    <a href="{% url 'home' %}" style="margin: 20px auto;">
-      <img style="width:60px; height:60px;" src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
+    <a href="{% url 'home' %}" class="link_home">
+      <img width=60 height=60 src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
     </a>
   </div>
   

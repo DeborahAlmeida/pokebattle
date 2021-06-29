@@ -1,16 +1,14 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Pokebattle</title>
+  <link rel="stylesheet" href="{% static './css/style.css' %}" >
   <style>
     body{
-        padding: 0px;
         background-image: url('https://pbs.twimg.com/media/DVMT-6OXcAE2rZY.jpg');
-        background-repeat: no-repeat;
-        background-size: cover;
-        font-family: Arial, Helvetica, sans-serif;
     }
-    .list{
+    .list_battle{
       list-style: none;
       margin-left: -40px;
       display: flex;
@@ -55,7 +53,7 @@
     <h1>Your battles</h1>
     <h2 class="subtitle">Click to see more information</h2>
   {% if battle_list %}
-  <ul class="list">
+  <ul class="list_battle">
     <div class="settled">
       <h3>Settled battles</h3>
       {% for battle in battle_list %}

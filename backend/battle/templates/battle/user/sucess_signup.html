@@ -1,11 +1,10 @@
 {% extends "battle/base.html" %}
 
 {% block content %}
-    <div style="background-color: white; width:400px; height:200px; margin-top: -30px;"></div>
-    <p class="invite" style="margin-top: 10px;">Your account was created sucessfully!</p>
-    <a href="{% url 'home' %}" style="text-decoration: none; width:60px; font-size: 20px; padding: 6px; margin: 0px auto; border-radius: 7px; text-align: center; background-color: #a29ac6; border-color: #a29ac6; color:white; margin-top: 20px;">Login</a>
-    <a href="{% url 'home' %}" style="margin: 20px auto;">
-        <img style="width:60px; height:60px;" src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
+    <div class="signup"></div>
+    <p class="signup_message">Your account was created sucessfully!</p>
+    <a href="{% url 'home' %}" class="home">
+        <img width=60 height=60 src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
     </a>
 
 {% endblock %}

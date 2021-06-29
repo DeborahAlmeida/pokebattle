@@ -20,6 +20,4 @@ urlpatterns = [
     path("battle/detail/<int:pk>/", BattleDetail.as_view(), name="battle_detail"),
     path('signup/', BattleSignUp.as_view(), name='signup'),
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
-
-
 ]
