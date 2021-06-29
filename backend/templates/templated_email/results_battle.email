@@ -4,6 +4,5 @@
   <p>You just finished a battle and the winner is... <strong>{{winner}}</strong> </p>
 
   <p>Thanks for playing Pokebattle! Go battle again!</p>
-  <a href="http://pokebattlefirstproject.herokuapp.com/">Access the application here</a>
 
 {% endblock %}
