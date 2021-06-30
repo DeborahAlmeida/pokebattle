@@ -63,7 +63,8 @@ def create_pokemon_on_database(pokemon):
     Pokemon.objects.create(pokemon_id=pokemon, name=data_from_api_save['name'],
                            attack=data_from_api_save['attack'],
                            defense=data_from_api_save['defense'],
-                           hp=data_from_api_save['hp'])
+                           hp=data_from_api_save['hp'],
+                           img_url=data_from_api_save['img_url'], )
 
 
 def set_winner(winner, battle):
