@@ -1,0 +1,8 @@
+{% block html %}
+  <p>Hello player!</p>
+
+  <p>You was challenged to a battle against <strong>{{creator}}</strong> </p>
+
+  <p>Go battle! Thanks for playing Pokebattle!</p>
+
+{% endblock %}
