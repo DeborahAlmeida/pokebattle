@@ -80,6 +80,8 @@ INSTALLED_APPS = [
     "battle",
     "pokemon",
     'templated_email',
+    'dal_select2',
+    'dal',
 ]
 
 

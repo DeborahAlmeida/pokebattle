@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url
 from .views import (
     Home,
     BattleView,
@@ -8,6 +9,7 @@ from .views import (
     BattleDetail,
     BattleSignUp,
     SignUpSucess,
+    PokemonAutocomplete,
 )
 
 
@@ -20,4 +22,8 @@ urlpatterns = [
     path("battle/detail/<int:pk>/", BattleDetail.as_view(), name="battle_detail"),
     path('signup/', BattleSignUp.as_view(), name='signup'),
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
+    url(r'^pokemon-autocomplete/$',
+        PokemonAutocomplete.as_view(),
+        name='pokemon-autocomplete',
+    ),
 ]

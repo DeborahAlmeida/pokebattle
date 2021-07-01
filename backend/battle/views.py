@@ -3,6 +3,9 @@ from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
+from django.conf import settings
+from urllib.parse import urljoin
+import requests
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
@@ -10,6 +13,10 @@ from battle.battles.battle import run_battle, set_winner
 from battle.battles.email import send_invite_email
 
 from users.models import User
+
+from pokemon.models import Pokemon
+
+from dal import autocomplete
 
 
 class Home(TemplateView):
@@ -88,3 +95,26 @@ class BattleSignUp(CreateView):
 
 class SignUpSucess(TemplateView):
     template_name = "battle/user/sucess_signup.html"
+
+
+class PokemonAutocomplete(autocomplete.Select2QuerySetView):
+    template_name = "battle/teste.html"
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Pokemon.objects.none()
+
+        response = requests.get(urljoin(settings.POKE_API_URL, str(1)))
+        data = response.json()
+        
+        temp = []
+        dictlist = []
+
+        for key, value in data.iteritems():
+            temp = [key,value]
+            dictlist.append(temp)
+        qs = dictlist
+
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+
+        return qs

@@ -6,6 +6,10 @@ from battle.battles.battle import validate_sum_pokemons, get_pokemon_object, ver
 
 from users.models import User
 
+from pokemon.models import Pokemon
+
+from dal import autocomplete
+
 
 class BattleForm(forms.ModelForm):
     class Meta:
@@ -106,3 +110,14 @@ class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2', )
+
+
+class PokemonForm(forms.ModelForm):
+    pokemon_name = forms.ModelChoiceField(
+        queryset=Pokemon.objects.all(),
+        widget=autocomplete.ModelSelect2(url='country-autocomplete')
+    )
+
+    class Meta:
+        model = Pokemon
+        fields = ('__all__')
