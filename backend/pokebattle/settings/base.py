@@ -170,3 +170,7 @@ TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBacke
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
 FROM_EMAIL = config('FROM_EMAIL', default='deborah.mendonca@vinta.com.br')
+
+LOGIN_REDIRECT_URL = '/'
+
+LOGOUT_REDIRECT_URL = '/'
