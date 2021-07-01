@@ -151,6 +151,8 @@ h2{
 }
 .user{
     margin-left:85%;
+    display: flex;
+    flex-direction: column;
 }
 .img_user{
     width: 30px;
@@ -365,4 +367,9 @@ h2{
 }
 .text_button_detail{
     margin-top: 10px;
+}
+.logout{
+    text-align: center;
+    width:50px;
+    margin-left: 70px;
 }

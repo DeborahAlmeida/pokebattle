@@ -15,7 +15,9 @@
             <img class="img_user" src="https://s2.coinmarketcap.com/static/img/coins/200x200/8303.png">
             <p class="p_user">{{user}}</p>
         </a>
-        <p><a href="{% url 'logout' %}">Log Out</a></p>
+        <a class="logout" href="{% url 'logout' %}">
+            <img src="https://image.flaticon.com/icons/png/128/1053/1053210.png" width=40 height=40 alt="">
+        </a>
     </div>
     {% else %}
     <div class="user">
@@ -23,7 +25,9 @@
             <img class="img_user" width=50 height=50 src="https://www.greatmining.com/images/signup.png">
             <p class="p_user">SIGN UP</p>
         </a>
-        <a href="{% url 'login' %}">Log In</a>
+        <a href="{% url 'login' %}">
+            <img src="https://img.flaticon.com/icons/png/512/1055/1055660.png?size=1200x630f&pad=10,10,10,10&ext=png&bg=FFFFFFFF" width=60 height=60 alt="">
+        </a>
     </div>
     {% endif %}
     <div class="container1" id="home">
