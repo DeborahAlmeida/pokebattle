@@ -8,6 +8,8 @@ from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
 from battle.battles.base_stats import verify_team_exists
+from battle.battles.email import send_invite_email
+
 from users.models import User
 
 
@@ -31,6 +33,7 @@ class BattleView(CreateView):
 
     def form_valid(self, form):
         form.save()
+        send_invite_email(form.instance.opponent, form.instance.creator)
         return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
 
