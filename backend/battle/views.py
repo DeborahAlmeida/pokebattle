@@ -5,9 +5,11 @@ from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
 from battle.models import Battle, Team
-from battle.forms import TeamForm, BattleForm
+from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
 from battle.battles.email import send_invite_email
+
+from users.models import User
 
 
 class Home(TemplateView):
@@ -75,3 +77,14 @@ class BattleDetail(DetailView):
         team = Team.objects.filter(battle=self.object, trainer=self.request.user)
         context['team'] = team
         return context
+
+
+class BattleSignUp(CreateView):
+    model = User
+    form_class = UserForm
+    template_name = "battle/user/signup_form.html"
+    success_url = reverse_lazy("signup_sucess")
+
+
+class SignUpSucess(TemplateView):
+    template_name = "battle/user/sucess_signup.html"

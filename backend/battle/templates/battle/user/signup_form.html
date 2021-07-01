@@ -8,18 +8,16 @@
         {% endif %}
     </div>
 
-    <div class="container2 container2-bigger">
+    <div class="container2 container2_signup">
     <div class="div_trainer">
-        <p class="title_battle">Trainer</p>
-        <p class="subtitle_battle">Choose your opponent!</p>
-        <form method="POST" class="battle-form">{% csrf_token %}
+        <p class="title_battle">SignUp Now!</p>
+        <form method="POST" class="battle_form battle_form_signup">{% csrf_token %}
             {{ form.as_p }}
                         
-            <button type="submit" class="button_next">Next</button>
+            <button type="submit" class="button_next button_next_signup">Next</button>
         </form>     
     </div>
     </div>
 
 </div>
-
 {% endblock %}

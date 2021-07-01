@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poke Battle</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" >
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <div class="user">
+        <a class ="anchor_user" href="{% url 'battle_list' %}">
+            <img class="img_user" src="https://s2.coinmarketcap.com/static/img/coins/200x200/8303.png">
+            <p class="p_user">{{user}}</p>
+        </a>
+    </div>
+    {% else %}
+    <div class="user">
+        <a class ="anchor_user" href="{% url 'signup' %}">
+            <img class="img_user" width=50 height=50 src="https://www.greatmining.com/images/signup.png">
+            <p class="p_user">SIGN UP</p>
+        </a>
+    </div>
+    {% endif %}
+    <div class="container1" id="home">
+    
+            {% block content %}
+            {% endblock %}
+    </div>
+    
+</body>
+</html>

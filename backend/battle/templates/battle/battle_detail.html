@@ -1,88 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Pokebattle</title>
-  <style>
-    body{
-        padding: 0px;
-        background: #1488CC;  /* fallback for old browsers */
-        font-family: Arial, Helvetica, sans-serif;
-    }
-    .list{
-      list-style: none;
-      margin-left: -40px;
-    }
-    .battle_container{
-      background-color: white;
-      margin: auto;
-      padding: 20px;
-      justify-content: center;
-      align-items: center;
-      display: flex;
-      flex-direction: column;
-      margin-top: 50px;
-      width:1000px;
-      border-radius: 20px; 
-    }
-    .battle_id{
-      text-decoration: none;
-      background-color: #fb8603;
-      color: black;
-      padding: 6px;
-      border-radius: 6px;
-      }
-    .item{
-      margin-bottom: 20px;
-    }
-    .subtitle{
-      font-size: 16px;
-      font-weight: normal;
-      margin-top: -10px;
-      margin-bottom: 30px;
-    }
-    .button_battle{
-      width: 200px;
-      height: 60px;
-      font-size: 22px;
-      margin: 20px auto;
-      background-color: #7020a6;
-      border: 4px solid  #7020a6;
-      border-radius: 10px;
-      color: rgba(255, 255, 255, 0.925);
-      font-weight: bolder;
-      box-shadow: 1px 1px 14px 0px #7020a6;
-      transition: 0.2s;
-      text-decoration:none; 
-      text-align: center;
-    }
-    .button_battle:hover{
-      width:230px;
-      height: 70px;
-      background-color: white;
-      color: #7020a6;
-      transition: 0.2s;
-      font-size: 24px;
-    }
-    .text_button{
-      margin: 20px auto;
-    }
-  </style>
-</head>
-<body>
-  <div class="battle_container">
-    <h1>Battle information</h1>
-    <h2 class="subtitle">Creator: {{battle.creator}}</h2> 
-    <h2 class="subtitle">Opponent: {{battle.opponent}}</h2> 
-    {% if battle.winner %}
-        <h2 class="subtitle">Winner: {{battle.winner}}</h2> 
-    {% endif %}
-    {% if not team %}
-        <a class="button_battle"  href="{% url 'team_create' pk=battle.pk %}" role="button">
-          <p class="text_button">Create your team</p>
-        </a> 
-    {% endif %}
+{% extends "base.html" %}
 
-  </div>
-  
-</body>
-</html>
+{% block content %}
+<div class="battle_container_detail">
+  <h1>Battle information</h1>
+  <h2 class="subtitle_detail">Creator: {{battle.creator}}</h2> 
+  <h2 class="subtitle_detail">Opponent: {{battle.opponent}}</h2> 
+  {% if battle.winner %}
+      <img width=60 height=60 class="img_detail" src="https://image.flaticon.com/icons/png/512/2119/2119019.png" alt="trofeu">
+      <h2 class="subtitle_detail">The winner is {{battle.winner}}</h2> 
+  {% endif %}
+  {% if not team %}
+      <a class="button_battle button_battle_detail"  href="{% url 'team_create' pk=battle.pk %}" role="button">
+        <p class="text_button text_button_detail">Create your team</p>
+      </a> 
+  {% endif %}
+  <a href="{% url 'home' %}" class="link_home_detail">
+    <img width=60 height=60 src="https://www.pinclipart.com/picdir/big/198-1980058_after-working-out-you-dont-have-to-hop.png" alt="home">
+  </a>
+</div>
+
+{% endblock %}
+

@@ -1,6 +1,10 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, get_pokemon_object, verify_pokemon_is_saved
+
+from users.models import User
 
 
 class BattleForm(forms.ModelForm):
@@ -95,3 +99,10 @@ class TeamForm(forms.ModelForm):
         PokemonTeam.objects.create(team=instance,
                                    pokemon=data['pokemon_3_object'], order=3)
         return instance
+
+
+class UserForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ('email', 'password1', 'password2', )
