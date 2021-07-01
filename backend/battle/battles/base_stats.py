@@ -1,6 +1,7 @@
 from pokemon.helpers import get_pokemon_from_api
 from battle.models import Team
 
+
 def get_total_point_pokemon(data_pokemons):
     pokemon_first = get_pokemon_from_api(data_pokemons[0])
     pokemon_second = get_pokemon_from_api(data_pokemons[1])

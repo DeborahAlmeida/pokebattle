@@ -75,7 +75,7 @@ class BattleDetail(DetailView):
         team_user = Team.objects.filter(battle=self.object, trainer=self.request.user)
         team_creator = verify_team_exists(self.object, self.object.creator)
         team_opponent = verify_team_exists(self.object, self.object.opponent)
-        context['team_creator'] = team_creator   
+        context['team_creator'] = team_creator
         context['team_opponent'] = team_opponent
         context['team_user'] = team_user
         return context
