@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
-from battle.battles.base_stats import verify_team_exists
+from battle.battles.base_stats import get_pokemons_team
 from users.models import User
 
 
@@ -73,10 +73,11 @@ class BattleDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         team_user = Team.objects.filter(battle=self.object, trainer=self.request.user)
-        team_creator = verify_team_exists(self.object, self.object.creator)
-        team_opponent = verify_team_exists(self.object, self.object.opponent)
-        context['team_creator'] = team_creator
-        context['team_opponent'] = team_opponent
+        pokemons_creator = get_pokemons_team(self.object, self.object.creator)
+        pokemons_opponent = get_pokemons_team(self.object, self.object.opponent)
+
+        context['pokemons_creator'] = pokemons_creator
+        context['pokemons_opponent'] = pokemons_opponent
         context['team_user'] = team_user
         return context
 

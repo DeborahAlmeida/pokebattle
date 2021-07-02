@@ -36,13 +36,13 @@ def sumValid(pokemon):
     return sum_result
 
 
-def verify_team_exists(battle, trainer):
+def get_pokemons_team(battle, trainer):
     pokemons_team = {
         "pokemon_1": 0,
         "pokemon_2": 0,
         "pokemon_3": 0,
     }
-    team = Team.objects.filter(battle=battle, trainer=trainer)
+    team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer)
     if team:
         pokemons_team_query = team[0].pokemons.all()
         pokemons_team["pokemon_1"] = pokemons_team_query[0]

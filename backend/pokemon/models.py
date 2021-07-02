@@ -8,4 +8,4 @@ class Pokemon(models.Model):
     attack = models.IntegerField()
     defense = models.IntegerField()
     hp = models.IntegerField()
-    img_url = models.CharField(max_length=100, blank=True, )
+    img_url = models.CharField(max_length=255, blank=True, )
