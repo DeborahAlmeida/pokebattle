@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
+from battle.battles.base_stats import get_pokemons_team
 from battle.battles.email import send_invite_email
-
 from users.models import User
 
 
@@ -64,7 +64,7 @@ class BattleList(ListView):
     def get_queryset(self):
         queryset = Battle.objects.filter(
             Q(creator=self.request.user) | Q(opponent=self.request.user)
-        )
+        ).order_by('-id')
         return queryset
 
 
@@ -74,8 +74,17 @@ class BattleDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        team = Team.objects.filter(battle=self.object, trainer=self.request.user)
-        context['team'] = team
+
+        pokemons_creator = get_pokemons_team(self.object, self.object.creator)
+        pokemons_opponent = get_pokemons_team(self.object, self.object.opponent)
+        pokemons_user = None
+        if self.object.creator == self.request.user:
+            pokemons_user = pokemons_creator
+        else:
+            pokemons_user = pokemons_opponent
+        context['pokemons_creator'] = pokemons_creator
+        context['pokemons_opponent'] = pokemons_opponent
+        context['pokemons_user'] = pokemons_user
         return context
 
 
