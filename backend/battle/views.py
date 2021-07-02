@@ -77,7 +77,7 @@ class BattleDetail(DetailView):
 
         pokemons_creator = get_pokemons_team(self.object, self.object.creator)
         pokemons_opponent = get_pokemons_team(self.object, self.object.opponent)
-        pokemons_user = 0
+        pokemons_user = None
         if self.object.creator == self.request.user:
             pokemons_user = pokemons_creator
         else:

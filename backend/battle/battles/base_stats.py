@@ -38,9 +38,9 @@ def sumValid(pokemon):
 
 def get_pokemons_team(battle, trainer):
     pokemons_team = {
-        "pokemon_1": 0,
-        "pokemon_2": 0,
-        "pokemon_3": 0,
+        "pokemon_1": None,
+        "pokemon_2": None,
+        "pokemon_3": None,
     }
     team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer)
     if team:
