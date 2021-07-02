@@ -9,15 +9,15 @@
       <img width=60 height=60 class="img_detail" src="https://image.flaticon.com/icons/png/512/2119/2119019.png" alt="trofeu">
       <h2 class="subtitle_detail">The winner is {{battle.winner}}</h2> 
   {% endif %}
-  {% if not team_user %}
+  {% if pokemons_user == False %}
       <a class="button_battle button_battle_detail"  href="{% url 'team_create' pk=battle.pk %}" role="button">
         <p class="text_button text_button_detail">Create your team</p>
-      </a> 
+      </a>
   {% endif %}
   <div class="pokemons_info">
     <div>
       <p class="text_trainer">Creator</p>
-      {% if pokemons_creator.pokemon_1 != 0 %}
+      {% if pokemons_creator != False %}
         <div class="content_card">
           <div class="card_pokemon">
             <img src="{{pokemons_creator.pokemon_1.img_url}}" width=60 height=60>
@@ -80,7 +80,7 @@
     </div>
     <div>
       <p class="text_trainer">Opponent</p>
-      {% if pokemons_opponent.pokemon_1 != 0 %}
+      {% if pokemons_opponent != False %}
         <div>
           <div class="card_pokemon">
             <img src="{{pokemons_opponent.pokemon_1.img_url}}" width=60 height=60>

@@ -48,4 +48,6 @@ def get_pokemons_team(battle, trainer):
         pokemons_team["pokemon_1"] = pokemons_team_query[0]
         pokemons_team["pokemon_2"] = pokemons_team_query[1]
         pokemons_team["pokemon_3"] = pokemons_team_query[2]
-    return pokemons_team
+        return pokemons_team
+    else:
+        return False
