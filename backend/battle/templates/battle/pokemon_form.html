@@ -13,8 +13,35 @@
             <p class="title_battle">Trainer</p>
             <p class="subtitle_battle">Choose your pokemons!</p>
             <form method="POST" class="battle-form battle-form-pokemon">{% csrf_token %}
-                {{ form.as_p }}
-                            
+                <input name="battle" id="battle" value="{{battle}}">
+                <input name="trainer" id="trainer" value="{{trainer}}">
+                <p>
+                    <label for="id_pokemon_1">Pokemon 1:</label>
+                    <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
+                    <datalist id="pokemons" name="pokemon_1">
+                        {% for results in pokemons %}
+                            <option value="{{results.name}}">
+                        {% endfor %}
+                    </datalist>
+                </p>
+                <p>
+                    <label for="id_pokemon_2">Pokemon 2:</label>
+                    <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons">
+                    <datalist id="pokemons" name="pokemon_2">
+                        {% for results in pokemons %}
+                            <option value="{{results.name}}">
+                        {% endfor %}
+                    </datalist>
+                </p>
+                <p>
+                    <label for="id_pokemon_3">Pokemon 3:</label>
+                    <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons">
+                    <datalist id="pokemons" name="pokemon_3">
+                        {% for results in pokemons %}
+                            <option value="{{results.name}}">
+                        {% endfor %}
+                    </datalist>
+                </p>
                 <button type="submit" class="button_next">Next</button>
             </form>     
         </div>

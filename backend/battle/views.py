@@ -11,6 +11,8 @@ from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
 from battle.battles.email import send_invite_email
+from django.utils.html import format_html
+
 
 from users.models import User
 
@@ -49,11 +51,15 @@ class TeamView(CreateView):
     form_class = TeamForm
     success_url = reverse_lazy("invite")
 
-    def get_initial(self):
-        obj_battle = get_object_or_404(Battle, pk=self.kwargs['pk'])
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         obj_trainer = self.request.user
-        self.initial = {"battle": obj_battle, "trainer": obj_trainer}
-        return self.initial
+        pokemons = Pokemon.objects.all()
+
+        context['pokemons'] = pokemons
+        context['battle'] = self.kwargs['pk']
+        context['trainer'] = obj_trainer
+        return context
 
     def form_valid(self, form):
         team = form.save()
@@ -108,7 +114,7 @@ class PokemonAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
     def get_result_label(self, result):
-        return format_html('<img src="{}" height="60px"> {}', result.img_url, result.name)
+        return format_html('{}', result.name)
 
     def get_selected_result_label(self, result):
         return result.name

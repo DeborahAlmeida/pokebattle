@@ -40,27 +40,11 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = forms.ModelChoiceField(
-        queryset=Pokemon.objects.all(),
-        widget=autocomplete.ModelSelect2(url='pokemon-autocomplete',
-                                         attrs={# noqa
-                                        "data-placeholder": "Autocomplete pokemon",
-                                        "data-minimum-input-length": 3,
-                                        "data-html": True,})
-    )
-    pokemon_2 = forms.ModelChoiceField(
-        queryset=Pokemon.objects.all(),
-        widget=autocomplete.ModelSelect2(url='pokemon-autocomplete')
-    )
-    pokemon_3 = forms.ModelChoiceField(
-        queryset=Pokemon.objects.all(),
-        widget=autocomplete.ModelSelect2(url='pokemon-autocomplete')
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(TeamForm, self).__init__(*args, **kwargs)
-        self.fields['battle'].widget = forms.HiddenInput()
-        self.fields['trainer'].widget = forms.HiddenInput()
+    battle = forms.CharField(widget=forms.Textarea)
+    trainer = forms.CharField(widget=forms.Textarea)
+    pokemon_1 = forms.CharField(widget=forms.Textarea)
+    pokemon_2 = forms.CharField(widget=forms.Textarea)
+    pokemon_3 = forms.CharField(widget=forms.Textarea)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -71,8 +55,9 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_3']
             ]
         )
-        obj_battle = cleaned_data['battle']
-        if cleaned_data['trainer'] not in (obj_battle.creator, obj_battle.opponent):
+        cleaned_data['battle_object'] = Battle.objects.get(id=cleaned_data['battle'])
+
+        if cleaned_data['trainer'] not in (cleaned_data['battle_object'].creator, cleaned_data['battle_object'].opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:
