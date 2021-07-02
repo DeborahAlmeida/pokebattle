@@ -40,23 +40,21 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = forms.IntegerField(
-        label="Pokemon 1",
-        required=True,
-        min_value=1,
-        max_value=898,
+    pokemon_1 = forms.ModelChoiceField(
+        queryset=Pokemon.objects.all(),
+        widget=autocomplete.ModelSelect2(url='pokemon-autocomplete',
+                                         attrs={# noqa
+                                        "data-placeholder": "Autocomplete pokemon",
+                                        "data-minimum-input-length": 3,
+                                        "data-html": True,})
     )
-    pokemon_2 = forms.IntegerField(
-        label="Pokemon 2",
-        required=True,
-        min_value=1,
-        max_value=898,
+    pokemon_2 = forms.ModelChoiceField(
+        queryset=Pokemon.objects.all(),
+        widget=autocomplete.ModelSelect2(url='pokemon-autocomplete')
     )
-    pokemon_3 = forms.IntegerField(
-        label="Pokemon 3",
-        required=True,
-        min_value=1,
-        max_value=898,
+    pokemon_3 = forms.ModelChoiceField(
+        queryset=Pokemon.objects.all(),
+        widget=autocomplete.ModelSelect2(url='pokemon-autocomplete')
     )
 
     def __init__(self, *args, **kwargs):
@@ -111,13 +109,3 @@ class UserForm(UserCreationForm):
         model = User
         fields = ('email', 'password1', 'password2', )
 
-
-class PokemonForm(forms.ModelForm):
-    pokemon_name = forms.ModelChoiceField(
-        queryset=Pokemon.objects.all(),
-        widget=autocomplete.ModelSelect2(url='country-autocomplete')
-    )
-
-    class Meta:
-        model = Pokemon
-        fields = ('__all__')

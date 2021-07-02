@@ -100,21 +100,15 @@ class SignUpSucess(TemplateView):
 class PokemonAutocomplete(autocomplete.Select2QuerySetView):
     template_name = "battle/teste.html"
     def get_queryset(self):
-        if not self.request.user.is_authenticated:
-            return Pokemon.objects.none()
-
-        response = requests.get(urljoin(settings.POKE_API_URL, str(1)))
-        data = response.json()
-        
-        temp = []
-        dictlist = []
-
-        for key, value in data.iteritems():
-            temp = [key,value]
-            dictlist.append(temp)
-        qs = dictlist
+        qs = Pokemon.objects.all()
 
         if self.q:
             qs = qs.filter(name__istartswith=self.q)
 
         return qs
+
+    def get_result_label(self, result):
+        return format_html('<img src="{}" height="60px"> {}', result.img_url, result.name)
+
+    def get_selected_result_label(self, result):
+        return result.name
