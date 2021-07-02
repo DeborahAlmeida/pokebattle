@@ -17,11 +17,11 @@ class Home(TemplateView):
     template_name = 'battle/home.html'
 
 
-class Invite(LoginRequiredMixin,TemplateView):
+class Invite(LoginRequiredMixin, TemplateView):
     template_name = 'battle/invite.html'
 
 
-class BattleView(LoginRequiredMixin,CreateView):
+class BattleView(LoginRequiredMixin, CreateView):
     model = Battle
     template_name = 'battle/battle_form.html'
     form_class = BattleForm
@@ -37,7 +37,7 @@ class BattleView(LoginRequiredMixin,CreateView):
         return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
 
-class TeamView(LoginRequiredMixin,CreateView):
+class TeamView(LoginRequiredMixin, CreateView):
     model = Team
     template_name = "battle/pokemon_form.html"
     form_class = TeamForm
@@ -59,7 +59,7 @@ class TeamView(LoginRequiredMixin,CreateView):
         return HttpResponseRedirect(reverse_lazy("invite"))
 
 
-class BattleList(LoginRequiredMixin,ListView):
+class BattleList(LoginRequiredMixin, ListView):
     model = Battle
 
     def get_queryset(self):
@@ -69,7 +69,7 @@ class BattleList(LoginRequiredMixin,ListView):
         return queryset
 
 
-class BattleDetail(LoginRequiredMixin,DetailView):
+class BattleDetail(LoginRequiredMixin, DetailView):
     model = Battle
     template_name = "battle/battle_detail.html"
 
