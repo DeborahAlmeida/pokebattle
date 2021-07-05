@@ -12,6 +12,7 @@ from users.models import User
 
 from pokemon.models import Pokemon
 
+from pokemon.helpers import verify_pokemon_exists_api
 
 class BattleForm(forms.ModelForm):
     class Meta:
@@ -53,14 +54,15 @@ class TeamForm(forms.ModelForm):
         pokemon_1 = self.cleaned_data.get('pokemon_1')
         pokemon_2 = self.cleaned_data.get('pokemon_2')
         pokemon_3 = self.cleaned_data.get('pokemon_3')
+        obj_battle = cleaned_data['battle']
+        obj_trainer = cleaned_data['trainer']
 
         if not pokemon_1 or not pokemon_2 or not pokemon_3:
             raise forms.ValidationError('ERROR: Select all pokemons')
 
-        for pokemon in [pokemon_1, pokemon_2, pokemon_3]:
-            response = requests.get(urljoin(settings.POKE_API_URL, pokemon))
-            if response.status_code == 404:
-                raise forms.ValidationError('ERROR: Type the correct pokemon name ')
+        pokemons_exist = verify_pokemon_exists_api([pokemon_1, pokemon_2, pokemon_3])
+        if not pokemons_exist:
+            raise forms.ValidationError('ERROR: Type the correct pokemons name ')
 
         valid_pokemons = validate_sum_pokemons(
             [
@@ -69,8 +71,7 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_3']
             ]
         )
-
-        if cleaned_data['trainer'] not in (cleaned_data['battle'].creator, cleaned_data['battle'].opponent):
+        if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:
@@ -90,7 +91,7 @@ class TeamForm(forms.ModelForm):
 
     def save(self, commit=True):
         data = self.clean()
-        instance = Team.objects.create(battle=data['battle'], trainer=data['trainer'])
+        instance = super().save()
         PokemonTeam.objects.create(team=instance,
                                    pokemon=data['pokemon_1_object'], order=1)
         PokemonTeam.objects.create(team=instance,

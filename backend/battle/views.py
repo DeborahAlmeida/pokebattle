@@ -49,8 +49,8 @@ class TeamView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         pokemons = Pokemon.objects.all()
         context['pokemons'] = pokemons
-        context['battle'] = self.kwargs['pk']
-        context['trainer'] = self.request.user.id
+        context['battle_pk'] = self.kwargs['pk']
+        context['trainer_pk'] = self.request.user.id
         return context
 
     def form_valid(self, form):
