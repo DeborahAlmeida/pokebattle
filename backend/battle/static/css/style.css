@@ -341,15 +341,20 @@ h2{
     margin: 10px auto;
 }
 .battle_form_signup{
-    width:200px;
+    width:380px;
     margin: 0px auto;
     justify-content: center;
     flex-direction: column;
     display: flex;
 }
 .container2_signup{
-    height:500px;
-    margin-top: 10px;
+    height:600px;
+    width: 600px;
+    margin-top: -70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .container1-pokemon{
     margin-top: -50px;
