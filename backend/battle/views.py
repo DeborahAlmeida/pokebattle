@@ -3,10 +3,6 @@ from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
-from django.conf import settings
-from urllib.parse import urljoin
-import requests
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
@@ -51,7 +47,6 @@ class TeamView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        obj_trainer = self.request.user
         pokemons = Pokemon.objects.all()
         context['pokemons'] = pokemons
         context['battle'] = self.kwargs['pk']

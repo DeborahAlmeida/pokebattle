@@ -4,7 +4,6 @@ from django.conf import settings
 
 
 def get_pokemon_from_api(poke_name):
-    
     response = requests.get(urljoin(settings.POKE_API_URL, poke_name))
     data = response.json()
 

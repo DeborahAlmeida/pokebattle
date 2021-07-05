@@ -1,14 +1,12 @@
 from django import forms
-import requests
 from urllib.parse import urljoin
 import requests
-from urllib.error import HTTPError
 from django.conf import settings
 
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import validate_sum_pokemons, get_pokemon_object, verify_pokemon_is_saved
+from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
 
 from users.models import User
 
@@ -107,4 +105,3 @@ class UserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2', )
-
