@@ -40,46 +40,45 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    battle = forms.CharField(widget=forms.Textarea)
-    trainer = forms.CharField(widget=forms.Textarea)
+    battle = forms.ModelChoiceField(queryset=Battle.objects.all())
+    trainer = forms.ModelChoiceField(queryset=User.objects.all())
     pokemon_1 = forms.CharField(widget=forms.Textarea)
     pokemon_2 = forms.CharField(widget=forms.Textarea)
     pokemon_3 = forms.CharField(widget=forms.Textarea)
 
     def clean(self):
         cleaned_data = super().clean()
+        cleaned_data['pokemon_1_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_1'])
+        cleaned_data['pokemon_2_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_2'])
+        cleaned_data['pokemon_3_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_3'])
+
         valid_pokemons = validate_sum_pokemons(
             [
-                cleaned_data['pokemon_1'],
-                cleaned_data['pokemon_2'],
-                cleaned_data['pokemon_3']
+                cleaned_data['pokemon_1_object'].id,
+                cleaned_data['pokemon_2_object'].id,
+                cleaned_data['pokemon_3_object'].id
             ]
         )
-        cleaned_data['battle_object'] = Battle.objects.get(id=cleaned_data['battle'])
 
-        if cleaned_data['trainer'] not in (cleaned_data['battle_object'].creator, cleaned_data['battle_object'].opponent):
+        if cleaned_data['trainer'] not in (cleaned_data['battle'].creator, cleaned_data['battle'].opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
-        if not valid_pokemons:
+        if  valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
         verify_pokemon_is_saved(
             [
-                cleaned_data['pokemon_1'],
-                cleaned_data['pokemon_2'],
-                cleaned_data['pokemon_3']
+                cleaned_data['pokemon_1_object'].id,
+                cleaned_data['pokemon_2_object'].id,
+                cleaned_data['pokemon_3_object'].id
             ]
         )
 
-        cleaned_data['pokemon_1_object'] = get_pokemon_object(cleaned_data['pokemon_1'])
-        cleaned_data['pokemon_2_object'] = get_pokemon_object(cleaned_data['pokemon_2'])
-        cleaned_data['pokemon_3_object'] = get_pokemon_object(cleaned_data['pokemon_3'])
         return cleaned_data
 
     def save(self, commit=True):
-        print(">>>>>>>>>>>>>OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO>>>>>>>", instance)
         data = self.clean()
-        instance = Team.objects.create(battle=data['battle_object'], trainer=data['trainer'])
+        instance = Team.objects.create(battle=data['battle'], trainer=data['trainer'])
         PokemonTeam.objects.create(team=instance,
                                    pokemon=data['pokemon_1_object'], order=1)
         PokemonTeam.objects.create(team=instance,

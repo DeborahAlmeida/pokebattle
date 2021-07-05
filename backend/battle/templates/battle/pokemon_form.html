@@ -13,8 +13,8 @@
             <p class="title_battle">Trainer</p>
             <p class="subtitle_battle">Choose your pokemons!</p>
             <form method="POST" class="battle-form battle-form-pokemon">{% csrf_token %}
-                <input name="battle" id="battle" value="{{battle}}">
-                <input name="trainer" id="trainer" value="{{trainer}}">
+                <input hidden name="battle" id="battle" value="{{battle}}">
+                <input hidden name="trainer" id="trainer" value="{{trainer}}">
                 <p>
                     <label for="id_pokemon_1">Pokemon 1:</label>
                     <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
