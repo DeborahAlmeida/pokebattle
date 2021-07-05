@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.conf import settings
@@ -25,11 +26,11 @@ class Home(TemplateView):
     template_name = 'battle/home.html'
 
 
-class Invite(TemplateView):
+class Invite(LoginRequiredMixin, TemplateView):
     template_name = 'battle/invite.html'
 
 
-class BattleView(CreateView):
+class BattleView(LoginRequiredMixin, CreateView):
     model = Battle
     template_name = 'battle/battle_form.html'
     form_class = BattleForm
@@ -45,7 +46,7 @@ class BattleView(CreateView):
         return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
 
-class TeamView(CreateView):
+class TeamView(LoginRequiredMixin, CreateView):
     model = Team
     template_name = "battle/pokemon_form.html"
     form_class = TeamForm
@@ -70,7 +71,7 @@ class TeamView(CreateView):
         return HttpResponseRedirect(reverse_lazy("invite"))
 
 
-class BattleList(ListView):
+class BattleList(LoginRequiredMixin, ListView):
     model = Battle
 
     def get_queryset(self):
@@ -80,7 +81,7 @@ class BattleList(ListView):
         return queryset
 
 
-class BattleDetail(DetailView):
+class BattleDetail(LoginRequiredMixin, DetailView):
     model = Battle
     template_name = "battle/battle_detail.html"
 
