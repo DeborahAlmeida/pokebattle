@@ -368,6 +368,18 @@ h2{
 .text_button_detail{
     margin-top: 10px;
 }
+.card_pokemon{
+    background-color: rgb(211, 211, 211);
+    width:130px;
+    height:150px;
+    border-radius: 10px;
+    border: 2px solid #8f00cc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
 .logout{
     text-align: center;
     width:50px;
@@ -436,4 +448,29 @@ h2{
 .container_login{
     height:500px;
     margin-top: -40px;
+}
+
+.content_card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.pokemons_info{
+    display: flex;
+    justify-content: space-between;
+    width:380px;
+}
+.text_trainer{
+    text-align: center;
+}
+.base_stats{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width:120px;
+    margin-top: -8px;
+}
+.base_stats_title{
+    font-size: 11px;
 }

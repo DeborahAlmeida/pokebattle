@@ -1,4 +1,5 @@
 from pokemon.helpers import get_pokemon_from_api
+from battle.models import Team
 
 
 def get_total_point_pokemon(data_pokemons):
@@ -33,3 +34,20 @@ def sum_all_pokemons(pokemons):
 def sumValid(pokemon):
     sum_result = pokemon["attack"] + pokemon["defense"] + pokemon["hp"]
     return sum_result
+
+
+def get_pokemons_team(battle, trainer):
+    pokemons_team = {
+        "pokemon_1": None,
+        "pokemon_2": None,
+        "pokemon_3": None,
+    }
+    team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer)
+    if team:
+        pokemons_team_query = team[0].pokemons.all()
+        pokemons_team["pokemon_1"] = pokemons_team_query[0]
+        pokemons_team["pokemon_2"] = pokemons_team_query[1]
+        pokemons_team["pokemon_3"] = pokemons_team_query[2]
+        return pokemons_team
+    else:
+        return False

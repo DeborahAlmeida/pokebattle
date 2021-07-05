@@ -11,15 +11,12 @@ import requests
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
+from battle.battles.base_stats import get_pokemons_team
 from battle.battles.email import send_invite_email
-from django.utils.html import format_html
-
 
 from users.models import User
 
 from pokemon.models import Pokemon
-
-from dal import autocomplete
 
 
 class Home(TemplateView):
@@ -77,7 +74,7 @@ class BattleList(LoginRequiredMixin, ListView):
     def get_queryset(self):
         queryset = Battle.objects.filter(
             Q(creator=self.request.user) | Q(opponent=self.request.user)
-        )
+        ).order_by('-id')
         return queryset
 
 
@@ -87,8 +84,17 @@ class BattleDetail(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        team = Team.objects.filter(battle=self.object, trainer=self.request.user)
-        context['team'] = team
+
+        pokemons_creator = get_pokemons_team(self.object, self.object.creator)
+        pokemons_opponent = get_pokemons_team(self.object, self.object.opponent)
+        pokemons_user = None
+        if self.object.creator == self.request.user:
+            pokemons_user = pokemons_creator
+        else:
+            pokemons_user = pokemons_opponent
+        context['pokemons_creator'] = pokemons_creator
+        context['pokemons_opponent'] = pokemons_opponent
+        context['pokemons_user'] = pokemons_user
         return context
 
 
@@ -101,20 +107,3 @@ class BattleSignUp(CreateView):
 
 class SignUpSucess(TemplateView):
     template_name = "battle/user/sucess_signup.html"
-
-
-class PokemonAutocomplete(autocomplete.Select2QuerySetView):
-    template_name = "battle/teste.html"
-    def get_queryset(self):
-        qs = Pokemon.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__istartswith=self.q)
-
-        return qs
-
-    def get_result_label(self, result):
-        return format_html('{}', result.name)
-
-    def get_selected_result_label(self, result):
-        return result.name
