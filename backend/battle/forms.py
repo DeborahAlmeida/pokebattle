@@ -1,8 +1,4 @@
 from django import forms
-from urllib.parse import urljoin
-import requests
-from django.conf import settings
-
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
@@ -13,6 +9,7 @@ from users.models import User
 from pokemon.models import Pokemon
 
 from pokemon.helpers import verify_pokemon_exists_api
+
 
 class BattleForm(forms.ModelForm):
     class Meta:
