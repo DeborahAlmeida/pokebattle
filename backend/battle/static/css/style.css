@@ -346,6 +346,7 @@ h2{
     justify-content: center;
     flex-direction: column;
     display: flex;
+    align-items: center;
 }
 .container2_signup{
     height:600px;
