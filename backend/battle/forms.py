@@ -1,4 +1,10 @@
 from django import forms
+import requests
+from urllib.parse import urljoin
+import requests
+from urllib.error import HTTPError
+from django.conf import settings
+
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
@@ -46,32 +52,42 @@ class TeamForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        cleaned_data['pokemon_1_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_1'])
-        cleaned_data['pokemon_2_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_2'])
-        cleaned_data['pokemon_3_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_3'])
+        pokemon_1 = self.cleaned_data.get('pokemon_1')
+        pokemon_2 = self.cleaned_data.get('pokemon_2')
+        pokemon_3 = self.cleaned_data.get('pokemon_3')
+
+        if not pokemon_1 or not pokemon_2 or not pokemon_3:
+            raise forms.ValidationError('ERROR: Select all pokemons')
+
+        for pokemon in [pokemon_1, pokemon_2, pokemon_3]:
+            response = requests.get(urljoin(settings.POKE_API_URL, pokemon))
+            if response.status_code == 404:
+                raise forms.ValidationError('ERROR: Type the correct pokemon name ')
 
         valid_pokemons = validate_sum_pokemons(
             [
-                cleaned_data['pokemon_1_object'].id,
-                cleaned_data['pokemon_2_object'].id,
-                cleaned_data['pokemon_3_object'].id
+                cleaned_data['pokemon_1'],
+                cleaned_data['pokemon_2'],
+                cleaned_data['pokemon_3']
             ]
         )
 
         if cleaned_data['trainer'] not in (cleaned_data['battle'].creator, cleaned_data['battle'].opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
-        if  valid_pokemons:
+        if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
         verify_pokemon_is_saved(
             [
-                cleaned_data['pokemon_1_object'].id,
-                cleaned_data['pokemon_2_object'].id,
-                cleaned_data['pokemon_3_object'].id
+                cleaned_data['pokemon_1'],
+                cleaned_data['pokemon_2'],
+                cleaned_data['pokemon_3']
             ]
         )
-
+        cleaned_data['pokemon_1_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_1'])
+        cleaned_data['pokemon_2_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_2'])
+        cleaned_data['pokemon_3_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_3'])
         return cleaned_data
 
     def save(self, commit=True):

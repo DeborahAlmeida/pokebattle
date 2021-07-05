@@ -13,6 +13,7 @@
             <p class="title_battle">Trainer</p>
             <p class="subtitle_battle">Choose your pokemons!</p>
             <form method="POST" class="battle-form battle-form-pokemon">{% csrf_token %}
+                {{ form.non_field_errors }}
                 <input hidden name="battle" id="battle" value="{{battle}}">
                 <input hidden name="trainer" id="trainer" value="{{trainer}}">
                 <p>
