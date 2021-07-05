@@ -8,8 +8,6 @@ from users.models import User
 
 from pokemon.models import Pokemon
 
-from dal import autocomplete
-
 
 class BattleForm(forms.ModelForm):
     class Meta:
