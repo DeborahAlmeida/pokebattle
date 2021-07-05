@@ -40,8 +40,8 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    battle = forms.ModelChoiceField(queryset=Battle.objects.all())
-    trainer = forms.ModelChoiceField(queryset=User.objects.all())
+    battle = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Battle.objects.all())
+    trainer = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=User.objects.all())
     pokemon_1 = forms.CharField(widget=forms.Textarea)
     pokemon_2 = forms.CharField(widget=forms.Textarea)
     pokemon_3 = forms.CharField(widget=forms.Textarea)

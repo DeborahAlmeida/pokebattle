@@ -45,12 +45,15 @@ class TeamView(LoginRequiredMixin, CreateView):
     form_class = TeamForm
     success_url = reverse_lazy("invite")
 
+    def get_initial(self):
+        obj_creator = self.request.user
+        initial = {"battle": self.kwargs['pk'], "trainer":self.request.user.id }
+        return initial
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pokemons = Pokemon.objects.all()
         context['pokemons'] = pokemons
-        context['battle_pk'] = self.kwargs['pk']
-        context['trainer_pk'] = self.request.user.id
         return context
 
     def form_valid(self, form):
