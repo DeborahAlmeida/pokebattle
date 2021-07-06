@@ -3,14 +3,16 @@ from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.shortcuts import get_object_or_404
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
 from battle.battles.base_stats import get_pokemons_team
 from battle.battles.email import send_invite_email
+
 from users.models import User
+
+from pokemon.models import Pokemon
 
 
 class Home(TemplateView):
@@ -44,10 +46,14 @@ class TeamView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("invite")
 
     def get_initial(self):
-        obj_battle = get_object_or_404(Battle, pk=self.kwargs['pk'])
-        obj_trainer = self.request.user
-        self.initial = {"battle": obj_battle, "trainer": obj_trainer}
-        return self.initial
+        initial = {"battle": self.kwargs['pk'], "trainer": self.request.user.id}
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        pokemons = Pokemon.objects.all()
+        context['pokemons'] = pokemons
+        return context
 
     def form_valid(self, form):
         team = form.save()

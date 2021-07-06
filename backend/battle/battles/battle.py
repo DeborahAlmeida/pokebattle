@@ -45,7 +45,7 @@ def verify_pokemon_is_saved(pokemons):
 
 
 def verify_pokemon_exists_on_database(pokemon):
-    on_database = Pokemon.objects.filter(pokemon_id=pokemon)
+    on_database = Pokemon.objects.filter(name=pokemon)
     return on_database
 
 
@@ -60,7 +60,7 @@ def sum_points_pokemon_on_database(pokemon):
 
 def create_pokemon_on_database(pokemon):
     data_from_api_save = get_pokemon_from_api(pokemon)
-    Pokemon.objects.create(pokemon_id=pokemon, name=data_from_api_save['name'],
+    Pokemon.objects.create(pokemon_id=data_from_api_save['pokemon_id'], name=pokemon,
                            attack=data_from_api_save['attack'],
                            defense=data_from_api_save['defense'],
                            hp=data_from_api_save['hp'],

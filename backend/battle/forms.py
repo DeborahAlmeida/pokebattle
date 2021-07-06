@@ -2,9 +2,13 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import validate_sum_pokemons, get_pokemon_object, verify_pokemon_is_saved
+from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
 
 from users.models import User
+
+from pokemon.models import Pokemon
+
+from pokemon.helpers import verify_pokemon_exists_api
 
 
 class BattleForm(forms.ModelForm):
@@ -36,32 +40,27 @@ class TeamForm(forms.ModelForm):
             "pokemon_3",
         ]
 
-    pokemon_1 = forms.IntegerField(
-        label="Pokemon 1",
-        required=True,
-        min_value=1,
-        max_value=898,
-    )
-    pokemon_2 = forms.IntegerField(
-        label="Pokemon 2",
-        required=True,
-        min_value=1,
-        max_value=898,
-    )
-    pokemon_3 = forms.IntegerField(
-        label="Pokemon 3",
-        required=True,
-        min_value=1,
-        max_value=898,
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(TeamForm, self).__init__(*args, **kwargs)
-        self.fields['battle'].widget = forms.HiddenInput()
-        self.fields['trainer'].widget = forms.HiddenInput()
+    battle = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Battle.objects.all())
+    trainer = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=User.objects.all())
+    pokemon_1 = forms.CharField(widget=forms.Textarea)
+    pokemon_2 = forms.CharField(widget=forms.Textarea)
+    pokemon_3 = forms.CharField(widget=forms.Textarea)
 
     def clean(self):
         cleaned_data = super().clean()
+        pokemon_1 = self.cleaned_data.get('pokemon_1')
+        pokemon_2 = self.cleaned_data.get('pokemon_2')
+        pokemon_3 = self.cleaned_data.get('pokemon_3')
+        obj_battle = cleaned_data['battle']
+        obj_trainer = cleaned_data['trainer']
+
+        if not pokemon_1 or not pokemon_2 or not pokemon_3:
+            raise forms.ValidationError('ERROR: Select all pokemons')
+
+        pokemons_exist = verify_pokemon_exists_api([pokemon_1, pokemon_2, pokemon_3])
+        if not pokemons_exist:
+            raise forms.ValidationError('ERROR: Type the correct pokemons name ')
+
         valid_pokemons = validate_sum_pokemons(
             [
                 cleaned_data['pokemon_1'],
@@ -69,8 +68,7 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_3']
             ]
         )
-        obj_battle = cleaned_data['battle']
-        if cleaned_data['trainer'] not in (obj_battle.creator, obj_battle.opponent):
+        if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:
@@ -83,10 +81,9 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_3']
             ]
         )
-
-        cleaned_data['pokemon_1_object'] = get_pokemon_object(cleaned_data['pokemon_1'])
-        cleaned_data['pokemon_2_object'] = get_pokemon_object(cleaned_data['pokemon_2'])
-        cleaned_data['pokemon_3_object'] = get_pokemon_object(cleaned_data['pokemon_3'])
+        cleaned_data['pokemon_1_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_1'])
+        cleaned_data['pokemon_2_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_2'])
+        cleaned_data['pokemon_3_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_3'])
         return cleaned_data
 
     def save(self, commit=True):
