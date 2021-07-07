@@ -88,9 +88,7 @@ class TeamForm(forms.ModelForm):
         if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
-        list_positions = [position_pkn_1, position_pkn_2, position_pkn_3]
-
-        if position_pkn_1 == position_pkn_2 or position_pkn_1 == position_pkn_3:
+        if position_pkn_1 in (position_pkn_2, position_pkn_3):
             raise forms.ValidationError('ERROR: You cannot add the same position')
         if position_pkn_2 == position_pkn_3:
             raise forms.ValidationError('ERROR: You cannot add the same position')
