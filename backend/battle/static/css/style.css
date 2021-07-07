@@ -321,7 +321,9 @@ h2{
 }
 .container2-pokemon{
     height:480px;
-    margin-top: 60px;
+    margin-top: 0px;
+    height:550px;
+
 }
 .pokemon{
     width:400px;
