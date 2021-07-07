@@ -10,7 +10,7 @@ from pokemon.models import Pokemon
 
 from pokemon.helpers import verify_pokemon_exists_api, verify_duplicate_position
 
-POSITION_CHOICES = [(1,1), (2,2), (3,3)]
+POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
 
 class BattleForm(forms.ModelForm):
