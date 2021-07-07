@@ -8,7 +8,7 @@ from users.models import User
 
 from pokemon.models import Pokemon
 
-from pokemon.helpers import verify_pokemon_exists_api, verify_duplicate_position
+from pokemon.helpers import verify_pokemon_exists_api
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
@@ -89,8 +89,10 @@ class TeamForm(forms.ModelForm):
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
         list_positions = [position_pkn_1, position_pkn_2, position_pkn_3]
-        duplicate = verify_duplicate_position(list_positions)
-        if duplicate:
+
+        if position_pkn_1 == position_pkn_2 or position_pkn_1 == position_pkn_3:
+            raise forms.ValidationError('ERROR: You cannot add the same position')
+        if position_pkn_2 == position_pkn_3:
             raise forms.ValidationError('ERROR: You cannot add the same position')
 
         verify_pokemon_is_saved(
