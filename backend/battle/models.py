@@ -6,8 +6,7 @@ from pokemon.models import Pokemon
 class Battle(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                 related_name="creator_battles")
-    opponent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                 related_name="opponent_battles")
+    opponent = models.CharField(max_length=200)
     winner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                related_name="battle_win", null=True)
 
