@@ -28,5 +28,6 @@ def verify_pokemon_exists_api(poke_names):
 
 
 def verify_duplicate_position(list_positions):
-  if list(duplicates(list_positions)):
-    return True
+    if list(duplicates(list_positions)):
+        return True
+    return False
