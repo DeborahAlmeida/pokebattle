@@ -1,6 +1,7 @@
 from urllib.parse import urljoin
 import requests
 from django.conf import settings
+from iteration_utilities import duplicates
 
 
 def get_pokemon_from_api(poke_name):
@@ -23,4 +24,9 @@ def verify_pokemon_exists_api(poke_names):
         response = requests.get(urljoin(settings.POKE_API_URL, pokemon_name))
         if response.status_code == 404:
             return False
+    return True
+
+
+def verify_duplicate_position(list_positions):
+  if list(duplicates(list_positions)):
     return True

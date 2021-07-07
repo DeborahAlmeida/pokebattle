@@ -44,10 +44,10 @@ def get_pokemons_team(battle, trainer):
     }
     team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer)
     if team:
-        pokemons_team_query = team[0].pokemons.all()
-        pokemons_team["pokemon_1"] = pokemons_team_query[0]
-        pokemons_team["pokemon_2"] = pokemons_team_query[1]
-        pokemons_team["pokemon_3"] = pokemons_team_query[2]
+        pokemon_team = team[0].teams.all().order_by('order').prefetch_related('pokemon')
+        pokemons_team["pokemon_1"] = pokemon_team[0].pokemon
+        pokemons_team["pokemon_2"] = pokemon_team[1].pokemon
+        pokemons_team["pokemon_3"] = pokemon_team[2].pokemon
         return pokemons_team
     else:
         return False
