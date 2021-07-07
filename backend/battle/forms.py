@@ -25,8 +25,13 @@ class BattleForm(forms.ModelForm):
         if 'creator' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to be logged.")
 
-        if cleaned_data['opponent'] == cleaned_data['creator']:
-            raise forms.ValidationError("ERROR: You can't challenge yourself.")
+        if 'opponent' not in cleaned_data:
+            raise forms.ValidationError("ERROR: You need to challenge someone.")
+
+        opponent_on_database = User.objects.filter(email=cleaned_data['opponent'])
+        if opponent_on_database:
+            if opponent_on_database[0] == cleaned_data['creator']:
+                raise forms.ValidationError("ERROR: You can't challenge yourself.")
 
 
 class TeamForm(forms.ModelForm):
@@ -53,6 +58,10 @@ class TeamForm(forms.ModelForm):
         pokemon_3 = self.cleaned_data.get('pokemon_3')
         obj_battle = cleaned_data['battle']
         obj_trainer = cleaned_data['trainer']
+        trainer_on_database = User.objects.filter(email=obj_trainer)
+
+        if trainer_on_database:
+            obj_trainer = trainer_on_database[0].email
 
         if not pokemon_1 or not pokemon_2 or not pokemon_3:
             raise forms.ValidationError('ERROR: Select all pokemons')
@@ -68,7 +77,7 @@ class TeamForm(forms.ModelForm):
                 cleaned_data['pokemon_3']
             ]
         )
-        if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
+        if obj_trainer not in (obj_battle.creator.email, obj_battle.opponent):
             raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
         if not valid_pokemons:

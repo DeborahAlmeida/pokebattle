@@ -33,6 +33,12 @@ class BattleView(LoginRequiredMixin, CreateView):
         self.initial = {"creator": obj_creator}
         return self.initial
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users = User.objects.all()
+        context['users'] = users
+        return context
+
     def form_valid(self, form):
         form.save()
         send_invite_email(form.instance.opponent, form.instance.creator)
