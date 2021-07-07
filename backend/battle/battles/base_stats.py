@@ -1,5 +1,6 @@
 from pokemon.helpers import get_pokemon_from_api
 from battle.models import Team
+from users.models import User
 
 
 def get_total_point_pokemon(data_pokemons):
@@ -42,12 +43,18 @@ def get_pokemons_team(battle, trainer):
         "pokemon_2": None,
         "pokemon_3": None,
     }
-    team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer)
-    if team:
-        pokemons_team_query = team[0].pokemons.all()
-        pokemons_team["pokemon_1"] = pokemons_team_query[0]
-        pokemons_team["pokemon_2"] = pokemons_team_query[1]
-        pokemons_team["pokemon_3"] = pokemons_team_query[2]
-        return pokemons_team
+    trainer_object = None
+    trainer_on_database = User.objects.filter(email=trainer)
+    if trainer_on_database:
+        trainer_object = trainer_on_database[0]
+        team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer_object)
+        if team:
+            pokemons_team_query = team[0].pokemons.all()
+            pokemons_team["pokemon_1"] = pokemons_team_query[0]
+            pokemons_team["pokemon_2"] = pokemons_team_query[1]
+            pokemons_team["pokemon_3"] = pokemons_team_query[2]
+            return pokemons_team
+        else:
+            return False
     else:
         return False
