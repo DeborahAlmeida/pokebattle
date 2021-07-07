@@ -17,48 +17,57 @@
                 {% for hidden in form.hidden_fields %}
                     {{ hidden }}
                 {% endfor %}
-                <p>
-                    <label for="id_pokemon_1">Pokemon 1:</label>
-                    <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
-                    <datalist id="pokemons" name="pokemon_1">
-                        {% for results in pokemons %}
-                            <option value="{{results.name}}">
-                        {% endfor %}
-                    </datalist>
-                </p>
-                <select id="position_pokemon_1" name="position_pokemon_1">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-                <p>
-                    <label for="id_pokemon_2">Pokemon 2:</label>
-                    <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons">
-                    <datalist id="pokemons" name="pokemon_2">
-                        {% for results in pokemons %}
-                            <option value="{{results.name}}">
-                        {% endfor %}
-                    </datalist>
-                </p>
-                <select id="position_pokemon_2" name="position_pokemon_2">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
-                <p>
-                    <label for="id_pokemon_3">Pokemon 3:</label>
-                    <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons">
-                    <datalist id="pokemons" name="pokemon_3">
-                        {% for results in pokemons %}
-                            <option value="{{results.name}}">
-                        {% endfor %}
-                    </datalist>
-                </p>
-                <select id="position_pokemon_3" name="position_pokemon_3">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                </select>
+                <div class="form_pokemon_position">
+                    <p>
+                        <label for="id_pokemon_1">Pokemon 1:</label>
+                        <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
+                        <datalist id="pokemons" name="pokemon_1">
+                            {% for results in pokemons %}
+                                <option value="{{results.name}}">
+                            {% endfor %}
+                        </datalist>
+                    </p>
+                    <label class="position_label" for="id_pokemon_1">Position:</label>
+                    <select class="position_element" id="position_pokemon_1" name="position_pokemon_1">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="form_pokemon_position">
+                    <p>
+                        <label for="id_pokemon_2">Pokemon 2:</label>
+                        <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons">
+                        <datalist id="pokemons" name="pokemon_2">
+                            {% for results in pokemons %}
+                                <option value="{{results.name}}">
+                            {% endfor %}
+                        </datalist>
+                    </p>
+                    <label class="position_label" or="id_pokemon_2">Position:</label>
+                    <select class="position_element" id="position_pokemon_2" name="position_pokemon_2">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="form_pokemon_position">
+                    <p>
+                        <label for="id_pokemon_3">Pokemon 3:</label>
+                        <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons">
+                        <datalist id="pokemons" name="pokemon_3">
+                            {% for results in pokemons %}
+                                <option value="{{results.name}}">
+                            {% endfor %}
+                        </datalist>
+                    </p>
+                    <label class="position_label" for="id_pokemon_3">Position:</label>
+                    <select class="position_element" id="position_pokemon_3" name="position_pokemon_3">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
                 <button type="submit" class="button_next">Next</button>
             </form>     
         </div>

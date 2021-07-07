@@ -320,10 +320,25 @@ h2{
     margin-bottom: 30px;
 }
 .container2-pokemon{
-    height:480px;
     margin-top: 0px;
     height:550px;
+    width:480px;
+    align-items: center;
 
+}
+.position_element{
+    height:20px;
+    margin-left: 5px;
+}
+.position_label{
+    margin-left: 10px;
+}
+.form_pokemon_position{
+    width:400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .pokemon{
     width:400px;
