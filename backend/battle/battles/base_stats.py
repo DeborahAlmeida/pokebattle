@@ -47,7 +47,8 @@ def get_pokemons_team(battle, trainer):
     trainer_on_database = User.objects.filter(email=trainer)
     if trainer_on_database:
         trainer_object = trainer_on_database[0]
-        team = Team.objects.prefetch_related('pokemons').filter(battle=battle, trainer=trainer_object)
+        team = Team.objects.prefetch_related('pokemons').filter(battle=battle,
+                                                                trainer=trainer_object)
         if team:
             pokemons_team_query = team[0].pokemons.all()
             pokemons_team["pokemon_1"] = pokemons_team_query[0]
