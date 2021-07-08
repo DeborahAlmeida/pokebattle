@@ -12,7 +12,6 @@ from .views import (
 from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 
-
 urlpatterns = [
     path("", Home.as_view(), name="home"),
     path("battle/", BattleView.as_view(), name="battle"),
@@ -24,7 +23,7 @@ urlpatterns = [
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
     path(
             'reset/<uidb64>/<token>/',
-            auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('crm:password_reset_complete')),
+            auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('password_reset_complete')),
             name='password_reset_confirm'
         ),
 ]

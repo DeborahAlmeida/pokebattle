@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.crypto import get_random_string
 from django.contrib.auth.tokens import default_token_generator
-
+from django.conf import settings
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
 from battle.battles.email import send_invite_email
