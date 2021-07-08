@@ -22,8 +22,8 @@ urlpatterns = [
     path('signup/', BattleSignUp.as_view(), name='signup'),
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
     path(
-            'reset/<uidb64>/<token>/',
-            auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('password_reset_complete')),
-            name='password_reset_confirm'
-        ),
+        'reset/<uidb64>/<token>/',
+        auth_views.PasswordResetConfirmView.as_view(
+            success_url=reverse_lazy(
+                'password_reset_complete')), name='password_reset_confirm'),
 ]
