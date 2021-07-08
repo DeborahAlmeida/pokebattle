@@ -14,10 +14,10 @@ from pokemon.models import Pokemon
 
 from pokemon.helpers import verify_pokemon_exists_api
 
-is_guest = False
 
 class BattleForm(forms.ModelForm):
     opponent = forms.EmailField()
+    is_guest = False
 
     class Meta:
         model = Battle
@@ -32,8 +32,7 @@ class BattleForm(forms.ModelForm):
         try:
             opponent = User.objects.get(email=opponent_email)
         except User.DoesNotExist:
-            global is_guest
-            is_guest = True
+            self.is_guest = True
             opponent = User.objects.create(email=opponent_email)
             random_password = get_random_string(length=64)
             opponent.set_password(random_password)
@@ -49,12 +48,11 @@ class BattleForm(forms.ModelForm):
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
         return cleaned_data
 
-    def save(self):
+    def save(self, commit=True):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
-        global is_guest
-        if is_guest:
+        if self.is_guest:
             invite_form = PasswordResetForm(data={"email": opponent.email})
             invite_form.is_valid()
             invite_form.save(self,
