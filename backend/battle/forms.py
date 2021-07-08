@@ -108,12 +108,24 @@ class TeamForm(forms.ModelForm):
     def save(self, commit=True):
         cleaned_data = self.clean()
         instance = super().save()
-        # pylint: disable=line-too-long
-        PokemonTeam.objects.create(team=instance, pokemon=cleaned_data['pokemon_1_object'], order=cleaned_data['position_pkn_1']) # pylint: disable=line-too-long
 
-        PokemonTeam.objects.create(team=instance, pokemon=cleaned_data['pokemon_2_object'], order=cleaned_data['position_pkn_2']) # pylint: disable=line-too-long
+        PokemonTeam.objects.create(
+                                  team=instance,
+                                  pokemon=cleaned_data['pokemon_1_object'],
+                                  order=cleaned_data['position_pkn_1']
+                                  )
 
-        PokemonTeam.objects.create(team=instance, pokemon=cleaned_data['pokemon_3_object'], order=cleaned_data['position_pkn_3']) # pylint: disable=line-too-long
+        PokemonTeam.objects.create(
+                                  team=instance,
+                                  pokemon=cleaned_data['pokemon_2_object'],
+                                  order=cleaned_data['position_pkn_2']
+                                  )
+
+        PokemonTeam.objects.create(
+                                  team=instance,
+                                  pokemon=cleaned_data['pokemon_3_object'],
+                                  order=cleaned_data['position_pkn_3']
+                                  )
         return instance
 
 

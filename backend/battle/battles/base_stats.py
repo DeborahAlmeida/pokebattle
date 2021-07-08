@@ -42,10 +42,7 @@ def get_pokemons_team(battle, trainer):
         "pokemon_2": None,
         "pokemon_3": None,
     }
-    # pylint: disable=line-too-long
-    pkn_teams = PokemonTeam.objects.filter(team__battle=battle,
-                                           team__trainer=trainer).select_related('pokemon').order_by('order')
-    # pylint: enable=line-too-long
+    pkn_teams = PokemonTeam.objects.filter(team__battle=battle, team__trainer=trainer).select_related('pokemon').order_by('order')  # pylint: disable=line-too-long
 
     if pkn_teams:
         pokemons_team["pokemon_1"] = pkn_teams[0].pokemon
