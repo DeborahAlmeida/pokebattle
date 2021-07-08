@@ -9,6 +9,8 @@ from .views import (
     BattleSignUp,
     SignUpSucess,
 )
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
 
 
 urlpatterns = [
@@ -20,4 +22,9 @@ urlpatterns = [
     path("battle/detail/<int:pk>/", BattleDetail.as_view(), name="battle_detail"),
     path('signup/', BattleSignUp.as_view(), name='signup'),
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
+    path(
+            'reset/<uidb64>/<token>/',
+            auth_views.PasswordResetConfirmView.as_view(success_url=reverse_lazy('crm:password_reset_complete')),
+            name='password_reset_confirm'
+        ),
 ]
