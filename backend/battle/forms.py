@@ -6,7 +6,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
-from battle.battles.email import send_invite_email, send_invite_guest
+from battle.battles.email import send_invite_email
 
 from users.models import User
 
@@ -64,7 +64,6 @@ class BattleForm(forms.ModelForm):
              use_https=False, token_generator=default_token_generator,
              from_email='deborah.mendonca@vinta.com.br', request=None, html_email_template_name=None
             )
-            send_invite_guest(default_token_generator)
         else:
             send_invite_email(instance.opponent, instance.creator)
         return instance
