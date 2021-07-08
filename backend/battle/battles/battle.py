@@ -17,18 +17,18 @@ def get_winner_for(team_creator, team_opponent):
         'order').prefetch_related('pokemon')
 
     creator_pokemons_orderly = [
-        pkns_team_creator[0].pokemon,
-        pkns_team_creator[1].pokemon,
-        pkns_team_creator[2].pokemon
+        pokemons_team_creator[0].pokemon,
+        pokemons_team_creator[1].pokemon,
+        pokemons_team_creator[2].pokemon
         ]
 
     pokemons_team_opponent = team_opponent.teams.all().order_by(
         'order').prefetch_related('pokemon')
 
     opponent_pokemons_orderly = [
-        pkns_team_opponent[0].pokemon,
-        pkns_team_opponent[1].pokemon,
-        pkns_team_opponent[2].pokemon
+        pokemons_team_opponent[0].pokemon,
+        pokemons_team_opponent[1].pokemon,
+        pokemons_team_opponent[2].pokemon
         ]
 
     creator_won = 0
