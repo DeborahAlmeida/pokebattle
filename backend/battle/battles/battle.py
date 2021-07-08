@@ -13,18 +13,30 @@ def run_battle(battle):
 
 def get_winner_for(team_creator, team_opponent):
 
-    pkn_team_cre = team_creator.teams.all().order_by('order').prefetch_related('pokemon')
-    cre_pkn_ord = [pkn_team_cre[0].pokemon, pkn_team_cre[1].pokemon, pkn_team_cre[2].pokemon]
+    pokemons_team_creator = team_creator.teams.all().order_by(
+        'order').prefetch_related('pokemon')
 
-    pkn_team_opt = team_opponent.teams.all().order_by('order').prefetch_related('pokemon')
-    opt_pkn_ord = [pkn_team_opt[0].pokemon, pkn_team_opt[1].pokemon, pkn_team_opt[2].pokemon]
+    creator_pokemons_orderly = [
+        pkns_team_creator[0].pokemon,
+        pkns_team_creator[1].pokemon,
+        pkns_team_creator[2].pokemon
+        ]
+
+    pokemons_team_opponent = team_opponent.teams.all().order_by(
+        'order').prefetch_related('pokemon')
+
+    opponent_pokemons_orderly = [
+        pkns_team_opponent[0].pokemon,
+        pkns_team_opponent[1].pokemon,
+        pkns_team_opponent[2].pokemon
+        ]
 
     creator_won = 0
     opponent_won = 0
-    list_pokemons = zip(cre_pkn_ord, opt_pkn_ord)
+    list_pokemons = zip(creator_pokemons_orderly, opponent_pokemons_orderly)
 
-    for creator_pokemon_ordered, opponent_pokemon_ordered in list_pokemons:
-        winner_key = run_round(creator_pokemon_ordered, opponent_pokemon_ordered)
+    for creator_pokemon_orderly, opponent_pokemon_orderly in list_pokemons:
+        winner_key = run_round(creator_pokemon_orderly, opponent_pokemon_orderly)
         if winner_key == "creator_won":
             creator_won += 1
         else:
