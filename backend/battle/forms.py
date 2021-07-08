@@ -57,7 +57,6 @@ class BattleForm(forms.ModelForm):
         if is_guest:
             invite_form = PasswordResetForm(data={"email": opponent.email})
             invite_form.is_valid()
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> aqui", invite_form)
             invite_form.save(self,
              subject_template_name='registration/password_reset_subject.txt',
              email_template_name='registration/password_reset_email.html',
