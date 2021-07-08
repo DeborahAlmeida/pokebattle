@@ -106,14 +106,14 @@ class TeamForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        data = self.clean()
+        cleaned_data = self.clean()
         instance = super().save()
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=data['pokemon_1_object'], order=data['position_pkn_1'])
+                                   pokemon=cleaned_data['pokemon_1_object'], order=cleaned_data['position_pkn_1'])
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=data['pokemon_2_object'], order=data['position_pkn_2'])
+                                   pokemon=cleaned_data['pokemon_2_object'], order=cleaned_data['position_pkn_2'])
         PokemonTeam.objects.create(team=instance,
-                                   pokemon=data['pokemon_3_object'], order=data['position_pkn_3'])
+                                   pokemon=cleaned_data['pokemon_3_object'], order=cleaned_data['position_pkn_3'])
         return instance
 
 
