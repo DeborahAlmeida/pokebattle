@@ -110,22 +110,19 @@ class TeamForm(forms.ModelForm):
         instance = super().save()
 
         PokemonTeam.objects.create(
-                                  team=instance,
-                                  pokemon=cleaned_data['pokemon_1_object'],
-                                  order=cleaned_data['position_pkn_1']
-                                  )
+            team=instance,
+            pokemon=cleaned_data['pokemon_1_object'],
+            order=cleaned_data['position_pkn_1'])
 
         PokemonTeam.objects.create(
-                                  team=instance,
-                                  pokemon=cleaned_data['pokemon_2_object'],
-                                  order=cleaned_data['position_pkn_2']
-                                  )
+            team=instance,
+            pokemon=cleaned_data['pokemon_2_object'],
+            order=cleaned_data['position_pkn_2'])
 
         PokemonTeam.objects.create(
-                                  team=instance,
-                                  pokemon=cleaned_data['pokemon_3_object'],
-                                  order=cleaned_data['position_pkn_3']
-                                  )
+            team=instance,
+            pokemon=cleaned_data['pokemon_3_object'],
+            order=cleaned_data['position_pkn_3'])
         return instance
 
 
