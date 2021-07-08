@@ -55,15 +55,16 @@ class BattleForm(forms.ModelForm):
         if self.is_guest:
             invite_form = PasswordResetForm(data={"email": opponent.email})
             invite_form.is_valid()
-            invite_form.save(self,
-             subject_template_name='registration/password_reset_subject.txt',
-             email_template_name='registration/password_reset_email.html',
-             use_https=False, token_generator=default_token_generator,
-             from_email='deborah.mendonca@vinta.com.br', request=None, html_email_template_name=None
-            )
+            invite_form.save(
+                self, subject_template_name='registration/password_reset_subject.txt',
+                email_template_name='registration/password_reset_email.html',
+                use_https=False, token_generator=default_token_generator,
+                from_email='deborah.mendonca@vinta.com.br',
+                request=None, html_email_template_name=None)
         else:
             send_invite_email(instance.opponent, instance.creator)
         return instance
+
 
 class TeamForm(forms.ModelForm):
     class Meta:
