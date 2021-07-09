@@ -9,14 +9,17 @@
     </div>
 
     <div class="container2 container2_signup">
-    <div class="div_trainer">
-        <p class="title_battle">SignUp Now!</p>
-        <form method="POST" class="battle_form battle_form_signup">{% csrf_token %}
-            {{ form.as_p }}
-                        
-            <button type="submit" class="button_next button_next_signup">Next</button>
-        </form>     
-    </div>
+        <div class="div_trainer">
+            <p class="title_battle">SignUp Now!</p>
+            <form method="POST" class="battle_form battle_form_signup">{% csrf_token %}
+                {{ form.as_p }}
+                            
+                <button type="submit" class="button_next button_next_signup">Next</button>
+            </form>
+        </div>
+        <a href="{% url 'social:begin' 'google-oauth2' %}">
+            <div class="pk-btn">Signup with Google</div>
+        </a>
     </div>
 
 </div>
