@@ -61,8 +61,6 @@ django-model-utils==4.1.1
     # via -r requirements.in
 django-render-block==0.8.1
     # via django-templated-email
-django-social-auth==0.7.28
-    # via -r requirements.in
 django-templated-email==3.0.0
     # via -r requirements.in
 django-webpack-loader==1.1.0
@@ -75,13 +73,10 @@ django==3.2
     #   django-log-request-id
     #   django-model-utils
     #   django-render-block
-    #   django-social-auth
 et-xmlfile==1.1.0
     # via openpyxl
 gunicorn==20.1.0
     # via -r requirements.in
-httplib2==0.19.1
-    # via oauth2
 idna==2.10
     # via requests
 ipython-genutils==0.2.0
@@ -96,8 +91,6 @@ markuppy==1.14
     # via tablib
 matplotlib-inline==0.1.2
     # via ipython
-oauth2==1.9.0.post1
-    # via django-social-auth
 oauthlib==3.1.1
     # via
     #   requests-oauthlib
@@ -128,12 +121,8 @@ pygments==2.9.0
     # via ipython
 pyjwt==2.1.0
     # via social-auth-core
-pyparsing==2.4.7
-    # via httplib2
 python-decouple==3.4
     # via -r requirements.in
-python-openid==2.2.5
-    # via django-social-auth
 python3-openid==3.2.0
     # via social-auth-core
 pytz==2021.1
