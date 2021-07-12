@@ -48,7 +48,7 @@ class BattleForm(forms.ModelForm):
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
         return cleaned_data
 
-    def save(self): # pylint: disable=W:279
+    def save(self, commit=True):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
