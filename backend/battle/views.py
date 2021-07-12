@@ -9,6 +9,7 @@ from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.battle import run_battle, set_winner
 from battle.battles.base_stats import get_pokemons_team
 from battle.battles.email import send_invite_email
+from battle.tasks import run_battle_and_send_result_email
 
 from users.models import User
 
@@ -58,8 +59,7 @@ class TeamView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         team = form.save()
         if team.battle.teams.count() == 2:
-            team_winner = run_battle(team.battle)
-            set_winner(team_winner.trainer, team.battle)
+            run_battle_and_send_result_email.delay(team.battle.id)
             return HttpResponseRedirect(reverse_lazy("home"))
 
         return HttpResponseRedirect(reverse_lazy("invite"))
