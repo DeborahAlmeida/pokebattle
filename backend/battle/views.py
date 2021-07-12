@@ -6,7 +6,6 @@ from django.urls import reverse_lazy
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
-from battle.battles.battle import run_battle, set_winner
 from battle.battles.base_stats import get_pokemons_team
 from battle.battles.email import send_invite_email
 from battle.tasks import run_battle_and_send_result_email
