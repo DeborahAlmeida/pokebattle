@@ -123,6 +123,8 @@ pyjwt==2.1.0
     # via social-auth-core
 python-decouple==3.4
     # via -r requirements.in
+python-social-auth==0.3.6
+    # via -r requirements.in
 python3-openid==3.2.0
     # via social-auth-core
 pytz==2021.1
@@ -149,7 +151,9 @@ six==1.16.0
 social-auth-app-django==4.0.0
     # via -r requirements.in
 social-auth-core==4.1.0
-    # via social-auth-app-django
+    # via
+    #   python-social-auth
+    #   social-auth-app-django
 sqlparse==0.4.1
     # via django
 tablib[html,ods,xls,xlsx,yaml]==3.0.0

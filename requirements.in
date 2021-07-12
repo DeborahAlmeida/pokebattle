@@ -17,3 +17,4 @@ sentry-sdk
 requests
 django-templated-email
 social-auth-app-django
+python-social-auth

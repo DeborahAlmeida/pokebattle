@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     "battle",
     "pokemon",
     "templated_email",
+    "social_django",
 ]
 
 
