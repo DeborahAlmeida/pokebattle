@@ -497,3 +497,27 @@ h2{
 .base_stats_title{
     font-size: 11px;
 }
+.google-btn{
+    border: 2px solid red;
+    width:180px;
+    height:40px;
+    text-align: center;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+}
+.google-btn:hover{
+    border: 2px solid rgb(163, 15, 15);  
+    background-color: rgb(179, 24, 24); 
+}
+.signup_p{
+    margin-top: 10px;
+}
+.a-signup{
+    text-decoration: none;
+}
+.login_google{
+    margin: 0px auto;
+    margin-top: 20px;
+}
