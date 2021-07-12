@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import PasswordResetForm
 from django.utils.crypto import get_random_string
-from django.contrib.auth.tokens import default_token_generator
+from django.conf import settings
 
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
@@ -17,7 +17,6 @@ from pokemon.helpers import verify_pokemon_exists_api
 
 class BattleForm(forms.ModelForm):
     opponent = forms.EmailField()
-    is_guest = False
 
     class Meta:
         model = Battle
@@ -31,9 +30,10 @@ class BattleForm(forms.ModelForm):
         opponent_email = self.cleaned_data["opponent"]
         try:
             opponent = User.objects.get(email=opponent_email)
+            opponent.is_guest = False
         except User.DoesNotExist:
-            self.is_guest = True
             opponent = User.objects.create(email=opponent_email)
+            opponent.is_guest = True
             random_password = get_random_string(length=64)
             opponent.set_password(random_password)
             opponent.save()
@@ -48,19 +48,17 @@ class BattleForm(forms.ModelForm):
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
         return cleaned_data
 
-    def save(self, commit=True):
+    def save(self):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
-        if self.is_guest:
+        if opponent.is_guest:
             invite_form = PasswordResetForm(data={"email": opponent.email})
             invite_form.is_valid()
             invite_form.save(
-                self, subject_template_name='registration/password_reset_subject.txt',
-                email_template_name='registration/password_reset_email.html',
-                use_https=False, token_generator=default_token_generator,
-                from_email='deborah.mendonca@vinta.com.br',
-                request=None, html_email_template_name=None)
+                self, subject_template_name='registration/guest_email_subject.txt',
+                email_template_name='registration/guest_email.html',
+                from_email=settings.FROM_EMAIL,)
         else:
             send_invite_email(instance.opponent, instance.creator)
         return instance
