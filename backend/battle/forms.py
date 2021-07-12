@@ -10,6 +10,8 @@ from pokemon.models import Pokemon
 
 from pokemon.helpers import verify_pokemon_exists_api
 
+POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
+
 
 class BattleForm(forms.ModelForm):
     class Meta:
@@ -38,10 +40,16 @@ class TeamForm(forms.ModelForm):
             "pokemon_1",
             "pokemon_2",
             "pokemon_3",
+            "position_pkn_1",
+            "position_pkn_2",
+            "position_pkn_3",
         ]
 
     battle = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Battle.objects.all())
     trainer = forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=User.objects.all())
+    position_pkn_1 = forms.ChoiceField(choices=POSITION_CHOICES, label="Position")
+    position_pkn_2 = forms.ChoiceField(choices=POSITION_CHOICES, label="Position")
+    position_pkn_3 = forms.ChoiceField(choices=POSITION_CHOICES, label="Position")
     pokemon_1 = forms.CharField(widget=forms.Textarea)
     pokemon_2 = forms.CharField(widget=forms.Textarea)
     pokemon_3 = forms.CharField(widget=forms.Textarea)
@@ -53,9 +61,15 @@ class TeamForm(forms.ModelForm):
         pokemon_3 = self.cleaned_data.get('pokemon_3')
         obj_battle = cleaned_data['battle']
         obj_trainer = cleaned_data['trainer']
+        position_pkn_1 = cleaned_data['position_pkn_1']
+        position_pkn_2 = cleaned_data['position_pkn_2']
+        position_pkn_3 = cleaned_data['position_pkn_3']
 
         if not pokemon_1 or not pokemon_2 or not pokemon_3:
             raise forms.ValidationError('ERROR: Select all pokemons')
+
+        if not position_pkn_1 or not position_pkn_2 or not position_pkn_3:
+            raise forms.ValidationError('ERROR: Select all positions')
 
         pokemons_exist = verify_pokemon_exists_api([pokemon_1, pokemon_2, pokemon_3])
         if not pokemons_exist:
@@ -74,6 +88,11 @@ class TeamForm(forms.ModelForm):
         if not valid_pokemons:
             raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
 
+        if position_pkn_1 in (position_pkn_2, position_pkn_3):
+            raise forms.ValidationError('ERROR: You cannot add the same position')
+        if position_pkn_2 == position_pkn_3:
+            raise forms.ValidationError('ERROR: You cannot add the same position')
+
         verify_pokemon_is_saved(
             [
                 cleaned_data['pokemon_1'],
@@ -87,14 +106,23 @@ class TeamForm(forms.ModelForm):
         return cleaned_data
 
     def save(self, commit=True):
-        data = self.clean()
+        cleaned_data = self.clean()
         instance = super().save()
-        PokemonTeam.objects.create(team=instance,
-                                   pokemon=data['pokemon_1_object'], order=1)
-        PokemonTeam.objects.create(team=instance,
-                                   pokemon=data['pokemon_2_object'], order=2)
-        PokemonTeam.objects.create(team=instance,
-                                   pokemon=data['pokemon_3_object'], order=3)
+
+        PokemonTeam.objects.create(
+            team=instance,
+            pokemon=cleaned_data['pokemon_1_object'],
+            order=cleaned_data['position_pkn_1'])
+
+        PokemonTeam.objects.create(
+            team=instance,
+            pokemon=cleaned_data['pokemon_2_object'],
+            order=cleaned_data['position_pkn_2'])
+
+        PokemonTeam.objects.create(
+            team=instance,
+            pokemon=cleaned_data['pokemon_3_object'],
+            order=cleaned_data['position_pkn_3'])
         return instance
 
 

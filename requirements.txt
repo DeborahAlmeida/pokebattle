@@ -154,6 +154,10 @@ social-auth-core==4.1.0
     # via
     #   python-social-auth
     #   social-auth-app-django
+sentry-sdk==1.2.0
+    # via -r requirements.in
+six==1.16.0
+    # via click-repl
 sqlparse==0.4.1
     # via django
 tablib[html,ods,xls,xlsx,yaml]==3.0.0
