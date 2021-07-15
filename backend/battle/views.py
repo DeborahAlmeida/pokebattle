@@ -5,10 +5,10 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import (
-    AuthenticationForm, PasswordChangeForm, PasswordResetForm, SetPasswordForm,
+    PasswordChangeForm, PasswordResetForm, SetPasswordForm,
 )
 from django.contrib.auth import (
-    REDIRECT_FIELD_NAME, get_user_model, login as auth_login,
+    get_user_model, login as auth_login,
     logout as auth_logout, update_session_auth_hash,
 )
 from django.utils.http import (
@@ -197,8 +197,7 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
             ValueError,
             OverflowError,
             UserModel.DoesNotExist,
-            ValidationError):
-            user = None
+            ValidationError): user = None
         return user
 
     def get_form_kwargs(self):
@@ -220,7 +219,7 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
         else:
             context.update({
                 'form': None,
-                'title': _('Password reset unsuccessful'),
+                'title': ('Password create unsuccessful'),
                 'validlink': False,
             })
         return context
