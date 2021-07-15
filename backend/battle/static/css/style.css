@@ -320,8 +320,25 @@ h2{
     margin-bottom: 30px;
 }
 .container2-pokemon{
-    height:480px;
-    margin-top: 60px;
+    margin-top: 0px;
+    height:550px;
+    width:480px;
+    align-items: center;
+
+}
+.position_element{
+    height:20px;
+    margin-left: 5px;
+}
+.position_label{
+    margin-left: 10px;
+}
+.form_pokemon_position{
+    width:400px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 .pokemon{
     width:400px;
@@ -479,6 +496,30 @@ h2{
 }
 .base_stats_title{
     font-size: 11px;
+}
+.google-btn{
+    border: 2px solid red;
+    width:180px;
+    height:40px;
+    text-align: center;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+}
+.google-btn:hover{
+    border: 2px solid rgb(163, 15, 15);  
+    background-color: rgb(179, 24, 24); 
+}
+.signup_p{
+    margin-top: 10px;
+}
+.a-signup{
+    text-decoration: none;
+}
+.login_google{
+    margin: 0px auto;
+    margin-top: 20px;
 }
 .hidden-password-link{
     visibility: hidden;
