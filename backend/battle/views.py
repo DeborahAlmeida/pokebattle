@@ -201,7 +201,7 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
         try:
             # urlsafe_base64_decode() decodes to bytestring
             uid = urlsafe_base64_decode(uidb64).decode()
-            user = UserModel._default_manager.get(pk=uid)
+            user = UserModel._default_manager.get(pk=uid)  # pylint: disable=W0212
 
         except (
             TypeError,
