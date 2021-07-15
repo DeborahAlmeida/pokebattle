@@ -5,11 +5,10 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import (
-    PasswordResetForm, SetPasswordForm,
+    SetPasswordForm,
 )
 from django.contrib.auth import (
     get_user_model, login as auth_login,
-    update_session_auth_hash,
 )
 from django.utils.http import (
     urlsafe_base64_decode,
