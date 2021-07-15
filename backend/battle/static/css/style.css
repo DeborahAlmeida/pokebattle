@@ -480,3 +480,6 @@ h2{
 .base_stats_title{
     font-size: 11px;
 }
+.hidden-password-link{
+    visibility: hidden;
+}
