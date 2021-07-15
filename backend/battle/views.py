@@ -193,21 +193,23 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
         return self.render_to_response(self.get_context_data())
 
     def get_user(self, uidb64):
-         """
+        """
         :type other: PasswordCreateConfirmView
         :rtype PasswordCreateConfirmView:
         """
+
         try:
             # urlsafe_base64_decode() decodes to bytestring
-            uid = urlsafe_base64_decode(uidb64).decode()
-            user = UserModel._default_manager.get(pk=uid)
+                uid = urlsafe_base64_decode(uidb64).decode()
+                user = UserModel._default_manager.get(pk=uid)
+
         except (
             TypeError,
             ValueError,
             OverflowError,
             UserModel.DoesNotExist,
-            ValidationError):
-                user = None
+                ValidationError):
+                    user = None
         return user
 
     def get_form_kwargs(self):
