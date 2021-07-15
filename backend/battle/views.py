@@ -5,11 +5,11 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import (
-    PasswordChangeForm, PasswordResetForm, SetPasswordForm,
+    PasswordResetForm, SetPasswordForm,
 )
 from django.contrib.auth import (
     get_user_model, login as auth_login,
-    logout as auth_logout, update_session_auth_hash,
+    update_session_auth_hash,
 )
 from django.utils.http import (
     urlsafe_base64_decode,
@@ -153,6 +153,12 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
     template_name = 'registration/password_create_confirm.html'
     title = ('Create a password')
     token_generator = default_token_generator
+
+    def __init__(self, **kwargs):
+        self.validlink = None
+        self.user = None
+        for key, value in kwargs.items():
+            setattr(self, key, value)
 
     @method_decorator(sensitive_post_parameters())
     @method_decorator(never_cache)
