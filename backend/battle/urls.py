@@ -1,3 +1,4 @@
+from django.conf.urls import include
 from django.urls import path
 from .views import (
     Home,
@@ -22,6 +23,7 @@ urlpatterns = [
     path("battle/detail/<int:pk>/", BattleDetail.as_view(), name="battle_detail"),
     path('signup/', BattleSignUp.as_view(), name='signup'),
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
+    path("oauth/", include("social_django.urls"), name="social"),
     path(
         'create/<uidb64>/<token>/',
         PasswordCreateConfirmView.as_view(
@@ -31,5 +33,4 @@ urlpatterns = [
         'create/done/',
         PasswordCreateCompleteView.as_view(),
         name='password_create_complete'),
-
 ]

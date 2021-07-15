@@ -79,7 +79,8 @@ INSTALLED_APPS = [
     "users",
     "battle",
     "pokemon",
-    'templated_email',
+    "templated_email",
+    "social_django",
 ]
 
 
@@ -174,3 +175,12 @@ FROM_EMAIL = config('FROM_EMAIL', default='deborah.mendonca@vinta.com.br')
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "social_core.backends.google.GoogleOAuth2",
+]
+
+# Google Social Login
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY", default="")
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET", default="")

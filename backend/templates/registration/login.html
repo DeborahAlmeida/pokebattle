@@ -8,5 +8,12 @@
     {{ form.as_p }}
     <button type="submit" class="login_button">Log In</button>
     </form>
+    <div class="login_google">
+        <a class="a-signup" href="{% url 'social:begin' 'google-oauth2' %}">
+            <div class="google-btn">
+                <p class="signup_p">Signup with Google</p>
+            </div>
+        </a>
+    </div>
 </div>
 {% endblock %}

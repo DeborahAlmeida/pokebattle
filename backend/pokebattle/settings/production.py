@@ -108,3 +108,6 @@ JS_REVERSE_EXCLUDE_NAMESPACES = ["admin"]
 
 # Sentry
 sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()], release=COMMIT_SHA)
+
+SESSION_COOKIE_SAMESITE = None
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
