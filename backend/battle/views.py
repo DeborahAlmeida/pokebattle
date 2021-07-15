@@ -202,7 +202,8 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
             ValueError,
             OverflowError,
             UserModel.DoesNotExist,
-            ValidationError): user = None
+            ValidationError):
+                user = None
         return user
 
     def get_form_kwargs(self):
