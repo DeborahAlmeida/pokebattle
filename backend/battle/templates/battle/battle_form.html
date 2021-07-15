@@ -21,7 +21,7 @@
                 <label>Opponent:</label>
                 <input id="opponent" name="opponent" type="text" list="users">
                 <datalist id="users" name="opponent">
-                    {% for user in users %}
+                    {% for results in users %}
                         <option value="{{results.email}}">
                     {% endfor %}
                 </datalist>
