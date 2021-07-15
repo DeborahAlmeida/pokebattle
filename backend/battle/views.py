@@ -200,8 +200,8 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
 
         try:
             # urlsafe_base64_decode() decodes to bytestring
-                uid = urlsafe_base64_decode(uidb64).decode()
-                user = UserModel._default_manager.get(pk=uid)
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = UserModel._default_manager.get(pk=uid)
 
         except (
             TypeError,
@@ -209,7 +209,7 @@ class PasswordCreateConfirmView(PasswordContextMixin, FormView):
             OverflowError,
             UserModel.DoesNotExist,
                 ValidationError):
-                    user = None
+            user = None
         return user
 
     def get_form_kwargs(self):
