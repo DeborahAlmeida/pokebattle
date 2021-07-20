@@ -13,8 +13,19 @@
         <p class="title_battle">Trainer</p>
         <p class="subtitle_battle">Choose your opponent!</p>
         <form method="POST" class="battle-form">{% csrf_token %}
-            {{ form.as_p }}
-                        
+            {{ form.non_field_errors }}
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+            <p>
+                <label>Opponent:</label>
+                <input id="opponent" name="opponent" type="text" list="users">
+                <datalist id="users" name="opponent">
+                    {% for user in users %}
+                        <option value="{{results.email}}">
+                    {% endfor %}
+                </datalist>
+            </p>                        
             <button type="submit" class="button_next">Next</button>
         </form>     
     </div>
