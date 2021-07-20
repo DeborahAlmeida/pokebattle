@@ -130,4 +130,3 @@ class PasswordCreateConfirmView(PasswordResetConfirmView):
 class PasswordCreateCompleteView(PasswordResetCompleteView):
     template_name = 'registration/password_create_complete.html'
     title = ('Password create complete')
-
