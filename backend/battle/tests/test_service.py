@@ -1,6 +1,4 @@
-
 from django.test import TestCase, Client
-from battle.battles.battle import validate_sum_pokemons
 from model_bakery import baker
 from battle.models import PokemonTeam
 from battle.battles.battle import get_winner_for
@@ -14,12 +12,11 @@ class GetWinnerTest(TestCase):
         self.battle = baker.make('battle.Battle', creator=self.creator, opponent=self.opponent)
         self.team_creator = baker.make('battle.Team', battle=self.battle, trainer=self.creator)
         self.team_opponent = baker.make('battle.Team', battle=self.battle, trainer=self.opponent)
-        # create_pokemons_team(self.team_creator, self.pokemon_1, order)
-
-    def test_verify_if_returns_creator_as_winner_when_draw(self):
         self.pokemon_1, self.pokemon_2, self.pokemon_3 = baker.make(
             "pokemon.Pokemon",
             attack=60, defense=45, hp=50, _quantity=3)
+
+    def test_verify_if_returns_creator_as_winner_when_draw(self):
         pokemons = [self.pokemon_1, self.pokemon_2, self.pokemon_3]
         count_creator = 0
         count_opponent = 0
@@ -41,14 +38,11 @@ class GetWinnerTest(TestCase):
         self.assertEqual(winner, self.team_creator)
 
     def test_verify_if_returns_winner_when_different_points(self):
-        self.pokemon_1, self.pokemon_2, self.pokemon_3 = baker.make(
-            "pokemon.Pokemon",
-            attack=60, defense=45, hp=50, _quantity=3)
-        self.pokemon_4, self.pokemon_5, self.pokemon_6 = baker.make(
+        pokemon_4, pokemon_5, pokemon_6 = baker.make(
             "pokemon.Pokemon",
             attack=100, defense=35, hp=30, _quantity=3)
         pokemons_creator = [self.pokemon_1, self.pokemon_2, self.pokemon_3]
-        pokemons_opponent = [self.pokemon_4, self.pokemon_5, self.pokemon_6]
+        pokemons_opponent = [pokemon_4, pokemon_5, pokemon_6]
         count_creator = 0
         count_opponent = 0
         while count_creator < 3:
@@ -57,7 +51,7 @@ class GetWinnerTest(TestCase):
                 pokemon=pokemons_creator[count_creator],
                 order=count_creator)
             count_creator = count_creator + 1
-        
+
         while count_opponent < 3:
             PokemonTeam.objects.create(
                 team=self.team_opponent,
@@ -69,14 +63,11 @@ class GetWinnerTest(TestCase):
         self.assertEqual(winner, self.team_creator)
 
     def test_verify_if_not_returns_winner_missing_pokemons_teams(self):
-        self.pokemon_1, self.pokemon_2, self.pokemon_3 = baker.make(
-            "pokemon.Pokemon",
-            attack=60, defense=45, hp=50, _quantity=3)
-        self.pokemon_4, self.pokemon_5, self.pokemon_6 = baker.make(
+        pokemon_4, pokemon_5, pokemon_6 = baker.make(
             "pokemon.Pokemon",
             attack=100, defense=35, hp=30, _quantity=3)
         pokemons_creator = [self.pokemon_1, self.pokemon_2, self.pokemon_3]
-        pokemons_opponent = [self.pokemon_4, self.pokemon_5, self.pokemon_6]
+        pokemons_opponent = [pokemon_4, pokemon_5, pokemon_6]
         count_creator = 0
         count_opponent = 0
         while count_creator < 3:
@@ -85,7 +76,7 @@ class GetWinnerTest(TestCase):
                 pokemon=pokemons_creator[count_creator],
                 order=count_creator)
             count_creator = count_creator + 1
-        
+   
         while count_opponent < 2:
             PokemonTeam.objects.create(
                 team=self.team_opponent,
@@ -93,6 +84,6 @@ class GetWinnerTest(TestCase):
                 order=count_opponent)
             count_opponent = count_opponent + 1
         try:
-            winner = get_winner_for(self.team_creator, self.team_opponent)
+            get_winner_for(self.team_creator, self.team_opponent)
         except IndexError:
             pass
