@@ -37,12 +37,10 @@ class BattleCreateViewTest(TestCase):
     
     def test_create_battle_successfully(self):
         battle_data = {
-            "creator": self.creator,
-            "opponent": self.opponent,
+            "creator": self.creator.id,
+            "opponent": self.opponent.id,
         }
         self.client.login(username=self.creator.email, password='admin')
         response = self.client.post('/battle/', battle_data)
-        import ipdb; ipdb.set_trace()
-        # response.context_data.view.refresh_from_db()
-        battle = Battle.objects.all()
-        self.assertEqual(battle, True)
+        battle = Battle.objects.filter(creator=self.creator, opponent=self.opponent)
+        self.assertTrue(battle)
