@@ -1,14 +1,15 @@
 from django.test import TestCase, Client
 from model_bakery import baker
+from django.urls import reverse
 from users.models import User
 from battle.models import Battle
 
-'''
+
 class ListBattlesTest(TestCase):
     def setUp(self):
         self.client = Client()
         self.battle = baker.make('battle.Battle')
-        self.user = User.objects.create(email='deborah.mendonca@vinta.com.br', password='admin')
+        self.user = User.objects.create(email='example@example.com')
         self.user.set_password('admin')
         self.user.save()
     
@@ -21,16 +22,16 @@ class ListBattlesTest(TestCase):
     def test_data_returns_battle_ids(self):
         self.client.login(username=self.user.email, password='admin')
         battles = baker.make('battle.Battle', creator=self.user, _quantity=2)
-        response = self.client.get('/battle/list/')
+        response = self.client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
         self.assertCountEqual(battles, response_qs)
-'''
+
 
 class BattleCreateViewTest(TestCase):
     def setUp(self):
         super().setUp()
         self.client = Client()
-        self.creator = User.objects.create(email='deborah.mendonca@vinta.com.br', password='admin')
+        self.creator = User.objects.create(email='example@example.com')
         self.creator.set_password('admin')
         self.creator.save()
         self.opponent = baker.make('users.User')
@@ -41,6 +42,6 @@ class BattleCreateViewTest(TestCase):
             "opponent": self.opponent.id,
         }
         self.client.login(username=self.creator.email, password='admin')
-        response = self.client.post('/battle/', battle_data)
+        self.client.post(reverse('battle'), battle_data)
         battle = Battle.objects.filter(creator=self.creator, opponent=self.opponent)
         self.assertTrue(battle)
