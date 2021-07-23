@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from model_bakery import baker
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 from battle.models import PokemonTeam, Team
 from battle.battles.battle import get_winner_for
 from users.models import User
@@ -109,45 +110,41 @@ class AssociatePokemonsToBattleTest(TestCase):
         self.user.set_password('admin')
         self.user.save()
         self.battle = baker.make('battle.Battle', creator=self.user)
-
-    def test_user_can_create_team_with_pokemons(self):
-        # import ipdb; ipdb.set_trace()
-        self.client.login(username=self.user.email, password='admin')
-        names = ['pikachu', 'bulbasaur', 'pidgeot']
+        names = ['pikachu', 'bulbasaur', 'pidgeot', 'test']
         for pokemon_name in names:
-            baker.make("pokemon.Pokemon", name=pokemon_name, attack=60, defense=45, hp=50)
-        pokemons_data = {
-            "battle": self.battle.id,
-            "trainer": self.user.id,
-            "pokemon_1": Pokemon.objects.get(name='pikachu').name,
-            "pokemon_2": Pokemon.objects.get(name='bulbasaur').name,
-            "pokemon_3": Pokemon.objects.get(name='pidgeot').name,
-            "position_pkn_1": 1,
-            "position_pkn_2": 2,
-            "position_pkn_3": 3,
-        }
-        response = self.client.post(
-            reverse("team_create", kwargs={'pk': 1}), pokemons_data, follow=True)
-        self.assertEqual(response.status_code, 200)
-        team_user = Team.objects.filter(trainer=self.user)
-        self.assertTrue(team_user)
+            baker.make("pokemon.Pokemon", name=pokemon_name, attack=60, defense=15, hp=10)
+
+    # def test_user_can_create_team_with_pokemons(self):
+    #     # import ipdb; ipdb.set_trace()
+    #     self.client.login(username=self.user.email, password='admin')
+    #     pokemons_data = {
+    #         "battle": self.battle.id,
+    #         "trainer": self.user.id,
+    #         "pokemon_1": 'pikachu',
+    #         "pokemon_2": 'bulbasaur',
+    #         "pokemon_3": 'pidgeot',
+    #         "position_pkn_1": 1,
+    #         "position_pkn_2": 2,
+    #         "position_pkn_3": 3,
+    #     }
+    #     response = self.client.post(
+    #         reverse("team_create", kwargs={'pk': 1}), pokemons_data, follow=True)
+    #     self.assertEqual(response.status_code, 200)
+    #     team_user = Team.objects.filter(trainer=self.user)
+    #     self.assertTrue(team_user)
 
     def test_if_returns_error_when_type_wrong_pokemon_name(self):
         self.client.login(username=self.user.email, password='admin')
-        names = ['test', 'bulbasaur', 'pidgeot']
-        for pokemon_name in names:
-            baker.make("pokemon.Pokemon", name=pokemon_name, attack=60, defense=45, hp=50)
+        import ipdb; ipdb.set_trace()
         pokemons_data = {
             "battle": self.battle.id,
             "trainer": self.user.id,
-            "pokemon_1": Pokemon.objects.get(name='test').name,
-            "pokemon_2": Pokemon.objects.get(name='bulbasaur').name,
-            "pokemon_3": Pokemon.objects.get(name='pidgeot').name,
+            "pokemon_1": 'test',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
             "position_pkn_1": 1,
             "position_pkn_2": 2,
             "position_pkn_3": 3,
         }
-        response = self.client.post(
-            reverse("team_create", kwargs={'pk': 1}), pokemons_data, follow=True)
-        self.assertEqual(response, True)
-    
+        with self.assertRaisesMessage(ValidationError, 'ERROR: Type the correct pokemons name'):
+            self.client.post(reverse("team_create", kwargs={'pk': 1}), pokemons_data, follow=True)
