@@ -73,7 +73,7 @@ class TeamForm(forms.ModelForm):
 
         pokemons_exist = verify_pokemon_exists_api([pokemon_1, pokemon_2, pokemon_3])
         if not pokemons_exist:
-            raise forms.ValidationError('ERROR: Type the correct pokemons name')
+            raise forms.ValidationError('ERROR: Type the correct pokemons name' )
 
         valid_pokemons = validate_sum_pokemons(
             [
