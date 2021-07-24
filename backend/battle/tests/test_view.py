@@ -47,8 +47,13 @@ class AssociatePokemonsToBattleTest(TestCase):
             "position_pkn_2": 2,
             "position_pkn_3": 3,
         }
-        response = self.client.post(reverse("team_create", kwargs={'pk': self.battle.id}), pokemons_data, follow=True)
-        self.assertEqual(response.context_data['form'].errors['__all__'][0], 'ERROR: Type the correct pokemons name')
+        response = self.client.post(
+            reverse("team_create", kwargs={'pk': self.battle.id}),
+            pokemons_data, follow=True)
+
+        self.assertEqual(
+            response.context_data['form'].errors['__all__'][0],
+            'ERROR: Type the correct pokemons name')
 
     def test_if_returns_error_when_missing_position(self):
         self.client.login(username=self.user.email, password='admin')
@@ -116,4 +121,3 @@ class AssociatePokemonsToBattleTest(TestCase):
         with self.assertRaises(KeyError):
             self.client.post(reverse(
                 "team_create", kwargs={'pk': 100}), pokemons_data, follow=True)
-
