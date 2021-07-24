@@ -12,19 +12,59 @@ class ListBattlesTest(TestCase):
         self.user = User.objects.create(email='example@example.com')
         self.user.set_password('admin')
         self.user.save()
-    
+
     def test_login_user_can_acess_battle_list(self):
-        # import ipdb; ipdb.set_trace()
         self.client.login(username=self.user.email, password='admin')
-        response = self.client.get('/battle/list/')
+        response = self.client.get(reverse('battle_list'))
         self.assertEqual(response.status_code, 200)
-    
-    def test_data_returns_battle_ids(self):
+
+    def test_data_returns_empty_list(self):
         self.client.login(username=self.user.email, password='admin')
-        battles = baker.make('battle.Battle', creator=self.user, _quantity=2)
+        response = self.client.get(reverse('battle_list'))
+        response_qs = response.context_data.get('battle_list')
+        self.assertCountEqual(response_qs, [])
+
+    def test_data_returns_one_battle_in_list(self):
+        self.client.login(username=self.user.email, password='admin')
+        battle = baker.make('battle.Battle', creator=self.user)
+        response = self.client.get(reverse('battle_list'))
+        response_qs = response.context_data.get('battle_list')
+        self.assertCountEqual(response_qs, [battle])
+
+    def test_data_returns_few_battle_ids(self):
+        self.client.login(username=self.user.email, password='admin')
+        battles = baker.make('battle.Battle', creator=self.user, _quantity=4)
         response = self.client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
         self.assertCountEqual(battles, response_qs)
+
+    def test_data_returns_a_lot_battle_ids(self):
+        self.client.login(username=self.user.email, password='admin')
+        battles = baker.make('battle.Battle', creator=self.user, _quantity=100)
+        response = self.client.get(reverse('battle_list'))
+        response_qs = response.context_data.get('battle_list')
+        self.assertCountEqual(battles, response_qs)
+
+    def test_data_an_error_when_the_user_is_not_logged(self):
+        response = self.client.get(reverse('battle_list'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_data_diff_to_verify_it_returns_exactly_len_of_battle_list(self):
+        self.client.login(username=self.user.email, password='admin')
+
+        baker.make('battle.Battle', creator=self.user, _quantity=10)
+        battles_initial = Battle.objects.filter(creator=self.user)
+        response_initial = self.client.get(reverse('battle_list'))
+        response_qs_initial = response_initial.context_data.get('battle_list')
+
+        self.assertCountEqual(battles_initial, response_qs_initial)
+
+        baker.make('battle.Battle', creator=self.user, _quantity=90)
+        battles_updated = Battle.objects.filter(creator=self.user)
+        response_updated = self.client.get(reverse('battle_list'))
+        response_qs_updated = response_updated.context_data.get('battle_list')
+
+        self.assertCountEqual(battles_updated, response_qs_updated)
 
 
 class BattleCreateViewTest(TestCase):
@@ -35,7 +75,7 @@ class BattleCreateViewTest(TestCase):
         self.creator.set_password('admin')
         self.creator.save()
         self.opponent = baker.make('users.User')
-    
+
     def test_create_battle_successfully(self):
         battle_data = {
             "creator": self.creator.id,
@@ -45,3 +85,23 @@ class BattleCreateViewTest(TestCase):
         self.client.post(reverse('battle'), battle_data)
         battle = Battle.objects.filter(creator=self.creator, opponent=self.opponent)
         self.assertTrue(battle)
+
+    def test_if_returns_error_when_creator_and_opponent_are_the_same_user(self):
+        battle_data = {
+            "creator": self.creator.id,
+            "opponent": self.creator.id,
+        }
+        self.client.login(username=self.creator.email, password='admin')
+        response = self.client.post(reverse('battle'), battle_data)
+        self.assertEqual(
+            response.context_data['form'].errors['__all__'][0],
+            "ERROR: You can't challenge yourself.")
+
+    def test_if_returns_error_when_opponent_doesnt_exist(self):
+        battle_data = {
+            "creator": self.creator.id,
+            "opponent": 100,
+        }
+        self.client.login(username=self.creator.email, password='admin')
+        with self.assertRaises(KeyError):
+            self.client.post(reverse('battle'), battle_data)
