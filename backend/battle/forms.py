@@ -24,7 +24,6 @@ class BattleForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        import ipdb; ipdb.set_trace()
         if 'creator' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to be logged.")
 
