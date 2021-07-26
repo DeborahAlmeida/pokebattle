@@ -210,22 +210,31 @@ class BattleCreateViewTest(TestCase):
 
     @patch('battle.tasks.run_battle')
     def test_if_run_battle_task(self, result_battle_mock):
-        battle_data = {
-            "creator": self.creator.id,
-            "opponent": self.opponent.email,
-        }
+        battle = Battle.objects.create(creator=self.creator, opponent=self.opponent)
 
-        self.client.login(username=self.creator.email, password='admin')
+        team_creator = baker.make('battle.Team', battle=battle, trainer=self.creator)
+        team_opponent = baker.make('battle.Team', battle=battle, trainer=self.opponent)
+        pokemon_1, pokemon_2, pokemon_3 = baker.make(
+            "pokemon.Pokemon",
+            attack=60, defense=45, hp=50, _quantity=3)
 
-        self.client.post(reverse("battle"), battle_data)
+        pokemons = [pokemon_1, pokemon_2, pokemon_3]
 
-        battle = Battle.objects.filter(
-            creator=self.creator, opponent=self.opponent)
+        for count, pokemon in enumerate(pokemons):
+            PokemonTeam.objects.create(
+                team=team_creator,
+                pokemon=pokemon,
+                order=count)
 
-        self.assertTrue(battle)
+        for count, pokemon in enumerate(pokemons):
+            PokemonTeam.objects.create(
+                team=team_opponent,
+                pokemon=pokemon,
+                order=count)
 
-        run_battle_and_send_result_email.apply(battle[0].id)
-        assert result_battle_mock.called
+        result_battle_mock.return_value = team_creator
+        run_battle_and_send_result_email.apply([battle.id])
+        result_battle_mock.assert_called_with(battle)
 
 
 class IntegrationPokeapiTest(TestCase):
