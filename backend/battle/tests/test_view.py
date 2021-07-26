@@ -1,5 +1,5 @@
-from common.utils.tests import TestCaseUtils
 from model_bakery import baker
+from common.utils.tests import TestCaseUtils
 from django.urls import reverse
 from battle.models import Battle, PokemonTeam
 from battle.battles.battle import get_winner_for
