@@ -521,3 +521,6 @@ h2{
     margin: 0px auto;
     margin-top: 20px;
 }
+.hidden-password-link{
+    visibility: hidden;
+}

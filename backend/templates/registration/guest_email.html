@@ -1,0 +1,13 @@
+{% load i18n %}{% autoescape off %}
+Hey! You were invited to a pokebattle!
+
+Please go to the following page and choose a password to login and play:
+{% block reset_link %}
+{{ protocol }}://pokebattlefirstproject.herokuapp.com{% url 'password_create_confirm' uidb64=uid token=token %}
+{% endblock %}
+
+Thanks for using our site!
+
+Pokebattle Application: https://pokebattlefirstproject.herokuapp.com/
+
+{% endautoescape %}
