@@ -1,8 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import PasswordResetForm
+from django.utils.crypto import get_random_string
+from django.conf import settings
 
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
+from battle.battles.email import send_invite_email
 
 from users.models import User
 
@@ -14,6 +18,8 @@ POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
 
 class BattleForm(forms.ModelForm):
+    opponent = forms.EmailField()
+
     class Meta:
         model = Battle
         fields = ['creator', 'opponent', ]
@@ -22,6 +28,19 @@ class BattleForm(forms.ModelForm):
         super(BattleForm, self).__init__(*args, **kwargs)
         self.fields['creator'].widget = forms.HiddenInput()
 
+    def clean_opponent(self):
+        opponent_email = self.cleaned_data["opponent"]
+        try:
+            opponent = User.objects.get(email=opponent_email)
+            opponent.is_guest = False
+        except User.DoesNotExist:
+            opponent = User.objects.create(email=opponent_email)
+            opponent.is_guest = True
+            random_password = get_random_string(length=64)
+            opponent.set_password(random_password)
+            opponent.save()
+        return opponent
+
     def clean(self):
         cleaned_data = super().clean()
         if 'creator' not in cleaned_data:
@@ -29,6 +48,22 @@ class BattleForm(forms.ModelForm):
 
         if cleaned_data['opponent'] == cleaned_data['creator']:
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
+        return cleaned_data
+
+    def save(self, commit=True):
+        cleaned_data = self.clean()
+        instance = super().save()
+        opponent = cleaned_data["opponent"]
+        if opponent.is_guest:
+            invite_form = PasswordResetForm(data={"email": opponent.email})
+            invite_form.is_valid()
+            invite_form.save(
+                self, subject_template_name='registration/guest_email_subject.txt',
+                email_template_name='registration/guest_email.html',
+                from_email=settings.FROM_EMAIL,)
+        else:
+            send_invite_email(instance.opponent, instance.creator)
+        return instance
 
 
 class TeamForm(forms.ModelForm):

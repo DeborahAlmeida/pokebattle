@@ -9,8 +9,10 @@ from .views import (
     BattleDetail,
     BattleSignUp,
     SignUpSucess,
+    PasswordCreateConfirmView,
+    PasswordCreateCompleteView,
 )
-
+from django.urls import reverse_lazy
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
@@ -22,5 +24,13 @@ urlpatterns = [
     path('signup/', BattleSignUp.as_view(), name='signup'),
     path('signup/sucess', SignUpSucess.as_view(), name='signup_sucess'),
     path("oauth/", include("social_django.urls"), name="social"),
-
+    path(
+        'create/<uidb64>/<token>/',
+        PasswordCreateConfirmView.as_view(
+            success_url=reverse_lazy(
+                'password_create_complete')), name='password_create_confirm'),
+    path(
+        'create/done/',
+        PasswordCreateCompleteView.as_view(),
+        name='password_create_complete'),
 ]
