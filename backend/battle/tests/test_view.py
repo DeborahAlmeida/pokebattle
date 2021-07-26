@@ -1,8 +1,11 @@
 from django.test import TestCase, Client
+from django.conf import settings
+from unittest.mock import patch
 from model_bakery import baker
 from django.urls import reverse
 from users.models import User
 from battle.models import Battle
+from pokemon.helpers import get_pokemon_from_api
 
 
 class ListBattlesTest(TestCase):
@@ -105,3 +108,47 @@ class BattleCreateViewTest(TestCase):
         self.client.login(username=self.creator.email, password='admin')
         with self.assertRaises(KeyError):
             self.client.post(reverse('battle'), battle_data)
+
+    @patch("battle.battles.email.send_templated_mail")
+    def test_if_battle_invitation_email_is_sent(self, mock_templated_mail):
+        battle_data = {
+            "creator": self.creator.id,
+            "opponent": self.opponent.id,
+        }
+
+        self.client.login(username=self.creator.email, password='admin')
+
+        self.client.post(reverse("battle"), battle_data)
+
+        battle = Battle.objects.filter(
+            creator=self.creator, opponent=self.opponent)
+
+        self.assertTrue(battle)
+
+        mock_templated_mail.assert_called_with(
+            template_name="invite_challenge",
+            from_email=settings.FROM_EMAIL,
+            recipient_list=[self.opponent.email],
+            context={
+                'creator': self.creator.email,
+            },
+        )
+
+
+class IntegrationPokeapiTest(TestCase):
+    def test_if_pokeapi_integration_returns_pokemon_data_sucessfully(self):
+        fake_json = {
+            "defense": 40,
+            "attack": 55,
+            "hp": 35,
+            "name": 'pikachu',
+            "img_url": 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+            "pokemon_id": 25,
+        }
+
+        with patch("pokemon.helpers.requests") as mock_get:
+            mock_get.return_value.json.return_value = fake_json
+
+        response = get_pokemon_from_api('pikachu')
+
+        self.assertEqual(response, fake_json)
