@@ -1,5 +1,5 @@
-from common.utils.tests import TestCaseUtils
 from model_bakery import baker
+from common.utils.tests import TestCaseUtils
 from django.urls import reverse
 from battle.models import PokemonTeam, Team
 
@@ -38,7 +38,8 @@ class TeamViewTest(TestCaseUtils):
             pokemons_data['pokemon_3']
         ]
 
-        all_pokemons_on_team = PokemonTeam.objects.filter(team=team_user[0]).prefetch_related('pokemon')
+        all_pokemons_on_team = PokemonTeam.objects.filter(
+            team=team_user[0]).prefetch_related('pokemon')
 
         for count in enumerate(pokemons_data_submited):
             pokemons_on_team_user.append(all_pokemons_on_team[count[0]].pokemon.name)
