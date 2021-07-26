@@ -245,7 +245,7 @@ class IntegrationPokeapiTest(TestCase):
             "attack": 55,
             "hp": 35,
             "name": 'pikachu',
-            "img_url": 'https://raw.githubusercontent.com'\
+            "img_url": 'https://raw.githubusercontent.com'
                        '/PokeAPI/sprites/master/sprites/pokemon/25.png',
             "pokemon_id": 25,
         }
