@@ -7,6 +7,7 @@ from users.models import User
 from battle.models import Battle, PokemonTeam
 from pokemon.helpers import get_pokemon_from_api
 from battle.battles.battle import get_winner_for
+from battle.tasks import run_battle_and_send_result_email
 
 
 class GetWinnerTest(TestCase):
@@ -155,7 +156,7 @@ class BattleCreateViewTest(TestCase):
     def test_create_battle_successfully(self):
         battle_data = {
             "creator": self.creator.id,
-            "opponent": self.opponent.id,
+            "opponent": self.opponent.email,
         }
         self.client.login(username=self.creator.email, password='admin')
         self.client.post(reverse('battle'), battle_data)
@@ -165,7 +166,7 @@ class BattleCreateViewTest(TestCase):
     def test_if_returns_error_when_creator_and_opponent_are_the_same_user(self):
         battle_data = {
             "creator": self.creator.id,
-            "opponent": self.creator.id,
+            "opponent": self.creator.email,
         }
         self.client.login(username=self.creator.email, password='admin')
         response = self.client.post(reverse('battle'), battle_data)
@@ -186,7 +187,7 @@ class BattleCreateViewTest(TestCase):
     def test_if_battle_invitation_email_is_sent(self, mock_templated_mail):
         battle_data = {
             "creator": self.creator.id,
-            "opponent": self.opponent.id,
+            "opponent": self.opponent.email,
         }
 
         self.client.login(username=self.creator.email, password='admin')
@@ -206,6 +207,25 @@ class BattleCreateViewTest(TestCase):
                 'creator': self.creator.email,
             },
         )
+
+    @patch('battle.tasks.run_battle')
+    def test_if_run_battle_task(self, result_battle_mock):
+        battle_data = {
+            "creator": self.creator.id,
+            "opponent": self.opponent.email,
+        }
+
+        self.client.login(username=self.creator.email, password='admin')
+
+        self.client.post(reverse("battle"), battle_data)
+
+        battle = Battle.objects.filter(
+            creator=self.creator, opponent=self.opponent)
+
+        self.assertTrue(battle)
+
+        run_battle_and_send_result_email.apply(battle[0].id)
+        assert result_battle_mock.called
 
 
 class IntegrationPokeapiTest(TestCase):
