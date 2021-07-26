@@ -46,7 +46,14 @@ class TeamView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("invite")
 
     def get_initial(self):
-        initial = {"battle": self.kwargs['pk'], "trainer": self.request.user.id}
+        battle_id = self.kwargs['pk']
+
+        try:
+            Battle.objects.get(id=battle_id)
+        except Battle.DoesNotExist:
+            battle_id = None
+
+        initial = {"battle": battle_id, "trainer": self.request.user.id}
         return initial
 
     def get_context_data(self, **kwargs):
