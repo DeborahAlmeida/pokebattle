@@ -4,8 +4,9 @@ from unittest.mock import patch
 from model_bakery import baker
 from django.urls import reverse
 from users.models import User
-from battle.models import Battle, PokemonTeam
 from pokemon.helpers import get_pokemon_from_api
+
+from battle.models import Battle, PokemonTeam
 from battle.battles.battle import get_winner_for
 from battle.tasks import run_battle_and_send_result_email
 
@@ -244,7 +245,8 @@ class IntegrationPokeapiTest(TestCase):
             "attack": 55,
             "hp": 35,
             "name": 'pikachu',
-            "img_url": 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
+            "img_url": 'https://raw.githubusercontent.com'\
+                       '/PokeAPI/sprites/master/sprites/pokemon/25.png',
             "pokemon_id": 25,
         }
 
