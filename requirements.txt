@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-amqp==5.0.6
+amqp==2.6.1
     # via kombu
 asgiref==3.4.1
     # via django
@@ -14,7 +14,7 @@ billiard==3.6.4.0
     # via celery
 brotlipy==0.7.0
     # via -r requirements.in
-celery[redis]==5.1.2
+celery[redis]==4.4.2
     # via -r requirements.in
 certifi==2021.5.30
     # via
@@ -24,20 +24,8 @@ cffi==1.14.6
     # via
     #   brotlipy
     #   cryptography
-chardet==4.0.0
+charset-normalizer==2.0.3
     # via requests
-click-didyoumean==0.0.3
-    # via celery
-click-plugins==1.1.1
-    # via celery
-click-repl==0.2.0
-    # via celery
-click==7.1.2
-    # via
-    #   celery
-    #   click-didyoumean
-    #   click-plugins
-    #   click-repl
 cryptography==3.4.7
     # via social-auth-core
 decorator==5.0.9
@@ -77,7 +65,7 @@ et-xmlfile==1.1.0
     # via openpyxl
 gunicorn==20.1.0
     # via -r requirements.in
-idna==2.10
+idna==3.2
     # via requests
 ipython-genutils==0.2.0
     # via traitlets
@@ -85,7 +73,7 @@ ipython==7.25.0
     # via -r requirements.in
 jedi==0.18.0
     # via ipython
-kombu==5.1.0
+kombu==4.6.11
     # via celery
 markuppy==1.14
     # via tablib
@@ -106,9 +94,7 @@ pexpect==4.8.0
 pickleshare==0.7.5
     # via ipython
 prompt-toolkit==3.0.19
-    # via
-    #   click-repl
-    #   ipython
+    # via ipython
 psutil==5.8.0
     # via -r requirements.in
 psycopg2==2.9.1
@@ -137,7 +123,7 @@ redis==3.5.3
     # via celery
 requests-oauthlib==1.3.0
     # via social-auth-core
-requests==2.25.1
+requests==2.26.0
     # via
     #   -r requirements.in
     #   requests-oauthlib
@@ -145,17 +131,13 @@ requests==2.25.1
 sentry-sdk==1.3.0
     # via -r requirements.in
 six==1.16.0
-    # via
-    #   click-repl
-    #   social-auth-app-django
+    # via social-auth-app-django
 social-auth-app-django==4.0.0
     # via -r requirements.in
 social-auth-core==4.1.0
     # via
     #   python-social-auth
     #   social-auth-app-django
-six==1.16.0
-    # via click-repl
 sqlparse==0.4.1
     # via django
 tablib[html,ods,xls,xlsx,yaml]==3.0.0
@@ -168,14 +150,13 @@ urllib3==1.26.6
     # via
     #   requests
     #   sentry-sdk
-vine==5.0.0
+vine==1.3.0
     # via
     #   amqp
     #   celery
-    #   kombu
 wcwidth==0.2.5
     # via prompt-toolkit
-whitenoise==5.2.0
+whitenoise==5.3.0
     # via -r requirements.in
 xlrd==2.0.1
     # via tablib
