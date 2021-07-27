@@ -1,7 +1,7 @@
 from model_bakery import baker
 from common.utils.tests import TestCaseUtils
 from django.urls import reverse
-from battle.models import PokemonTeam, Team
+from battle.models import Team
 
 
 class TeamViewTest(TestCaseUtils):
@@ -29,7 +29,6 @@ class TeamViewTest(TestCaseUtils):
 
         team_user = Team.objects.get(battle=self.battle, trainer=self.user)
         self.assertTrue(team_user)
-
 
         pokemons_data_submited = {
             pokemons_data['pokemon_1'],
