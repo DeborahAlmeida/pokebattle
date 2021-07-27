@@ -30,24 +30,16 @@ class TeamViewTest(TestCaseUtils):
         team_user = Team.objects.get(battle=self.battle, trainer=self.user)
         self.assertTrue(team_user)
 
-        pokemons_on_team_user = []
 
-        pokemons_data_submited = [
+        pokemons_data_submited = {
             pokemons_data['pokemon_1'],
             pokemons_data['pokemon_2'],
             pokemons_data['pokemon_3']
-        ]
+        }
 
-        all_pokemons_on_team = PokemonTeam.objects.filter(
-            team=team_user).prefetch_related('pokemon')
-
-        for count in enumerate(pokemons_data_submited):
-            pokemons_on_team_user.append(all_pokemons_on_team[count[0]].pokemon.name)
-
-        self.assertEqual(pokemons_on_team_user, pokemons_data_submited)
         self.assertEqual(
-            set(pokemons_data_submited), 
-            set([p.name for p in team_user.pokemons.all()])
+            pokemons_data_submited,
+            {p.name for p in team_user.pokemons.all()}
         )
 
     def test_if_returns_error_when_type_wrong_pokemon_name(self):
