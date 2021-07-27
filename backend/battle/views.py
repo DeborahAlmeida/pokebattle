@@ -68,7 +68,7 @@ class TeamView(LoginRequiredMixin, CreateView):
         team = form.save()
         if team.battle.teams.count() == 2:
             run_battle_and_send_result_email.delay(team.battle.id)
-            return HttpResponseRedirect(reverse_lazy("home"))
+            return HttpResponseRedirect(reverse_lazy("result"))
 
         return HttpResponseRedirect(reverse_lazy("invite"))
 
