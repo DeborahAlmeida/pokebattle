@@ -6,8 +6,6 @@ from battle.battles.battle import get_winner_for
 
 
 class ListBattlesTest(TestCaseUtils):
-    def setUp(self):
-        super().setUp()
 
     def test_login_user_can_acess_battle_list(self):
         response = self.auth_client.get(reverse('battle_list'))
