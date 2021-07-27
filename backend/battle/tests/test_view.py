@@ -27,7 +27,7 @@ class TeamViewTest(TestCaseUtils):
             reverse("team_create", kwargs={'pk': self.battle.id}), pokemons_data, follow=True)
         self.assertEqual(response.status_code, 200)
 
-        team_user = Team.objects.filter(battle=self.battle, trainer=self.user)
+        team_user = Team.objects.get(battle=self.battle, trainer=self.user)
         self.assertTrue(team_user)
 
         pokemons_on_team_user = []
@@ -39,12 +39,16 @@ class TeamViewTest(TestCaseUtils):
         ]
 
         all_pokemons_on_team = PokemonTeam.objects.filter(
-            team=team_user[0]).prefetch_related('pokemon')
+            team=team_user).prefetch_related('pokemon')
 
         for count in enumerate(pokemons_data_submited):
             pokemons_on_team_user.append(all_pokemons_on_team[count[0]].pokemon.name)
 
         self.assertEqual(pokemons_on_team_user, pokemons_data_submited)
+        self.assertEqual(
+            set(pokemons_data_submited), 
+            set([p.name for p in team_user.pokemons.all()])
+        )
 
     def test_if_returns_error_when_type_wrong_pokemon_name(self):
         pokemons_data = {
@@ -129,6 +133,4 @@ class TeamViewTest(TestCaseUtils):
         }
         response = self.auth_client.post(reverse(
             "team_create", kwargs={'pk': 100}), pokemons_data, follow=True)
-        self.assertEqual(
-            response.context_data['form'].errors['__all__'][0],
-            'ERROR: Select a valid battle')
+        self.assertEqual(response.status_code, 404)

@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
@@ -47,11 +48,7 @@ class TeamView(LoginRequiredMixin, CreateView):
 
     def get_initial(self):
         battle_id = self.kwargs['pk']
-
-        try:
-            Battle.objects.get(id=battle_id)
-        except Battle.DoesNotExist:
-            battle_id = None
+        get_object_or_404(Battle, pk=battle_id)
 
         initial = {"battle": battle_id, "trainer": self.request.user.id}
         return initial
