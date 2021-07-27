@@ -19,6 +19,10 @@ class Home(TemplateView):
     template_name = 'battle/home.html'
 
 
+class ResultBattle(TemplateView):
+    template_name = 'battle/result_alert.html'
+
+
 class Invite(LoginRequiredMixin, TemplateView):
     template_name = 'battle/invite.html'
 
