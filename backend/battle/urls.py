@@ -12,7 +12,7 @@ from .views import (
     SignUpSucess,
     PasswordCreateConfirmView,
     PasswordCreateCompleteView,
-    ResultBattle,
+
 )
 from django.urls import reverse_lazy
 
