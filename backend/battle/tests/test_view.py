@@ -8,55 +8,55 @@ from battle.battles.battle import get_winner_for
 class ListBattlesTest(TestCaseUtils):
     def setUp(self):
         super().setUp()
-        self.battle = baker.make('battle.Battle', creator=self.user)
-        self.battle_from_user = Battle.objects.filter(creator=self.user)
 
     def test_login_user_can_acess_battle_list(self):
         response = self.auth_client.get(reverse('battle_list'))
         self.assertEqual(response.status_code, 200)
 
     def test_view_returns_empty_list(self):
-        battle = Battle.objects.get(creator=self.user)
-        battle.delete()
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(response_qs, [])
+        self.assertCountEqual(response_qs, Battle.objects.filter(creator=self.user))
 
     def test_view_returns_one_battle_in_list(self):
+        baker.make('battle.Battle', creator=self.user)
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(response_qs, [self.battle_from_user][0])
+        self.assertCountEqual(response_qs, [Battle.objects.get(creator=self.user)])
 
     def test_view_returns_few_battle_ids(self):
+        baker.make('battle.Battle', creator=self.user, _quantity=3)
         baker.make('battle.Battle', creator=self.user, _quantity=4)
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(self.battle_from_user, response_qs)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs)
 
     def test_view_returns_a_lot_battle_ids(self):
         baker.make('battle.Battle', creator=self.user, _quantity=100)
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(self.battle_from_user, response_qs)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs)
 
-    def test_view_an_error_when_the_user_is_not_logged(self):
+    def test_view_returns_an_error_when_the_user_is_not_logged(self):
         self.auth_client.logout()
         response = self.client.get(reverse('battle_list'))
         self.assertRedirects(response, '/accounts/login/?next=/battle/list/')
+        self.assertEqual(response.status_code, 302)
 
     def test_view_diff_to_verify_it_returns_exactly_len_of_battle_list(self):
         baker.make('battle.Battle', creator=self.user, _quantity=10)
+
         response_initial = self.auth_client.get(reverse('battle_list'))
         response_qs_initial = response_initial.context_data.get('battle_list')
 
-        self.assertCountEqual(self.battle_from_user, response_qs_initial)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs_initial)
 
         baker.make('battle.Battle', creator=self.user, _quantity=90)
-        battles_updated = Battle.objects.filter(creator=self.user)
+
         response_updated = self.auth_client.get(reverse('battle_list'))
         response_qs_updated = response_updated.context_data.get('battle_list')
 
-        self.assertCountEqual(battles_updated, response_qs_updated)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs_updated)
 
 
 class BattleCreateViewTest(TestCaseUtils):
