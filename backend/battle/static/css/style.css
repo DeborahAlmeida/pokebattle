@@ -136,6 +136,12 @@ h2{
     margin-top: 50px;
 
 }
+.result{
+    color: black;
+    margin: 0 auto;
+    margin-top: 100px;
+    width:280px;
+}
 
 .list{
     color: black;
@@ -520,4 +526,7 @@ h2{
 .login_google{
     margin: 0px auto;
     margin-top: 20px;
+}
+.hidden-password-link{
+    visibility: hidden;
 }

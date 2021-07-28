@@ -2,13 +2,13 @@ from django.http import HttpResponseRedirect
 from django.db.models import Q
 from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
 from django.shortcuts import get_object_or_404
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
 from battle.battles.base_stats import get_pokemons_team
-from battle.battles.email import send_invite_email
 from battle.tasks import run_battle_and_send_result_email
 
 from users.models import User
@@ -18,6 +18,10 @@ from pokemon.models import Pokemon
 
 class Home(TemplateView):
     template_name = 'battle/home.html'
+
+
+class ResultBattle(TemplateView):
+    template_name = 'battle/result_alert.html'
 
 
 class Invite(LoginRequiredMixin, TemplateView):
@@ -34,9 +38,14 @@ class BattleView(LoginRequiredMixin, CreateView):
         self.initial = {"creator": obj_creator}
         return self.initial
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        users = User.objects.all()
+        context['users'] = users
+        return context
+
     def form_valid(self, form):
         form.save()
-        send_invite_email(form.instance.opponent, form.instance.creator)
         return HttpResponseRedirect(reverse_lazy("team_create", args=(form.instance.id, )))
 
 
@@ -63,7 +72,7 @@ class TeamView(LoginRequiredMixin, CreateView):
         team = form.save()
         if team.battle.teams.count() == 2:
             run_battle_and_send_result_email.delay(team.battle.id)
-            return HttpResponseRedirect(reverse_lazy("home"))
+            return HttpResponseRedirect(reverse_lazy("result"))
 
         return HttpResponseRedirect(reverse_lazy("invite"))
 
@@ -107,3 +116,25 @@ class BattleSignUp(CreateView):
 
 class SignUpSucess(TemplateView):
     template_name = "battle/user/sucess_signup.html"
+
+
+class PasswordContextMixin:
+    extra_context = None
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'title': self.title,
+            **(self.extra_context or {})
+        })
+        return context
+
+
+class PasswordCreateConfirmView(PasswordResetConfirmView):
+    template_name = 'registration/password_create_confirm.html'
+    title = ('Create a password')
+
+
+class PasswordCreateCompleteView(PasswordResetCompleteView):
+    template_name = 'registration/password_create_complete.html'
+    title = ('Password create complete')
