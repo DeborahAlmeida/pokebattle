@@ -93,6 +93,7 @@ class TeamForm(forms.ModelForm):
     pokemon_3 = forms.CharField(widget=forms.Textarea)
 
     def clean(self):
+        # import ipdb; ipdb.set_trace()
         cleaned_data = super().clean()
         pokemon_1 = self.cleaned_data.get('pokemon_1')
         pokemon_2 = self.cleaned_data.get('pokemon_2')
