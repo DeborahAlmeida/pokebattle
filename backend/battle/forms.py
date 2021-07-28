@@ -97,21 +97,26 @@ class TeamForm(forms.ModelForm):
         pokemon_1 = self.cleaned_data.get('pokemon_1')
         pokemon_2 = self.cleaned_data.get('pokemon_2')
         pokemon_3 = self.cleaned_data.get('pokemon_3')
-        obj_battle = cleaned_data['battle']
         obj_trainer = cleaned_data['trainer']
-        position_pkn_1 = cleaned_data['position_pkn_1']
-        position_pkn_2 = cleaned_data['position_pkn_2']
-        position_pkn_3 = cleaned_data['position_pkn_3']
+
+        if 'battle' not in cleaned_data:
+            raise forms.ValidationError('ERROR: Select a valid battle')
+
+        obj_battle = cleaned_data['battle']
 
         if not pokemon_1 or not pokemon_2 or not pokemon_3:
             raise forms.ValidationError('ERROR: Select all pokemons')
 
-        if not position_pkn_1 or not position_pkn_2 or not position_pkn_3:
+        if ('position_pkn_1' or 'position_pkn_2' or 'position_pkn_3') not in cleaned_data:
             raise forms.ValidationError('ERROR: Select all positions')
+
+        position_pkn_1 = cleaned_data['position_pkn_1']
+        position_pkn_2 = cleaned_data['position_pkn_2']
+        position_pkn_3 = cleaned_data['position_pkn_3']
 
         pokemons_exist = verify_pokemon_exists_api([pokemon_1, pokemon_2, pokemon_3])
         if not pokemons_exist:
-            raise forms.ValidationError('ERROR: Type the correct pokemons name ')
+            raise forms.ValidationError('ERROR: Type the correct pokemons name')
 
         valid_pokemons = validate_sum_pokemons(
             [

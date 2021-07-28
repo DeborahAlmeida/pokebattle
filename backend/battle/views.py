@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
@@ -55,7 +56,10 @@ class TeamView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("invite")
 
     def get_initial(self):
-        initial = {"battle": self.kwargs['pk'], "trainer": self.request.user.id}
+        battle_id = self.kwargs['pk']
+        get_object_or_404(Battle, pk=battle_id)
+
+        initial = {"battle": battle_id, "trainer": self.request.user.id}
         return initial
 
     def get_context_data(self, **kwargs):
