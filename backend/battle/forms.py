@@ -46,6 +46,9 @@ class BattleForm(forms.ModelForm):
         if 'creator' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to be logged.")
 
+        if 'opponent' not in cleaned_data:
+            raise forms.ValidationError("ERROR: You need to choose an opponent")
+
         if cleaned_data['opponent'] == cleaned_data['creator']:
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
         return cleaned_data
