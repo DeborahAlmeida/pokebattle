@@ -4,7 +4,6 @@ from django.conf import settings
 from unittest.mock import patch
 from model_bakery import baker
 from django.urls import reverse
-from pokemon.helpers import get_pokemon_from_api
 
 from battle.models import Battle, PokemonTeam
 from battle.battles.battle import get_winner_for, validate_sum_pokemons, sum_point_from_api
@@ -221,60 +220,49 @@ class IntegrationPokeapiTest(TestCaseUtils):
     def setUp(self):
         super().setUp()
 
-    # def test_if_pokeapi_integration_returns_pokemon_data_sucessfully(self):
-    #     fake_json = {
-    #         "defense": 40,
-    #         "attack": 55,
-    #         "hp": 35,
-    #         "name": 'pikachu',
-    #         "img_url": 'https://raw.githubusercontent.com'
-    #                    '/PokeAPI/sprites/master/sprites/pokemon/25.png',
-    #         "pokemon_id": 25,
-    #     }
-
-    #     with patch("pokemon.helpers.requests") as mock_get:
-    #         mock_get.return_value.json.return_value = fake_json
-
-    #     valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
-    #     self.assertTrue(valid_sum)
-
-    # @patch('battle.battles.battle.get_pokemon_from_api')
-    # def test_validate_sum_pokemons(self, mock_points):
-
-    #     fake_json = {
-    #         "defense": 40,
-    #         "attack": 55,
-    #         "hp": 35,
-    #         "name": 'pikachu',
-    #         "img_url": 'https://raw.githubusercontent.com'
-    #                    '/PokeAPI/sprites/master/sprites/pokemon/25.png',
-    #         "pokemon_id": 25,
-    #     }
-
-    #     with patch("pokemon.helpers.requests") as mock_get:
-    #         mock_get.return_value.json.return_value = fake_json
-
-
-    #     pokemons = ['pikachu', 'pidgey', 'bulbasaur']
-    #     sum_point = sum_point_from_api('pikachu')
-    #     self.assertEqual(sum_point, 200)
-
     @patch('battle.battles.battle.get_pokemon_from_api')
     def test_if_pokeapi_integration_returns_pokemon_data_sucessfully(self, mock_get_pokemon):
-        fake_json = {
-            "defense": 40,
-            "attack": 55,
-            "hp": 35,
-            "name": 'pikachu',
-            "img_url": 'https://raw.githubusercontent.com'
-                       '/PokeAPI/sprites/master/sprites/pokemon/25.png',
-            "pokemon_id": 25,
-        }
-        mock_get_pokemon.return_value = fake_json
-        mock_get_pokemon.assert_called_with('pikachu')
-        sum_point_from_api('pikachu')
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == 'pikachu':
+                fake_json = {
+                    "defense": 40,
+                    "attack": 55,
+                    "hp": 35,
+                    "name": 'pikachu',
+                    "img_url": 'https://raw.githubusercontent.com'
+                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                    "pokemon_id": 25,
+                }
+            elif pokemon_name == 'pidgey':
+                fake_json = {
+                    "defense": 50,
+                    "attack": 25,
+                    "hp": 15,
+                    "name": 'pidgey',
+                    "img_url": 'https://raw.githubusercontent.com'
+                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                    "pokemon_id": 15,
+                }
+            elif pokemon_name == 'bulbasaur':
+                fake_json = {
+                    "defense": 30,
+                    "attack": 40,
+                    "hp": 20,
+                    "name": 'bulbasaur',
+                    "img_url": 'https://raw.githubusercontent.com'
+                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                    "pokemon_id": 10,
+                }
+            return fake_json
+        mock_get_pokemon.side_effect = side_effect_func
 
+        total_point_pokemons = 0
 
-        
-        # valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
-        # self.assertTrue(valid_sum)
+        for pokemon in ['pikachu', 'pidgey', 'bulbasaur']:
+            pokemon_point = sum_point_from_api(pokemon)
+            mock_get_pokemon.assert_called_with(pokemon)
+            total_point_pokemons += pokemon_point
+
+        is_valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
+        self.assertTrue(is_valid_sum)
