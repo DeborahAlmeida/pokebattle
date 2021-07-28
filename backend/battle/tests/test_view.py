@@ -1,8 +1,8 @@
 from django.test import TestCase
-from common.utils.tests import TestCaseUtils
-from django.conf import settings
 from unittest.mock import patch
 from model_bakery import baker
+from common.utils.tests import TestCaseUtils
+from django.conf import settings
 from django.urls import reverse
 
 from battle.models import Battle, PokemonTeam
@@ -217,8 +217,6 @@ class BattleCreateViewTest(TestCaseUtils):
 
 
 class IntegrationPokeapiTest(TestCaseUtils):
-    def setUp(self):
-        super().setUp()
 
     @patch('battle.battles.battle.get_pokemon_from_api')
     def test_if_pokeapi_integration_returns_pokemon_data_sucessfully(self, mock_get_pokemon):
