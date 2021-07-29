@@ -1,4 +1,4 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from unittest.mock import patch
 from model_bakery import baker
 from common.utils.tests import TestCaseUtils
@@ -262,7 +262,7 @@ class IntegrationPokeApiTest(TestCaseUtils):
             mock_get_pokemon.assert_called_with(pokemon)
             total_point_pokemons += pokemon_point
 
-        self.assertEqual(total_point_pokemons, 310 )
+        self.assertEqual(total_point_pokemons, 310)
 
         is_valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
         self.assertTrue(is_valid_sum)
@@ -380,7 +380,7 @@ class TeamViewTest(TestCaseUtils):
 
         self.auth_client.post(
             reverse("team_create", kwargs={'pk': battle.id}), pokemons_data, follow=True)
-        
+
         battle_updated = Battle.objects.get(creator=self.user, opponent=self.opponent)
 
         email_mock.assert_called_with(
