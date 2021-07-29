@@ -99,10 +99,6 @@ class TeamForm(forms.ModelForm):
             raise forms.ValidationError('ERROR: Select a valid battle')
 
         obj_battle = cleaned_data['battle']
-
-        if 'trainer' not in cleaned_data:
-            raise forms.ValidationError('ERROR: You need to be logged')
-
         obj_trainer = cleaned_data['trainer']
 
         if ('pokemon_1' or 'pokemon_2' or 'pokemon_3') not in cleaned_data:

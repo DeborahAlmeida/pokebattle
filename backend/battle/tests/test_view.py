@@ -369,21 +369,6 @@ class TeamFormTest(TestCaseUtils):
         with self.assertRaisesMessage(ValidationError, 'ERROR: Select a valid battle'):
             form.save()
 
-    def test_form_returns_error_with_trainer_missing(self):
-        pokemons_data = {
-            "battle": self.battle.id,
-            "pokemon_1": 'pikachu',
-            "pokemon_2": 'bulbasaur',
-            "pokemon_3": 'pidgeot',
-            "position_pkn_1": 1,
-            "position_pkn_2": 2,
-            "position_pkn_3": 3,
-        }
-        form = TeamForm(data=pokemons_data)
-        self.assertFalse(form.is_valid())
-        with self.assertRaisesMessage(ValidationError, 'ERROR: You need to be logged'):
-            form.save()
-
     def test_form_returns_error_with_incorrect_pkn_name(self):
         pokemons_data = {
             "battle": self.battle.id,
