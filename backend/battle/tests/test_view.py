@@ -6,7 +6,7 @@ from django.conf import settings
 from django.urls import reverse
 
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import get_winner_for, validate_sum_pokemons, sum_point_from_api
+from battle.battles.battle import get_winner_for, validate_sum_pokemons
 from battle.tasks import run_battle_and_send_result_email
 
 
