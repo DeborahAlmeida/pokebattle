@@ -216,7 +216,7 @@ class BattleCreateViewTest(TestCaseUtils):
         result_battle_mock.assert_called_with(battle)
 
 
-class IntegrationPokeapiTest(TestCaseUtils):
+class IntegrationPokeApiTest(TestCaseUtils):
 
     @patch('battle.battles.battle.get_pokemon_from_api')
     def test_if_pokeapi_integration_returns_pokemon_data_sucessfully(self, mock_get_pokemon):
@@ -262,7 +262,50 @@ class IntegrationPokeapiTest(TestCaseUtils):
             mock_get_pokemon.assert_called_with(pokemon)
             total_point_pokemons += pokemon_point
 
+        self.assertEqual(total_point_pokemons, 310 )
+
         is_valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
+        self.assertTrue(is_valid_sum)
+
+    @patch('battle.battles.battle.get_pokemon_from_api')
+    def test_if_function_valid_points_returns_corretly(self, mock_get_pokemon):
+        def side_effect_func(pokemon_name):
+            fake_json = 1
+            if pokemon_name == 'pikachu':
+                fake_json = {
+                    "defense": 40,
+                    "attack": 55,
+                    "hp": 35,
+                    "name": 'pikachu',
+                    "img_url": 'https://raw.githubusercontent.com'
+                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                    "pokemon_id": 25,
+                }
+            elif pokemon_name == 'pidgey':
+                fake_json = {
+                    "defense": 50,
+                    "attack": 25,
+                    "hp": 15,
+                    "name": 'pidgey',
+                    "img_url": 'https://raw.githubusercontent.com'
+                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                    "pokemon_id": 15,
+                }
+            elif pokemon_name == 'bulbasaur':
+                fake_json = {
+                    "defense": 30,
+                    "attack": 40,
+                    "hp": 20,
+                    "name": 'bulbasaur',
+                    "img_url": 'https://raw.githubusercontent.com'
+                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
+                    "pokemon_id": 10,
+                }
+            return fake_json
+        mock_get_pokemon.side_effect = side_effect_func
+
+        is_valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
+
         self.assertTrue(is_valid_sum)
 
 
@@ -299,11 +342,11 @@ class TeamViewTest(TestCaseUtils):
             "position_pkn_2": 2,
             "position_pkn_3": 3,
         }
-        response = self.auth_client.post(
+        self.auth_client.post(
             reverse("team_create", kwargs={'pk': battle.id}), pokemons_data, follow=True)
-        task_mock.return_value = 2
+
         task_mock.assert_called_with(battle.id)
-        # self.assertEqual(response, 1)
+
         self.assertTrue(Team.objects.get(battle=battle, trainer=self.user))
 
     @patch('battle.battles.email.send_templated_mail')
