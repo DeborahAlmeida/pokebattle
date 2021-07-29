@@ -86,7 +86,6 @@ class ListBattlesTest(TestCaseUtils):
     def setUp(self):
         super().setUp()
         self.battle = baker.make('battle.Battle', creator=self.user)
-        self.battle_from_user = Battle.objects.filter(creator=self.user)
 
     def test_login_user_can_acess_battle_list(self):
         response = self.auth_client.get(reverse('battle_list'))
@@ -102,19 +101,19 @@ class ListBattlesTest(TestCaseUtils):
     def test_view_returns_one_battle_in_list(self):
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(response_qs, [self.battle_from_user][0])
+        self.assertCountEqual(response_qs, [Battle.objects.filter(creator=self.user)][0])
 
     def test_view_returns_few_battle_ids(self):
         baker.make('battle.Battle', creator=self.user, _quantity=4)
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(self.battle_from_user, response_qs)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs)
 
     def test_view_returns_a_lot_battle_ids(self):
         baker.make('battle.Battle', creator=self.user, _quantity=100)
         response = self.auth_client.get(reverse('battle_list'))
         response_qs = response.context_data.get('battle_list')
-        self.assertCountEqual(self.battle_from_user, response_qs)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs)
 
     def test_view_an_error_when_the_user_is_not_logged(self):
         self.auth_client.logout()
@@ -126,7 +125,7 @@ class ListBattlesTest(TestCaseUtils):
         response_initial = self.auth_client.get(reverse('battle_list'))
         response_qs_initial = response_initial.context_data.get('battle_list')
 
-        self.assertCountEqual(self.battle_from_user, response_qs_initial)
+        self.assertCountEqual(Battle.objects.filter(creator=self.user), response_qs_initial)
 
         baker.make('battle.Battle', creator=self.user, _quantity=90)
         battles_updated = Battle.objects.filter(creator=self.user)
@@ -187,85 +186,8 @@ class BattleCreateViewTest(TestCaseUtils):
             },
         )
 
-    @patch('battle.tasks.run_battle')
-    def test_if_run_battle_task(self, result_battle_mock):
-        battle = Battle.objects.create(creator=self.user, opponent=self.opponent)
-
-        team_creator = baker.make('battle.Team', battle=battle, trainer=self.user)
-        team_opponent = baker.make('battle.Team', battle=battle, trainer=self.opponent)
-        pokemon_1, pokemon_2, pokemon_3 = baker.make(
-            "pokemon.Pokemon",
-            attack=60, defense=45, hp=50, _quantity=3)
-
-        pokemons = [pokemon_1, pokemon_2, pokemon_3]
-
-        for count, pokemon in enumerate(pokemons):
-            PokemonTeam.objects.create(
-                team=team_creator,
-                pokemon=pokemon,
-                order=count)
-
-        for count, pokemon in enumerate(pokemons):
-            PokemonTeam.objects.create(
-                team=team_opponent,
-                pokemon=pokemon,
-                order=count)
-
-        result_battle_mock.return_value = team_creator
-        run_battle_and_send_result_email.apply([battle.id])
-        result_battle_mock.assert_called_with(battle)
-
 
 class IntegrationPokeApiTest(TestCaseUtils):
-
-    @patch('battle.battles.battle.get_pokemon_from_api')
-    def test_if_pokeapi_integration_returns_pokemon_data_sucessfully(self, mock_get_pokemon):
-        def side_effect_func(pokemon_name):
-            fake_json = 1
-            if pokemon_name == 'pikachu':
-                fake_json = {
-                    "defense": 40,
-                    "attack": 55,
-                    "hp": 35,
-                    "name": 'pikachu',
-                    "img_url": 'https://raw.githubusercontent.com'
-                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
-                    "pokemon_id": 25,
-                }
-            elif pokemon_name == 'pidgey':
-                fake_json = {
-                    "defense": 50,
-                    "attack": 25,
-                    "hp": 15,
-                    "name": 'pidgey',
-                    "img_url": 'https://raw.githubusercontent.com'
-                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
-                    "pokemon_id": 15,
-                }
-            elif pokemon_name == 'bulbasaur':
-                fake_json = {
-                    "defense": 30,
-                    "attack": 40,
-                    "hp": 20,
-                    "name": 'bulbasaur',
-                    "img_url": 'https://raw.githubusercontent.com'
-                            '/PokeAPI/sprites/master/sprites/pokemon/25.png',
-                    "pokemon_id": 10,
-                }
-            return fake_json
-        mock_get_pokemon.side_effect = side_effect_func
-
-        total_point_pokemons = 0
-
-        for pokemon in ['pikachu', 'pidgey', 'bulbasaur']:
-            pokemon_point = sum_point_from_api(pokemon)
-            mock_get_pokemon.assert_called_with(pokemon)
-            total_point_pokemons += pokemon_point
-
-        self.assertEqual(total_point_pokemons, 310)
-
-        is_valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
-        self.assertTrue(is_valid_sum)
 
     @patch('battle.battles.battle.get_pokemon_from_api')
     def test_if_function_valid_points_returns_corretly(self, mock_get_pokemon):
@@ -318,19 +240,19 @@ class TeamViewTest(TestCaseUtils):
     def test_if_task_run_battle_is_called(self, task_mock):
         battle = Battle.objects.create(creator=self.user, opponent=self.opponent)
 
-        team_opponent = baker.make('battle.Team', battle=battle, trainer=self.opponent)
-
-        pokemon_1, pokemon_2, pokemon_3 = baker.make(
-            "pokemon.Pokemon",
-            attack=60, defense=45, hp=50, _quantity=3)
-
-        pokemons = [pokemon_1, pokemon_2, pokemon_3]
-
-        for count, pokemon in enumerate(pokemons):
-            PokemonTeam.objects.create(
-                team=team_opponent,
-                pokemon=pokemon,
-                order=count)
+        pokemons_data_opponnent = {
+            "battle": battle.id,
+            "trainer": self.opponent.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        self.auth_client.post(
+            reverse("team_create", kwargs={'pk': battle.id}), pokemons_data_opponnent, follow=True)
+        self.assertTrue(Team.objects.get(battle=battle, trainer=self.opponent))
 
         pokemons_data = {
             "battle": battle.id,
@@ -353,19 +275,19 @@ class TeamViewTest(TestCaseUtils):
     def test_if_task_send_email(self, email_mock):
         battle = Battle.objects.create(creator=self.user, opponent=self.opponent)
 
-        team_opponent = baker.make('battle.Team', battle=battle, trainer=self.opponent)
-
-        pokemon_1, pokemon_2, pokemon_3 = baker.make(
-            "pokemon.Pokemon",
-            attack=60, defense=45, hp=50, _quantity=3)
-
-        pokemons = [pokemon_1, pokemon_2, pokemon_3]
-
-        for count, pokemon in enumerate(pokemons):
-            PokemonTeam.objects.create(
-                team=team_opponent,
-                pokemon=pokemon,
-                order=count)
+        pokemons_data_opponnent = {
+            "battle": battle.id,
+            "trainer": self.opponent.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        self.auth_client.post(
+            reverse("team_create", kwargs={'pk': battle.id}), pokemons_data_opponnent, follow=True)
+        self.assertTrue(Team.objects.get(battle=battle, trainer=self.opponent))
 
         pokemons_data = {
             "battle": battle.id,
@@ -391,6 +313,12 @@ class TeamViewTest(TestCaseUtils):
                 'winner': battle_updated.winner,
             },
         )
+
+
+class TaskAsyncTest(TestCaseUtils):
+    def setUp(self):
+        super().setUp()
+        self.opponent = baker.make('users.User')
 
     def test_if_task_set_winner_correctly(self):
         battle = Battle.objects.create(creator=self.user, opponent=self.opponent)
