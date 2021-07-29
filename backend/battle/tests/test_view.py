@@ -415,3 +415,8 @@ class TeamFormTest(TestCaseUtils):
         self.assertFalse(form.is_valid())
         with self.assertRaisesMessage(ValidationError, 'ERROR: You cannot add the same position'):
             form.save()
+
+    def test_form_is_invalid_with_empty_data(self):
+        form = TeamForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(len(form.errors), 9)
