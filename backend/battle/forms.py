@@ -94,18 +94,23 @@ class TeamForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        pokemon_1 = self.cleaned_data.get('pokemon_1')
-        pokemon_2 = self.cleaned_data.get('pokemon_2')
-        pokemon_3 = self.cleaned_data.get('pokemon_3')
-        obj_trainer = cleaned_data['trainer']
 
         if 'battle' not in cleaned_data:
             raise forms.ValidationError('ERROR: Select a valid battle')
 
         obj_battle = cleaned_data['battle']
 
-        if not pokemon_1 or not pokemon_2 or not pokemon_3:
+        if 'trainer' not in cleaned_data:
+            raise forms.ValidationError('ERROR: You need to be logged')
+
+        obj_trainer = cleaned_data['trainer']
+
+        if ('pokemon_1' or 'pokemon_2' or 'pokemon_3') not in cleaned_data:
             raise forms.ValidationError('ERROR: Select all pokemons')
+
+        pokemon_1 = self.cleaned_data.get('pokemon_1')
+        pokemon_2 = self.cleaned_data.get('pokemon_2')
+        pokemon_3 = self.cleaned_data.get('pokemon_3')
 
         if ('position_pkn_1' or 'position_pkn_2' or 'position_pkn_3') not in cleaned_data:
             raise forms.ValidationError('ERROR: Select all positions')
