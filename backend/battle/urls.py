@@ -4,6 +4,7 @@ from .views import (
     Home,
     BattleView,
     Invite,
+    ResultBattle,
     TeamView,
     BattleList,
     BattleDetail,
@@ -11,11 +12,13 @@ from .views import (
     SignUpSucess,
     PasswordCreateConfirmView,
     PasswordCreateCompleteView,
+
 )
 from django.urls import reverse_lazy
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
+    path("result/", ResultBattle.as_view(), name="result"),
     path("battle/", BattleView.as_view(), name="battle"),
     path('invite/', Invite.as_view(), name='invite'),
     path('battle/list/', BattleList.as_view(), name='battle_list'),

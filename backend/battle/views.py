@@ -4,6 +4,7 @@ from django.views.generic import TemplateView, CreateView, ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
+from django.shortcuts import get_object_or_404
 
 from battle.models import Battle, Team
 from battle.forms import TeamForm, BattleForm, UserForm
@@ -17,6 +18,10 @@ from pokemon.models import Pokemon
 
 class Home(TemplateView):
     template_name = 'battle/home.html'
+
+
+class ResultBattle(TemplateView):
+    template_name = 'battle/result_alert.html'
 
 
 class Invite(LoginRequiredMixin, TemplateView):
@@ -51,7 +56,10 @@ class TeamView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("invite")
 
     def get_initial(self):
-        initial = {"battle": self.kwargs['pk'], "trainer": self.request.user.id}
+        battle_id = self.kwargs['pk']
+        get_object_or_404(Battle, pk=battle_id)
+
+        initial = {"battle": battle_id, "trainer": self.request.user.id}
         return initial
 
     def get_context_data(self, **kwargs):
@@ -64,7 +72,7 @@ class TeamView(LoginRequiredMixin, CreateView):
         team = form.save()
         if team.battle.teams.count() == 2:
             run_battle_and_send_result_email.delay(team.battle.id)
-            return HttpResponseRedirect(reverse_lazy("home"))
+            return HttpResponseRedirect(reverse_lazy("result"))
 
         return HttpResponseRedirect(reverse_lazy("invite"))
 
