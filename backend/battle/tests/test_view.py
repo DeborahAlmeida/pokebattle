@@ -1,4 +1,3 @@
-from django.test import TestCase
 from unittest.mock import patch
 from model_bakery import baker
 from common.utils.tests import TestCaseUtils
@@ -228,6 +227,7 @@ class IntegrationPokeApiTest(TestCaseUtils):
         is_valid_sum = validate_sum_pokemons(['pikachu', 'pidgey', 'bulbasaur'])
 
         self.assertTrue(is_valid_sum)
+
 
 class TeamViewTest(TestCaseUtils):
     def setUp(self):
