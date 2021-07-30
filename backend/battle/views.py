@@ -65,6 +65,10 @@ class TeamView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         pokemons = Pokemon.objects.all()
+        if kwargs:
+            context['pokemon_1'] = kwargs['form'].data['pokemon_1']
+            context['pokemon_2'] = kwargs['form'].data['pokemon_2']
+            context['pokemon_3'] = kwargs['form'].data['pokemon_3']
         context['pokemons'] = pokemons
         return context
 
@@ -73,8 +77,10 @@ class TeamView(LoginRequiredMixin, CreateView):
         if team.battle.teams.count() == 2:
             run_battle_and_send_result_email.delay(team.battle.id)
             return HttpResponseRedirect(reverse_lazy("result"))
-
         return HttpResponseRedirect(reverse_lazy("invite"))
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
 
 
 class BattleList(LoginRequiredMixin, ListView):

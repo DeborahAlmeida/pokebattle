@@ -21,12 +21,21 @@
                     <p>
                         {{ form.errors.pokemon_1 }}
                         <label for="id_pokemon_1">Pokemon 1:</label>
-                        <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
-                        <datalist id="pokemons" name="pokemon_1">
-                            {% for results in pokemons %}
-                                <option value="{{results.name}}">
-                            {% endfor %}
-                        </datalist>
+                        {% if pokemon_1 %}
+                            <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons" value={{pokemon_1}}>
+                            <datalist id="pokemons" name="pokemon_1">
+                                {% for results in pokemons %}
+                                    <option value="{{results.name}}">
+                                {% endfor %}
+                            </datalist>
+                        {% else %}
+                            <input id="pokemon_1" name="pokemon_1" type="text" list="pokemons">
+                            <datalist id="pokemons" name="pokemon_1">
+                                {% for results in pokemons %}
+                                    <option value="{{results.name}}">
+                                {% endfor %}
+                            </datalist>
+                        {% endif %}
                     </p>
                     {{ form.errors.position_pkn_1 }}
                     <label class="position_label">Position:</label>
@@ -40,12 +49,21 @@
                     <p>
                         {{ form.errors.pokemon_2 }}
                         <label for="id_pokemon_2">Pokemon 2:</label>
-                        <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons">
-                        <datalist id="pokemons" name="pokemon_2">
-                            {% for results in pokemons %}
-                                <option value="{{results.name}}">
-                            {% endfor %}
-                        </datalist>
+                        {% if pokemon_2 %}
+                            <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons" value={{pokemon_2}}>
+                            <datalist id="pokemons" name="pokemon_2">
+                                {% for results in pokemons %}
+                                    <option value="{{results.name}}">
+                                {% endfor %}
+                            </datalist>
+                        {% else %}
+                            <input id="pokemon_2" name="pokemon_2" type="text" list="pokemons">
+                            <datalist id="pokemons" name="pokemon_2">
+                                {% for results in pokemons %}
+                                    <option value="{{results.name}}">
+                                {% endfor %}
+                            </datalist>
+                        {% endif %}
                     </p>
                     {{ form.errors.position_pkn_2 }}
                     <label class="position_label">Position:</label>
@@ -59,12 +77,21 @@
                     <p>
                         {{ form.errors.pokemon_3 }}
                         <label for="id_pokemon_3">Pokemon 3:</label>
-                        <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons">
-                        <datalist id="pokemons" name="pokemon_3">
-                            {% for results in pokemons %}
-                                <option value="{{results.name}}">
-                            {% endfor %}
-                        </datalist>
+                        {% if pokemon_3 %}
+                            <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons" value={{pokemon_3}}>
+                            <datalist id="pokemons" name="pokemon_3">
+                                {% for results in pokemons %}
+                                    <option value="{{results.name}}">
+                                {% endfor %}
+                            </datalist>
+                        {% else %}
+                            <input id="pokemon_3" name="pokemon_3" type="text" list="pokemons">
+                            <datalist id="pokemons" name="pokemon_3">
+                                {% for results in pokemons %}
+                                    <option value="{{results.name}}">
+                                {% endfor %}
+                            </datalist>
+                        {% endif %}
                     </p>
                     {{ form.errors.position_pkn_3 }}
                     <label class="position_label">Position:</label>
@@ -86,4 +113,3 @@
 <script type="text/javascript" src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
 {{ form.media }}
 {% endblock %}
-
