@@ -66,9 +66,9 @@ class TeamView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         pokemons = Pokemon.objects.all()
         if kwargs:
-            context['pokemon_1'] = kwargs['form'].data['pokemon_1']
-            context['pokemon_2'] = kwargs['form'].data['pokemon_2']
-            context['pokemon_3'] = kwargs['form'].data['pokemon_3']
+            context['pokemon_1'] = kwargs['form'].data.get('pokemon_1')
+            context['pokemon_2'] = kwargs['form'].data.get('pokemon_2')
+            context['pokemon_3'] = kwargs['form'].data.get('pokemon_3')
         context['pokemons'] = pokemons
         return context
 
