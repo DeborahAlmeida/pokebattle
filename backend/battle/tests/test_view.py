@@ -3,8 +3,10 @@ from model_bakery import baker
 from common.utils.tests import TestCaseUtils
 from django.conf import settings
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 from battle.models import Battle, PokemonTeam, Team
+from battle.forms import TeamForm
 from battle.battles.battle import get_winner_for, validate_sum_pokemons
 from battle.tasks import run_battle_and_send_result_email
 
@@ -428,6 +430,124 @@ class TeamViewTest(TestCaseUtils):
         response = self.auth_client.post(reverse(
             "team_create", kwargs={'pk': 100}), pokemons_data, follow=True)
         self.assertEqual(response.status_code, 404)
+
+
+class TeamFormTest(TestCaseUtils):
+    def setUp(self):
+        super().setUp()
+        self.battle = baker.make('battle.Battle', creator=self.user)
+        names = ['pikachu', 'bulbasaur', 'pidgeot', 'wrong_name']
+        for pokemon_name in names:
+            baker.make("pokemon.Pokemon", name=pokemon_name, attack=60, defense=15, hp=10)
+
+    def test_form_is_valid(self):
+        pokemons_data = {
+            "battle": self.battle.id,
+            "trainer": self.user.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertTrue(form.is_valid())
+
+    def test_form_saved_successfully(self):
+        pokemons_data = {
+            "battle": self.battle.id,
+            "trainer": self.user.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertTrue(form.is_valid())
+        instance = form.save()
+        self.assertEqual(Team.objects.get(battle=self.battle, trainer=self.user), instance)
+
+    def test_form_returns_error_pokemons_missing(self):
+        pokemons_data = {
+            "battle": self.battle.id,
+            "trainer": self.user.id,
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertFalse(form.is_valid())
+        with self.assertRaisesMessage(ValidationError, 'ERROR: Select all pokemons'):
+            form.save()
+
+    def test_form_returns_error_positions_missing(self):
+        pokemons_data = {
+            "battle": self.battle.id,
+            "trainer": self.user.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertFalse(form.is_valid())
+        with self.assertRaisesMessage(ValidationError, 'ERROR: Select all positions'):
+            form.save()
+
+    def test_form_returns_error_with_battle_invalid(self):
+        pokemons_data = {
+            "battle": 100,
+            "trainer": self.user.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertFalse(form.is_valid())
+        with self.assertRaisesMessage(ValidationError, 'ERROR: Select a valid battle'):
+            form.save()
+
+    def test_form_returns_error_with_incorrect_pkn_name(self):
+        pokemons_data = {
+            "battle": self.battle.id,
+            "trainer": self.user.id,
+            "pokemon_1": 'pikachuuu',
+            "pokemon_2": 'bulbasaurrr',
+            "pokemon_3": 'pidgeottt',
+            "position_pkn_1": 1,
+            "position_pkn_2": 2,
+            "position_pkn_3": 3,
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertFalse(form.is_valid())
+        with self.assertRaisesMessage(ValidationError, 'ERROR: Type the correct pokemons name'):
+            form.save()
+
+    def test_form_returns_error_with_same_positions(self):
+        pokemons_data = {
+            "battle": self.battle.id,
+            "trainer": self.user.id,
+            "pokemon_1": 'pikachu',
+            "pokemon_2": 'bulbasaur',
+            "pokemon_3": 'pidgeot',
+            "position_pkn_1": 1,
+            "position_pkn_2": 1,
+            "position_pkn_3": 2,
+        }
+        form = TeamForm(data=pokemons_data)
+        self.assertFalse(form.is_valid())
+        with self.assertRaisesMessage(ValidationError, 'ERROR: You cannot add the same position'):
+            form.save()
+
+    def test_form_is_invalid_with_empty_data(self):
+        form = TeamForm(data={})
+        self.assertFalse(form.is_valid())
+        self.assertEqual(len(form.errors), 9)
 
 
 class TaskAsyncTest(TestCaseUtils):
