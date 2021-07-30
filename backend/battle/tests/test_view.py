@@ -549,7 +549,7 @@ class TeamFormTest(TestCaseUtils):
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors), 9)
 
-        
+
 class TaskAsyncTest(TestCaseUtils):
     def setUp(self):
         super().setUp()
