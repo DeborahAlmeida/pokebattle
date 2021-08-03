@@ -1,7 +1,7 @@
 from django.db.models import Q
+from rest_framework import generics, permissions
 from battle.models import Battle
 from api.battle.serializers import BattleSerializer
-from rest_framework import generics, permissions
 
 
 class BattletList(generics.ListCreateAPIView):
