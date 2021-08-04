@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework import generics, permissions
 from battle.models import Battle
-from battle.serializers import BattleSerializer
+from battle.serializers import BattleSerializer, BattleCreateSerializer
 
 
 class BattletList(generics.ListCreateAPIView):
@@ -25,3 +25,8 @@ class BattleDetail(generics.RetrieveAPIView):
             Q(creator=self.request.user) | Q(opponent=self.request.user)
         ).order_by('-id')
         return queryset
+
+
+class BattleCreate(generics.CreateAPIView):
+    serializer_class = BattleCreateSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
