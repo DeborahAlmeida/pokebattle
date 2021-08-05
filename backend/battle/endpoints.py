@@ -2,11 +2,12 @@ from django.db.models import Q
 from rest_framework import generics, permissions
 from battle.models import Battle
 from battle.serializers import BattleSerializer, BattleCreateSerializer
+from rest_framework.permissions import IsAuthenticated
 
 
 class BattletList(generics.ListCreateAPIView):
     serializer_class = BattleSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         queryset = Battle.objects.filter(
