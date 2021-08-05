@@ -14,6 +14,8 @@ from pokemon.models import Pokemon
 
 from pokemon.helpers import verify_pokemon_exists_api
 
+from services.create_battle import validate_if_creator_and_opponent_are_different, validate_if_opponent_is_valid, create_battle
+
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
 
@@ -29,16 +31,7 @@ class BattleForm(forms.ModelForm):
         self.fields['creator'].widget = forms.HiddenInput()
 
     def clean_opponent(self):
-        opponent_email = self.cleaned_data["opponent"]
-        try:
-            opponent = User.objects.get(email=opponent_email)
-            opponent.is_guest = False
-        except User.DoesNotExist:
-            opponent = User.objects.create(email=opponent_email)
-            opponent.is_guest = True
-            random_password = get_random_string(length=64)
-            opponent.set_password(random_password)
-            opponent.save()
+        opponent = validate_if_opponent_is_valid(self.cleaned_data['opponent'])
         return opponent
 
     def clean(self):
@@ -49,7 +42,10 @@ class BattleForm(forms.ModelForm):
         if 'opponent' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to choose an opponent")
 
-        if cleaned_data['opponent'] == cleaned_data['creator']:
+        valid_creator_field = validate_if_creator_and_opponent_are_different(
+            cleaned_data['opponent'], cleaned_data['creator'])
+
+        if not valid_creator_field:
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
         return cleaned_data
 
@@ -57,15 +53,7 @@ class BattleForm(forms.ModelForm):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
-        if opponent.is_guest:
-            invite_form = PasswordResetForm(data={"email": opponent.email})
-            invite_form.is_valid()
-            invite_form.save(
-                self, subject_template_name='registration/guest_email_subject.txt',
-                email_template_name='registration/guest_email.html',
-                from_email=settings.FROM_EMAIL,)
-        else:
-            send_invite_email(instance.opponent, instance.creator)
+        create_battle(self, opponent, instance.creator)
         return instance
 
 

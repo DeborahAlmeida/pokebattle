@@ -5,7 +5,6 @@ from battle.serializers import BattleSerializer, BattleCreateSerializer
 
 
 class BattletList(generics.ListCreateAPIView):
-
     serializer_class = BattleSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
