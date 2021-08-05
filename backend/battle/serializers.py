@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from battle.models import Battle
+from battle.models import Battle, PokemonTeam, Team
 from django.utils.crypto import get_random_string
 from django.contrib.auth.forms import PasswordResetForm
 from battle.battles.email import send_invite_email
@@ -13,10 +13,19 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("email", "id")
 
 
+class TeamSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Team
+        fields = ("id", "battle", "trainer", "pokemons")
+
+
 class BattleSerializer(serializers.ModelSerializer):
+    teams = TeamSerializer(many=True, read_only=True)
+
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent", "winner")
+        fields = ("id", "creator", "opponent", "winner", "teams")
 
 
 class BattleCreateSerializer(serializers.ModelSerializer):
@@ -43,4 +52,3 @@ class BattleCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         create_battle(self, validated_data['opponent'], validated_data['creator'])
         return Battle.objects.create(**validated_data)
-
