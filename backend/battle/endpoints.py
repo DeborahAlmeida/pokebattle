@@ -4,11 +4,11 @@ from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 
 from battle.models import Battle
-from battle.serializers import BattleCreateSerializer, TeamCreateSerializer
+from battle.serializers import BattleSerializer, BattleCreateSerializer, TeamCreateSerializer
 
 
 class BattletList(generics.ListCreateAPIView):
-    serializer_class = BattleCreateSerializer
+    serializer_class = BattleSerializer
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
@@ -19,8 +19,8 @@ class BattletList(generics.ListCreateAPIView):
 
 
 class BattleDetail(generics.RetrieveAPIView):
-    serializer_class = BattleCreateSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    serializer_class = BattleSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Battle.objects.filter(

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from battle.models import Battle, Team, PokemonTeam
+from battle.tasks import run_battle_and_send_result_email
 from services.create_battle import (
     validate_if_creator_and_opponent_are_different,
     validate_if_opponent_is_valid, create_battle)
@@ -104,42 +105,15 @@ class TeamCreateSerializer(serializers.Serializer):
             team=instance,
             pokemon=pokemon_3_object,
             order=position_pkn_3)
-
+        try:
+            Team.objects.get(trainer=validated_data['battle'].creator, battle=validated_data['battle'])
+            Team.objects.get(trainer=validated_data['battle'].opponent, battle=validated_data['battle'])
+        except Team.DoesNotExist:
+            pass
+        else:
+            run_battle_and_send_result_email.delay(validated_data['battle'].id)
         return instance
 
-
-
-
-
-
-
-
-
-
-
-
-
-    # def create(self, validated_data):
-    #     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", validated_data)
-    #     instance = Team.objects.create(**validated_data)
-    #     return instance
-
-'''
-        PokemonTeam.objects.create(
-            team=instance,
-            pokemon=self.initial_data['pokemon_1_object'],
-            order=self.initial_data['position_pkn_1'])
-
-        PokemonTeam.objects.create(
-            team=instance,
-            pokemon=self.initial_data['pokemon_2_object'],
-            order=self.initial_data['position_pkn_2'])
-
-        PokemonTeam.objects.create(
-            team=instance,
-            pokemon=self.initial_data['pokemon_3_object'],
-            order=self.initial_data['position_pkn_3'])
-'''
 
 class BattleSerializer(serializers.ModelSerializer):
     teams = TeamSerializer(many=True, read_only=True)
@@ -150,13 +124,15 @@ class BattleSerializer(serializers.ModelSerializer):
 
 
 class BattleCreateSerializer(serializers.ModelSerializer):
+    opponent = serializers.CharField(style={'base_template': 'textarea.html'})
+
     class Meta:
         model = Battle
         fields = ("id", "creator", "opponent", "winner")
 
     def validate_creator(self, value):
         valid_field = validate_if_creator_and_opponent_are_different(
-            self.initial_data['creator'], self.initial_data['opponent'])
+            str(value), self.initial_data.get('opponent'))
         if not valid_field:
             raise serializers.ValidationError("ERROR: You can't challenge yourself.")
         return value
