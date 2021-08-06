@@ -1,9 +1,8 @@
 from rest_framework import serializers
-from battle.models import Battle, PokemonTeam, Team
-from django.utils.crypto import get_random_string
-from django.contrib.auth.forms import PasswordResetForm
-from battle.battles.email import send_invite_email
-from services.create_battle import validate_if_creator_and_opponent_are_different, validate_if_opponent_is_valid, create_battle
+from battle.models import Battle, Team
+from services.create_battle import (
+    validate_if_creator_and_opponent_are_different,
+    validate_if_opponent_is_valid, create_battle)
 from users.models import User
 
 

@@ -1,8 +1,10 @@
 from django.db.models import Q
+
 from rest_framework import generics, permissions
+from rest_framework.permissions import IsAuthenticated
+
 from battle.models import Battle
 from battle.serializers import BattleSerializer, BattleCreateSerializer
-from rest_framework.permissions import IsAuthenticated
 
 
 class BattletList(generics.ListCreateAPIView):

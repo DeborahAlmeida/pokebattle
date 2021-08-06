@@ -1,12 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.forms import PasswordResetForm
-from django.utils.crypto import get_random_string
-from django.conf import settings
 
 from battle.models import Battle, PokemonTeam, Team
 from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
-from battle.battles.email import send_invite_email
 
 from users.models import User
 
@@ -14,7 +10,9 @@ from pokemon.models import Pokemon
 
 from pokemon.helpers import verify_pokemon_exists_api
 
-from services.create_battle import validate_if_creator_and_opponent_are_different, validate_if_opponent_is_valid, create_battle
+from services.create_battle import (
+    validate_if_creator_and_opponent_are_different,
+    validate_if_opponent_is_valid, create_battle)
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
