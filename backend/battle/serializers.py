@@ -20,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ("email", "id")
 
+
 class TeamSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -27,7 +28,7 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = ("id", "battle", "trainer", "pokemons")
 
 
-class TeamCreateSerializer(serializers.Serializer): # pylint: disable=abstract-method
+class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-method
 
     battle = serializers.PrimaryKeyRelatedField(queryset=Battle.objects.all())
     trainer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())

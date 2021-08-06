@@ -3,7 +3,7 @@ from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
 from pokemon.helpers import verify_pokemon_exists_api
 
 
-def verify_if_data_is_valid(data):
+def verify_if_data_is_valid(data):  # pylint: disable=too-many-return-statements
     message_error = None
 
     if 'battle' not in data:
@@ -45,10 +45,8 @@ def verify_if_data_is_valid(data):
         return message_error
 
     verify_pokemon_is_saved(
-            [
-                data['pokemon_1'],
-                data['pokemon_2'],
-                data['pokemon_3']
-            ]
-        )
+        [
+            data['pokemon_1'],
+            data['pokemon_2'],
+            data['pokemon_3']])
     return True
