@@ -1,16 +1,16 @@
 from rest_framework import serializers
+
 from battle.models import Battle, Team, PokemonTeam
 from battle.tasks import run_battle_and_send_result_email
+
 from services.create_battle import (
     validate_if_creator_and_opponent_are_different,
     validate_if_opponent_is_valid, create_battle)
 from services.create_team import verify_if_data_is_valid
+
 from users.models import User
 
-from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
-
 from pokemon.models import Pokemon
-from pokemon.helpers import verify_pokemon_exists_api
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
@@ -27,7 +27,7 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = ("id", "battle", "trainer", "pokemons")
 
 
-class TeamCreateSerializer(serializers.Serializer):
+class TeamCreateSerializer(serializers.Serializer): # pylint: disable=W0223
 
     battle = serializers.PrimaryKeyRelatedField(queryset=Battle.objects.all())
     trainer = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
@@ -106,8 +106,12 @@ class TeamCreateSerializer(serializers.Serializer):
             pokemon=pokemon_3_object,
             order=position_pkn_3)
         try:
-            Team.objects.get(trainer=validated_data['battle'].creator, battle=validated_data['battle'])
-            Team.objects.get(trainer=validated_data['battle'].opponent, battle=validated_data['battle'])
+            Team.objects.get(
+                trainer=validated_data['battle'].creator,
+                battle=validated_data['battle'])
+            Team.objects.get(
+                trainer=validated_data['battle'].opponent,
+                battle=validated_data['battle'])
         except Team.DoesNotExist:
             pass
         else:
