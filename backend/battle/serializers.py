@@ -63,11 +63,11 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
             "pokemon_3"
         )
 
-    def validate(self, value):
-        valid = verify_if_data_is_valid(value)
+    def validate(self, attrs):
+        valid = verify_if_data_is_valid(attrs)
         if valid is not True:
             raise serializers.ValidationError(valid)
-        return value
+        return attrs
 
     def create(self, validated_data):
 
