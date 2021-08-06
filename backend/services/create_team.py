@@ -22,18 +22,15 @@ def verify_if_data_is_valid(data):
         message_error = 'ERROR: Select all positions'
         return message_error
 
-    pokemons_exist = verify_pokemon_exists_api([data['pokemon_1'], data['pokemon_2'], data['pokemon_3']])
+    pokemons_exist = verify_pokemon_exists_api(
+        [data['pokemon_1'], data['pokemon_2'], data['pokemon_3']])
+
     if not pokemons_exist:
         message_error = 'ERROR: Type the correct pokemons name'
         return message_error
 
     valid_pokemons = validate_sum_pokemons(
-            [
-                data['pokemon_1'],
-                data['pokemon_2'],
-                data['pokemon_3']
-            ]
-        )
+        [data['pokemon_1'], data['pokemon_2'], data['pokemon_3']])
 
     if not valid_pokemons:
         message_error = 'ERROR: Pokemons sum more than 600 points. Select again'
