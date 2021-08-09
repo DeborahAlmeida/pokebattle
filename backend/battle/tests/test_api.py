@@ -23,11 +23,9 @@ class ListBattleEndpointTest(APITestCaseUtils):
         self.assertEqual(response.status_code, 200)
 
     def test_endpoint_returns_empty_list(self):
-        battle = baker.make('battle.Battle', creator=self.user_1)
         response = self.auth_client.get(reverse('battle-list'))
-        matching_battles = BattleSerializer([battle], many=True)
         self.assertEqual(response.status_code, 200)
-        self.assertCountEqual(matching_battles.data, response.json())
+        self.assertEqual(response.json(), [])
 
     def test_endpoint_returns_one_battle_in_list(self):
         battle = baker.make('battle.Battle', creator=self.user_1)
@@ -37,16 +35,16 @@ class ListBattleEndpointTest(APITestCaseUtils):
         self.assertCountEqual(matching_battles.data, response.json())
 
     def test_endpoint_returns_few_battle_ids(self):
-        battle = baker.make('battle.Battle', creator=self.user_1, _quantity=3)
+        battles = baker.make('battle.Battle', creator=self.user_1, _quantity=3)
         response = self.auth_client.get(reverse('battle-list'))
-        matching_battles = BattleSerializer(battle, many=True)
+        matching_battles = BattleSerializer(battles, many=True)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(matching_battles.data, response.json())
 
     def test_endpoint_returns_a_lot_battle_ids(self):
-        battle = baker.make('battle.Battle', creator=self.user_1, _quantity=100)
+        battles = baker.make('battle.Battle', creator=self.user_1, _quantity=100)
         response = self.auth_client.get(reverse('battle-list'))
-        matching_battles = BattleSerializer(battle, many=True)
+        matching_battles = BattleSerializer(battles, many=True)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(matching_battles.data, response.json())
 
@@ -56,11 +54,11 @@ class ListBattleEndpointTest(APITestCaseUtils):
         self.assertEqual(response.status_code, 403)
 
     def test_endpoint_diff_to_verify_it_returns_exactly_len_of_battle_list(self):
-        battle = baker.make('battle.Battle', creator=self.user_1, _quantity=10)
+        battles = baker.make('battle.Battle', creator=self.user_1, _quantity=10)
 
         response_initial = self.auth_client.get(reverse('battle-list'))
 
-        self.assertCountEqual(BattleSerializer(battle, many=True).data, response_initial.json())
+        self.assertCountEqual(BattleSerializer(battles, many=True).data, response_initial.json())
 
         baker.make('battle.Battle', creator=self.user_1, _quantity=50)
 
@@ -75,13 +73,10 @@ class ListBattleEndpointTest(APITestCaseUtils):
 
 class DeatilBattleEndpointTest(APITestCaseUtils):
 
-    def test_login_user_can_acess_battle_detail(self):
+    def test_logged_user_can_acess_battle_detail(self):
         battle = baker.make("battle.Battle", creator=self.user_1, opponent=self.opponent)
         response = self.auth_client.get(reverse('battle-detail', kwargs={'pk': battle.id}))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            BattleSerializer([battle], many=True).data[0]['creator'],
-            response.json()['id'])
 
     def test_endpoint_returns_404_status(self):
         response = self.auth_client.get(reverse('battle-detail', kwargs={'pk': 1}))
@@ -116,7 +111,6 @@ class CreateBattleEndpointTest(APITestCaseUtils):
             "opponent": self.user_1.email,
         }
         response = self.auth_client.post(reverse('battle-create'), battle_data)
-        # import ipdb; ipdb.set_trace()
         self.assertEqual(
             response.json()['creator'][0],
             "ERROR: You can't challenge yourself.")
