@@ -51,7 +51,7 @@ class BattleForm(forms.ModelForm):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
-        send_invite_email_or_create_password_email(self, opponent, instance.creator)
+        send_invite_email_or_create_password_email(opponent, instance.creator)
         return instance
 
 

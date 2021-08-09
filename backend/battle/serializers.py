@@ -50,7 +50,6 @@ class BattleCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         send_invite_email_or_create_password_email(
-            self,
             validated_data['opponent'],
             validated_data['creator'])
         return Battle.objects.create(**validated_data)
