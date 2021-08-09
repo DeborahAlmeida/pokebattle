@@ -8,8 +8,8 @@ from users.models import User
 from pokemon.models import Pokemon
 
 from services.create_battle import (
-    validate_if_creator_and_opponent_are_different,
-    validate_if_opponent_is_valid, create_battle)
+    validate_if_creator_and_opponent_has_different_contenders,
+    fetch_opponent_or_create_if_doenst_exist, send_invite_email_or_create_password_email)
 
 from services.create_team import verify_if_data_is_valid
 
@@ -28,7 +28,7 @@ class BattleForm(forms.ModelForm):
         self.fields['creator'].widget = forms.HiddenInput()
 
     def clean_opponent(self):
-        opponent = validate_if_opponent_is_valid(self.cleaned_data['opponent'])
+        opponent = fetch_opponent_or_create_if_doenst_exist(self.cleaned_data['opponent'])
         return opponent
 
     def clean(self):
@@ -39,7 +39,7 @@ class BattleForm(forms.ModelForm):
         if 'opponent' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to choose an opponent")
 
-        valid_creator_field = validate_if_creator_and_opponent_are_different(
+        valid_creator_field = validate_if_creator_and_opponent_has_different_contenders(
             cleaned_data['opponent'], cleaned_data['creator'])
 
         if not valid_creator_field:
@@ -50,7 +50,7 @@ class BattleForm(forms.ModelForm):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
-        create_battle(self, opponent, instance.creator)
+        send_invite_email_or_create_password_email(opponent, instance.creator)
         return instance
 
 
