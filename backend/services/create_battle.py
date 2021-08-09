@@ -24,12 +24,13 @@ def fetch_opponent_or_create_if_doenst_exist(opponent_email):
     return opponent
 
 
-def send_invite_email_or_create_password_email(self, opponent, creator):
+def send_invite_email_or_create_password_email(opponent, creator):
     if opponent.is_guest:
         invite_form = PasswordResetForm(data={"email": opponent.email})
         invite_form.is_valid()
         invite_form.save(
-            domain_override=settings.HOST, subject_template_name='registration/guest_email_subject.txt',
+            domain_override=settings.HOST,
+            subject_template_name='registration/guest_email_subject.txt',
             email_template_name='registration/guest_email.html',
             from_email=settings.FROM_EMAIL,)
     else:
