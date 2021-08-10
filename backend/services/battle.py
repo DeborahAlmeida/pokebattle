@@ -5,9 +5,7 @@ from django.conf import settings
 from pokemon.helpers import verify_pokemon_exists_api
 
 from battle.battles.email import send_invite_email
-from battle.battles.battle import (
-    validate_sum_pokemons,
-    save_pokemons_if_they_doenst_exist)
+from battle.battles.battle import validate_sum_pokemons
 
 
 def validate_if_creator_and_opponent_has_different_contenders(creator, opponent):

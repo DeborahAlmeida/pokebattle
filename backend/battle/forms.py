@@ -2,12 +2,11 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
+from battle.battles.battle import save_pokemons_if_they_doenst_exist
 
 from users.models import User
 
 from pokemon.models import Pokemon
-
-from battle.battles.battle import save_pokemons_if_they_doenst_exist
 
 from services.battle import (
     validate_if_creator_and_opponent_has_different_contenders,
