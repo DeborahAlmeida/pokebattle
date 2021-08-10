@@ -11,8 +11,8 @@ from pokemon.models import Pokemon
 from pokemon.helpers import verify_pokemon_exists_api
 
 from services.create_battle import (
-    validate_if_creator_and_opponent_has_different_contenders,
-    fetch_opponent_or_create_if_doenst_exist, send_invite_email_or_create_password_email)
+    validate_if_creator_and_opponent_are_different,
+    fetch_opponent_or_create_if_doesnt_exist, send_invite_email_or_send_password_email)
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
@@ -29,7 +29,7 @@ class BattleForm(forms.ModelForm):
         self.fields['creator'].widget = forms.HiddenInput()
 
     def clean_opponent(self):
-        opponent = fetch_opponent_or_create_if_doenst_exist(self.cleaned_data['opponent'])
+        opponent = fetch_opponent_or_create_if_doesnt_exist(self.cleaned_data['opponent'])
         return opponent
 
     def clean(self):
@@ -40,7 +40,7 @@ class BattleForm(forms.ModelForm):
         if 'opponent' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to choose an opponent")
 
-        valid_creator_field = validate_if_creator_and_opponent_has_different_contenders(
+        valid_creator_field = validate_if_creator_and_opponent_are_different(
             cleaned_data['opponent'], cleaned_data['creator'])
 
         if not valid_creator_field:
@@ -51,7 +51,7 @@ class BattleForm(forms.ModelForm):
         cleaned_data = self.clean()
         instance = super().save()
         opponent = cleaned_data["opponent"]
-        send_invite_email_or_create_password_email(opponent, instance.creator)
+        send_invite_email_or_send_password_email(opponent, instance.creator)
         return instance
 
 

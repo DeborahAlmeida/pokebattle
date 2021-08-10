@@ -5,13 +5,13 @@ from battle.battles.email import send_invite_email
 from django.conf import settings
 
 
-def validate_if_creator_and_opponent_has_different_contenders(creator, opponent):
+def validate_if_creator_and_opponent_are_different(creator, opponent):
     if creator == opponent:
         return False
     return True
 
 
-def fetch_opponent_or_create_if_doenst_exist(opponent_email):
+def fetch_opponent_or_create_if_doesnt_exist(opponent_email):
     try:
         opponent = User.objects.get(email=opponent_email)
         opponent.is_guest = False
@@ -24,7 +24,7 @@ def fetch_opponent_or_create_if_doenst_exist(opponent_email):
     return opponent
 
 
-def send_invite_email_or_create_password_email(opponent, creator):
+def send_invite_email_or_send_password_email(opponent, creator):
     if opponent.is_guest:
         invite_form = PasswordResetForm(data={"email": opponent.email})
         invite_form.is_valid()
