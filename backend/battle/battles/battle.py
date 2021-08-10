@@ -53,7 +53,7 @@ def validate_sum_pokemons(pokemons):
     return total_points <= 600
 
 
-def verify_pokemon_is_saved(pokemons):
+def save_pokemons_if_they_doenst_exist(pokemons):
     for pokemon in pokemons:
         on_database = verify_pokemon_exists_on_database(pokemon)
         if not on_database:

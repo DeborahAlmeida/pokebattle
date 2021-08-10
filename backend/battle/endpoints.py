@@ -3,6 +3,7 @@ from django.db.models import Q
 from rest_framework import generics, permissions
 from rest_framework.permissions import IsAuthenticated
 
+from battle.permissions import IsInBattle
 from battle.models import Battle
 from battle.serializers import BattleSerializer, BattleCreateSerializer, TeamCreateSerializer
 
@@ -36,4 +37,4 @@ class BattleCreate(generics.CreateAPIView):
 
 class TeamCreate(generics.CreateAPIView):
     serializer_class = TeamCreateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsInBattle]

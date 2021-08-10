@@ -2,12 +2,19 @@ from rest_framework import serializers
 
 from battle.models import Battle, Team, PokemonTeam
 from battle.tasks import run_battle_and_send_result_email
+from battle.battles.battle import save_pokemons_if_they_doenst_exist
 
-from services.create_team import verify_if_data_is_valid
-
-from services.create_battle import (
+from services.battle import (
+    verify_pokemons_fields_has_missing_values,
+    verify_fields_has_wrong_pokemon_name,
+    verify_positions_fields_has_missing_values,
+    verify_pokemon_sum_is_valid,
+    verify_positions_fields_has_duplicate_values,
     validate_if_creator_and_opponent_has_different_contenders,
-    fetch_opponent_or_create_if_doenst_exist, send_invite_email_or_create_password_email)
+    fetch_opponent_or_create_if_doenst_exist,
+    send_invite_email_or_create_password_email
+)
+
 from users.models import User
 
 from pokemon.models import Pokemon
@@ -64,31 +71,50 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
         )
 
     def validate(self, attrs):
-        valid = verify_if_data_is_valid(attrs)
+
+        if Team.objects.filter(battle=attrs['battle'], trainer=attrs['trainer']):
+            raise serializers.ValidationError('You cannot create a new team for this battle')
+
+        valid = verify_pokemons_fields_has_missing_values(attrs)
         if valid is not True:
             raise serializers.ValidationError(valid)
+
+        valid = verify_positions_fields_has_missing_values(attrs)
+        if valid is not True:
+            raise serializers.ValidationError(valid)
+
+        valid = verify_fields_has_wrong_pokemon_name(attrs)
+        if valid is not True:
+            raise serializers.ValidationError(valid)
+
+        valid = verify_pokemon_sum_is_valid(attrs)
+        if valid is not True:
+            raise serializers.ValidationError(valid)
+
+        valid = verify_positions_fields_has_duplicate_values(attrs)
+        if valid is not True:
+            raise serializers.ValidationError(valid)
+
+        save_pokemons_if_they_doenst_exist(
+            [
+                attrs['pokemon_1'],
+                attrs['pokemon_2'],
+                attrs['pokemon_3']])
         return attrs
 
     def create(self, validated_data):
 
-        pokemon_1 = self.validated_data['pokemon_1']
-        pokemon_2 = self.validated_data['pokemon_2']
-        pokemon_3 = self.validated_data['pokemon_3']
+        pokemon_1 = validated_data.pop('pokemon_1')
+        pokemon_2 = validated_data.pop('pokemon_2')
+        pokemon_3 = validated_data.pop('pokemon_3')
 
         pokemon_1_object = Pokemon.objects.get(name=pokemon_1)
         pokemon_2_object = Pokemon.objects.get(name=pokemon_2)
         pokemon_3_object = Pokemon.objects.get(name=pokemon_3)
 
-        position_pkn_1 = self.validated_data['position_pkn_1']
-        position_pkn_2 = self.validated_data['position_pkn_2']
-        position_pkn_3 = self.validated_data['position_pkn_3']
-
-        validated_data.pop('pokemon_1')
-        validated_data.pop('pokemon_2')
-        validated_data.pop('pokemon_3')
-        validated_data.pop('position_pkn_1')
-        validated_data.pop('position_pkn_2')
-        validated_data.pop('position_pkn_3')
+        position_pkn_1 = validated_data.pop('position_pkn_1')
+        position_pkn_2 = validated_data.pop('position_pkn_2')
+        position_pkn_3 = validated_data.pop('position_pkn_3')
 
         instance = Team.objects.create(**validated_data)
 
@@ -106,16 +132,8 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
             team=instance,
             pokemon=pokemon_3_object,
             order=position_pkn_3)
-        try:
-            Team.objects.get(
-                trainer=validated_data['battle'].creator,
-                battle=validated_data['battle'])
-            Team.objects.get(
-                trainer=validated_data['battle'].opponent,
-                battle=validated_data['battle'])
-        except Team.DoesNotExist:
-            pass
-        else:
+
+        if len(list(validated_data['battle'].teams.all())) == 2:
             run_battle_and_send_result_email.delay(validated_data['battle'].id)
         return instance
 

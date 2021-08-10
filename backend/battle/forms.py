@@ -7,11 +7,18 @@ from users.models import User
 
 from pokemon.models import Pokemon
 
-from services.create_battle import (
-    validate_if_creator_and_opponent_has_different_contenders,
-    fetch_opponent_or_create_if_doenst_exist, send_invite_email_or_create_password_email)
+from battle.battles.battle import save_pokemons_if_they_doenst_exist
 
-from services.create_team import verify_if_data_is_valid
+from services.battle import (
+    validate_if_creator_and_opponent_has_different_contenders,
+    fetch_opponent_or_create_if_doenst_exist,
+    send_invite_email_or_create_password_email,
+    verify_pokemons_fields_has_missing_values,
+    verify_fields_has_wrong_pokemon_name,
+    verify_positions_fields_has_missing_values,
+    verify_pokemon_sum_is_valid,
+    verify_positions_fields_has_duplicate_values,
+)
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
@@ -80,9 +87,31 @@ class TeamForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        valid = verify_if_data_is_valid(cleaned_data)
+        valid = verify_pokemons_fields_has_missing_values(cleaned_data)
         if valid is not True:
             raise forms.ValidationError(valid)
+
+        valid = verify_positions_fields_has_missing_values(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError(valid)
+
+        valid = verify_fields_has_wrong_pokemon_name(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError(valid)
+
+        valid = verify_pokemon_sum_is_valid(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError(valid)
+
+        valid = verify_positions_fields_has_duplicate_values(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError(valid)
+
+        save_pokemons_if_they_doenst_exist(
+            [
+                cleaned_data['pokemon_1'],
+                cleaned_data['pokemon_2'],
+                cleaned_data['pokemon_3']])
 
         cleaned_data['pokemon_1_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_1'])
         cleaned_data['pokemon_2_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_2'])
