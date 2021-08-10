@@ -86,6 +86,13 @@ class TeamForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
+        obj_battle = cleaned_data.get('battle')
+        obj_trainer = cleaned_data.get('trainer')
+
+        if obj_battle:
+            if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
+                raise forms.ValidationError("ERROR: You do not have permission for this action.")
+
         valid = verify_pokemons_fields_has_missing_values(cleaned_data)
         if valid is not True:
             raise forms.ValidationError(valid)

@@ -75,7 +75,7 @@ def verify_pokemon_sum_is_valid(data):
 
 
 def verify_positions_fields_has_duplicate_values(data):
-    positions = {data['position_pkn_1'], data['position_pkn_2'], data['position_pkn_3']}
+    positions = {int(data['position_pkn_1']), int(data['position_pkn_2']), int(data['position_pkn_3'])}
     if positions != {1, 2, 3}:
         message_error = 'ERROR: You cannot add the same position'
         return message_error
