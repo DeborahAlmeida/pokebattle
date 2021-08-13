@@ -327,4 +327,3 @@ class CreateTeamEndpointTest(APITestCaseUtils):
         self.assertEqual(
             response.json()['non_field_errors'][0],
             'ERROR: Select all pokemons')
-

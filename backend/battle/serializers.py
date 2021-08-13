@@ -89,7 +89,9 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
 
         valid = has_pokemon_sum_valid(attrs)
         if valid is not True:
-            raise serializers.ValidationError('ERROR: Pokemons sum more than 600 points. Select again')
+            raise serializers.ValidationError(
+                'ERROR: Pokemons sum more than 600 points. Select again'
+            )
 
         valid = has_positions_fields_with_duplicate_values(attrs)
         if valid is not True:
