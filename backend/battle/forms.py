@@ -2,17 +2,22 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import validate_sum_pokemons, verify_pokemon_is_saved
+from battle.battles.battle import save_pokemons_if_they_dont_exist
 
 from users.models import User
 
 from pokemon.models import Pokemon
 
-from pokemon.helpers import verify_pokemon_exists_api
-
-from services.create_battle import (
-    validate_if_creator_and_opponent_are_different,
-    fetch_opponent_or_create_if_doesnt_exist, send_invite_email_or_send_password_email)
+from services.battle import (
+    has_different_contenders_to_creator_and_opponent,
+    fetch_opponent_or_create_if_doesnt_exist,
+    send_invite_email_or_send_password_email,
+    has_pokemons_fields_missing_values,
+    has_fields_with_wrong_pokemon_name,
+    has_positions_fields_missing_values,
+    has_pokemon_sum_valid,
+    has_positions_fields_with_duplicate_values,
+)
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
 
@@ -40,8 +45,9 @@ class BattleForm(forms.ModelForm):
         if 'opponent' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to choose an opponent")
 
-        valid_creator_field = validate_if_creator_and_opponent_are_different(
-            cleaned_data['opponent'], cleaned_data['creator'])
+        creator_id = User.objects.get(email=cleaned_data['creator']).id
+        valid_creator_field = has_different_contenders_to_creator_and_opponent(
+            creator_id, cleaned_data['opponent'])
 
         if not valid_creator_field:
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
@@ -81,55 +87,39 @@ class TeamForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        if 'battle' not in cleaned_data:
-            raise forms.ValidationError('ERROR: Select a valid battle')
+        obj_battle = cleaned_data.get('battle')
+        obj_trainer = cleaned_data.get('trainer')
 
-        obj_battle = cleaned_data['battle']
-        obj_trainer = cleaned_data['trainer']
+        if obj_battle:
+            if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
+                raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
-        if ('pokemon_1' or 'pokemon_2' or 'pokemon_3') not in cleaned_data:
+        valid = has_pokemons_fields_missing_values(cleaned_data)
+        if valid is not True:
             raise forms.ValidationError('ERROR: Select all pokemons')
 
-        pokemon_1 = self.cleaned_data.get('pokemon_1')
-        pokemon_2 = self.cleaned_data.get('pokemon_2')
-        pokemon_3 = self.cleaned_data.get('pokemon_3')
-
-        if ('position_pkn_1' or 'position_pkn_2' or 'position_pkn_3') not in cleaned_data:
+        valid = has_positions_fields_missing_values(cleaned_data)
+        if valid is not True:
             raise forms.ValidationError('ERROR: Select all positions')
 
-        position_pkn_1 = cleaned_data['position_pkn_1']
-        position_pkn_2 = cleaned_data['position_pkn_2']
-        position_pkn_3 = cleaned_data['position_pkn_3']
-
-        pokemons_exist = verify_pokemon_exists_api([pokemon_1, pokemon_2, pokemon_3])
-        if not pokemons_exist:
+        valid = has_fields_with_wrong_pokemon_name(cleaned_data)
+        if valid is not True:
             raise forms.ValidationError('ERROR: Type the correct pokemons name')
 
-        valid_pokemons = validate_sum_pokemons(
+        valid = has_pokemon_sum_valid(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError('ERROR: Pokemons sum more than 600 points. Select again')
+
+        valid = has_positions_fields_with_duplicate_values(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError('ERROR: You cannot add the same position')
+
+        save_pokemons_if_they_dont_exist(
             [
                 cleaned_data['pokemon_1'],
                 cleaned_data['pokemon_2'],
-                cleaned_data['pokemon_3']
-            ]
-        )
-        if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
-            raise forms.ValidationError("ERROR: You do not have permission for this action.")
+                cleaned_data['pokemon_3']])
 
-        if not valid_pokemons:
-            raise forms.ValidationError("ERROR: Pokemons sum more than 600 points. Select again.")
-
-        if position_pkn_1 in (position_pkn_2, position_pkn_3):
-            raise forms.ValidationError('ERROR: You cannot add the same position')
-        if position_pkn_2 == position_pkn_3:
-            raise forms.ValidationError('ERROR: You cannot add the same position')
-
-        verify_pokemon_is_saved(
-            [
-                cleaned_data['pokemon_1'],
-                cleaned_data['pokemon_2'],
-                cleaned_data['pokemon_3']
-            ]
-        )
         cleaned_data['pokemon_1_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_1'])
         cleaned_data['pokemon_2_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_2'])
         cleaned_data['pokemon_3_object'] = Pokemon.objects.get(name=cleaned_data['pokemon_3'])
