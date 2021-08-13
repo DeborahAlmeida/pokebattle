@@ -165,13 +165,10 @@ class BattleCreateSerializer(serializers.ModelSerializer):
         return value
 
     def validate_opponent(self, value):
-        if 'opponent' in self.initial_data:
-            valid_opponent = fetch_opponent_or_create_if_doesnt_exist(self.initial_data['opponent'])
-            value = valid_opponent
-            value.is_guest = valid_opponent.is_guest
-        else:
+        if 'opponent' not in self.initial_data:
             raise serializers.ValidationError("ERROR: You need to choose an opponent")
-        return value
+        opponent = fetch_opponent_or_create_if_doesnt_exist(self.initial_data['opponent'])
+        return opponent
 
     def create(self, validated_data):
         send_invite_email_or_send_password_email(
