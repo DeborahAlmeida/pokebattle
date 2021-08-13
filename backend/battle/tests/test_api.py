@@ -118,11 +118,12 @@ class CreateBattleEndpointTest(APITestCaseUtils):
     def test_if_returns_error_when_opponent_doesnt_exist(self):
         battle_data = {
             "creator": self.user_1.id,
+            "opponent": "",
         }
         response = self.auth_client.post(reverse('battle-create'), battle_data)
         self.assertEqual(
             response.json()['opponent'][0],
-            "This field is required.")
+            'This field may not be blank.')
 
     @patch("battle.battles.email.send_templated_mail")
     def test_if_battle_invitation_email_is_sent(self, mock_templated_mail):
@@ -308,7 +309,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             pokemons_data,
             follow=True)
         self.assertEqual(
-            response.json()['non_field_errors'][0],
+            response.json()['detail'],
             'ERROR: You do not have permission for this action.')
 
     def test_if_returns_error_when_missing_pokemons(self):
@@ -327,22 +328,3 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             response.json()['non_field_errors'][0],
             'ERROR: Select all pokemons')
 
-    def test_if_returns_error_when_battle_does_not_exist(self):
-        pokemons_data = {
-            "battle": 100,
-            "trainer": self.user_1.id,
-            "pokemon_1": 'pikachu',
-            "pokemon_2": 'bulbasaur',
-            "pokemon_3": 'pidgeot',
-            "position_pkn_1": 1,
-            "position_pkn_2": 2,
-            "position_pkn_3": 3,
-        }
-        response = self.auth_client.post(
-            reverse("team-create"),
-            pokemons_data,
-            follow=True)
-        self.assertEqual(
-            response.json()['battle'][0],
-            'Invalid pk "100" - object does not exist.')
-        self.assertEqual(response.status_code, 400)

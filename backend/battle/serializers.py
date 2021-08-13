@@ -2,17 +2,17 @@ from rest_framework import serializers
 
 from battle.models import Battle, Team, PokemonTeam
 from battle.tasks import run_battle_and_send_result_email
-from battle.battles.battle import save_pokemons_if_they_doenst_exist
+from battle.battles.battle import save_pokemons_if_they_dont_exist
 
 from services.battle import (
-    verify_pokemons_fields_has_missing_values,
-    verify_fields_has_wrong_pokemon_name,
-    verify_positions_fields_has_missing_values,
-    verify_pokemon_sum_is_valid,
-    verify_positions_fields_has_duplicate_values,
+    has_pokemons_fields_missing_values,
+    has_fields_with_wrong_pokemon_name,
+    has_positions_fields_missing_values,
+    has_pokemon_sum_valid,
+    has_positions_fields_with_duplicate_values,
     validate_if_creator_and_opponent_has_different_contenders,
     fetch_opponent_or_create_if_doenst_exist,
-    send_invite_email_or_create_password_email
+    send_invite_email_or_create_password_email,
 )
 
 from users.models import User
@@ -75,31 +75,33 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
         if Team.objects.filter(battle=attrs['battle'], trainer=attrs['trainer']):
             raise serializers.ValidationError('You cannot create a new team for this battle')
 
-        valid = verify_pokemons_fields_has_missing_values(attrs)
+        valid = has_pokemons_fields_missing_values(attrs)
         if valid is not True:
-            raise serializers.ValidationError(valid)
+            raise serializers.ValidationError('ERROR: Select all pokemons')
 
-        valid = verify_positions_fields_has_missing_values(attrs)
+        valid = has_positions_fields_missing_values(attrs)
         if valid is not True:
-            raise serializers.ValidationError(valid)
+            raise serializers.ValidationError('ERROR: Select all positions')
 
-        valid = verify_fields_has_wrong_pokemon_name(attrs)
+        valid = has_fields_with_wrong_pokemon_name(attrs)
         if valid is not True:
-            raise serializers.ValidationError(valid)
+            raise serializers.ValidationError('ERROR: Type the correct pokemons name')
 
-        valid = verify_pokemon_sum_is_valid(attrs)
+        valid = has_pokemon_sum_valid(attrs)
         if valid is not True:
-            raise serializers.ValidationError(valid)
+            raise serializers.ValidationError('ERROR: Pokemons sum more than 600 points. Select again')
 
-        valid = verify_positions_fields_has_duplicate_values(attrs)
+        valid = has_positions_fields_with_duplicate_values(attrs)
         if valid is not True:
-            raise serializers.ValidationError(valid)
+            raise serializers.ValidationError('ERROR: You cannot add the same position')
 
-        save_pokemons_if_they_doenst_exist(
+        save_pokemons_if_they_dont_exist(
             [
                 attrs['pokemon_1'],
                 attrs['pokemon_2'],
-                attrs['pokemon_3']])
+                attrs['pokemon_3']
+            ]
+        )
         return attrs
 
     def create(self, validated_data):
@@ -133,7 +135,7 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
             pokemon=pokemon_3_object,
             order=position_pkn_3)
 
-        if len(list(validated_data['battle'].teams.all())) == 2:
+        if len(validated_data['battle'].teams.all()) == 2:
             run_battle_and_send_result_email.delay(validated_data['battle'].id)
         return instance
 

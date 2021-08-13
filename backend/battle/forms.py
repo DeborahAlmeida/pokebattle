@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from battle.models import Battle, PokemonTeam, Team
-from battle.battles.battle import save_pokemons_if_they_doenst_exist
+from battle.battles.battle import save_pokemons_if_they_dont_exist
 
 from users.models import User
 
@@ -12,11 +12,11 @@ from services.battle import (
     validate_if_creator_and_opponent_has_different_contenders,
     fetch_opponent_or_create_if_doenst_exist,
     send_invite_email_or_create_password_email,
-    verify_pokemons_fields_has_missing_values,
-    verify_fields_has_wrong_pokemon_name,
-    verify_positions_fields_has_missing_values,
-    verify_pokemon_sum_is_valid,
-    verify_positions_fields_has_duplicate_values,
+    has_pokemons_fields_missing_values,
+    has_fields_with_wrong_pokemon_name,
+    has_positions_fields_missing_values,
+    has_pokemon_sum_valid,
+    has_positions_fields_with_duplicate_values,
 )
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
@@ -45,8 +45,9 @@ class BattleForm(forms.ModelForm):
         if 'opponent' not in cleaned_data:
             raise forms.ValidationError("ERROR: You need to choose an opponent")
 
+        creator_id = User.objects.get(email=cleaned_data['creator']).id
         valid_creator_field = validate_if_creator_and_opponent_has_different_contenders(
-            cleaned_data['opponent'], cleaned_data['creator'])
+            creator_id, cleaned_data['opponent'])
 
         if not valid_creator_field:
             raise forms.ValidationError("ERROR: You can't challenge yourself.")
@@ -93,27 +94,27 @@ class TeamForm(forms.ModelForm):
             if obj_trainer not in (obj_battle.creator, obj_battle.opponent):
                 raise forms.ValidationError("ERROR: You do not have permission for this action.")
 
-        valid = verify_pokemons_fields_has_missing_values(cleaned_data)
+        valid = has_pokemons_fields_missing_values(cleaned_data)
         if valid is not True:
-            raise forms.ValidationError(valid)
+            raise forms.ValidationError('ERROR: Select all pokemons')
 
-        valid = verify_positions_fields_has_missing_values(cleaned_data)
+        valid = has_positions_fields_missing_values(cleaned_data)
         if valid is not True:
-            raise forms.ValidationError(valid)
+            raise forms.ValidationError('ERROR: Select all positions')
 
-        valid = verify_fields_has_wrong_pokemon_name(cleaned_data)
+        valid = has_fields_with_wrong_pokemon_name(cleaned_data)
         if valid is not True:
-            raise forms.ValidationError(valid)
+            raise forms.ValidationError('ERROR: Type the correct pokemons name')
 
-        valid = verify_pokemon_sum_is_valid(cleaned_data)
+        valid = has_pokemon_sum_valid(cleaned_data)
         if valid is not True:
-            raise forms.ValidationError(valid)
+            raise forms.ValidationError('ERROR: Pokemons sum more than 600 points. Select again')
 
-        valid = verify_positions_fields_has_duplicate_values(cleaned_data)
+        valid = has_positions_fields_with_duplicate_values(cleaned_data)
         if valid is not True:
-            raise forms.ValidationError(valid)
+            raise forms.ValidationError('ERROR: You cannot add the same position')
 
-        save_pokemons_if_they_doenst_exist(
+        save_pokemons_if_they_dont_exist(
             [
                 cleaned_data['pokemon_1'],
                 cleaned_data['pokemon_2'],
