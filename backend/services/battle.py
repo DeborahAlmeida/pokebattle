@@ -8,7 +8,7 @@ from battle.battles.email import send_invite_email
 from battle.battles.battle import validate_sum_pokemons
 
 
-def has_different_contenders_to_creator_and_opponent(creator, opponent):
+def has_different_contenders(creator, opponent):
     creator_email = User.objects.get(id=creator)
     if str(creator_email) == str(opponent):
         return False

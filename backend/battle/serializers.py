@@ -10,7 +10,7 @@ from services.battle import (
     has_positions_fields_missing_values,
     has_pokemon_sum_valid,
     has_positions_fields_with_duplicate_values,
-    has_different_contenders_to_creator_and_opponent,
+    has_different_contenders,
     fetch_opponent_or_create_if_doesnt_exist,
     send_invite_email_or_send_password_email
 )
@@ -72,7 +72,7 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
 
     def validate(self, attrs):
 
-        if Team.objects.filter(battle=attrs['battle'], trainer=attrs['trainer']):
+        if Team.objects.filter(battle=attrs['battle'], trainer=attrs['trainer']).exists():
             raise serializers.ValidationError('You cannot create a new team for this battle')
 
         valid = has_pokemons_fields_missing_values(attrs)
@@ -158,7 +158,7 @@ class BattleCreateSerializer(serializers.ModelSerializer):
         fields = ("id", "creator", "opponent", "winner")
 
     def validate_creator(self, value):
-        valid_field = has_different_contenders_to_creator_and_opponent(
+        valid_field = has_different_contenders(
             self.initial_data['creator'], self.initial_data['opponent'])
         if not valid_field:
             raise serializers.ValidationError("ERROR: You can't challenge yourself.")
@@ -167,8 +167,8 @@ class BattleCreateSerializer(serializers.ModelSerializer):
     def validate_opponent(self, value):
         if 'opponent' not in self.initial_data:
             raise serializers.ValidationError("ERROR: You need to choose an opponent")
-        opponent = fetch_opponent_or_create_if_doesnt_exist(self.initial_data['opponent'])
-        return opponent
+        value = fetch_opponent_or_create_if_doesnt_exist(self.initial_data['opponent'])
+        return value
 
     def create(self, validated_data):
         send_invite_email_or_send_password_email(

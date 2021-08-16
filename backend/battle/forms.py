@@ -9,7 +9,7 @@ from users.models import User
 from pokemon.models import Pokemon
 
 from services.battle import (
-    has_different_contenders_to_creator_and_opponent,
+    has_different_contenders,
     fetch_opponent_or_create_if_doesnt_exist,
     send_invite_email_or_send_password_email,
     has_pokemons_fields_missing_values,
@@ -46,7 +46,7 @@ class BattleForm(forms.ModelForm):
             raise forms.ValidationError("ERROR: You need to choose an opponent")
 
         creator_id = User.objects.get(email=cleaned_data['creator']).id
-        valid_creator_field = has_different_contenders_to_creator_and_opponent(
+        valid_creator_field = has_different_contenders(
             creator_id, cleaned_data['opponent'])
 
         if not valid_creator_field:

@@ -10,7 +10,7 @@ from battle.serializers import BattleSerializer, BattleCreateSerializer, TeamCre
 
 class BattletList(generics.ListCreateAPIView):
     serializer_class = BattleSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Battle.objects.filter(
