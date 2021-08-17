@@ -28,7 +28,15 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("email", "id")
 
 
+class PokemonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pokemon
+        fields = ("id", "pokemon_id", "name", "img_url", "attack", "defense", "hp")
+
+
 class TeamSerializer(serializers.ModelSerializer):
+    trainer = UserSerializer()
+    pokemons = PokemonSerializer(many=True)
 
     class Meta:
         model = Team
@@ -143,6 +151,8 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
 
 
 class BattleSerializer(serializers.ModelSerializer):
+    creator = UserSerializer()
+    opponent = UserSerializer()
     teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:
