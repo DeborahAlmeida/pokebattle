@@ -18,7 +18,7 @@ def get_pokemon_from_api(poke_name):
     return info
 
 
-def verify_pokemon_exists_api(poke_names):
+def has_pokemon_on_api(poke_names):
     for pokemon_name in poke_names:
         response = requests.get(urljoin(settings.POKE_API_URL, pokemon_name))
         if response.status_code == 404:

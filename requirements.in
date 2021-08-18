@@ -19,3 +19,6 @@ django-templated-email
 social-auth-app-django
 python-social-auth
 model_bakery
+djangorestframework
+markdown
+django-filter
