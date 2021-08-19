@@ -4,7 +4,7 @@ from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
 from django.conf import settings
 from battle.models import Battle, Team
-from battle.serializers import BattleSerializer, UserSerializer
+from battle.serializers import BattleSerializer
 
 
 class APITestCaseUtils(APITestCase):
