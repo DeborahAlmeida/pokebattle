@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { apiUrls, getFromApi } from 'utils/api.js';
 
 function Home(props){
   const [showCreator, Creator] = useState({});
+
+  const { id } = useParams();
+
   const getTeamData = async () => {
-    const data = await getFromApi(apiUrls['battleDetail'](182));
-    Creator({ creator : data.creator.email,
-  opponent: data.opponent.email,
-winner: data.winner});
+    const data = await getFromApi(apiUrls['battleDetail'](id));
+    Creator({
+      creator : data.creator.email,
+      opponent: data.opponent.email,
+      winner: data.winner
+    });
     return data;
   };
+
   getTeamData();
+
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
