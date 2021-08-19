@@ -4,7 +4,7 @@ from rest_framework.test import APIClient, APITestCase
 from django.urls import reverse
 from django.conf import settings
 from battle.models import Battle, Team
-from battle.serializers import BattleSerializer
+from battle.serializers import BattleSerializer, UserSerializer
 
 
 class APITestCaseUtils(APITestCase):
@@ -327,3 +327,17 @@ class CreateTeamEndpointTest(APITestCaseUtils):
         self.assertEqual(
             response.json()['non_field_errors'][0],
             'ERROR: Select all pokemons')
+
+
+class LoggedUserEndpointTest(APITestCaseUtils):
+
+    def test_endpoint_returns_current_user(self):
+        response = self.auth_client.get(reverse("logged-user"))
+        self.assertEqual(
+            response.json()['email'],
+            self.user_1.email)
+
+    def test_endpoint_returns_error_if_user_is_not_logged(self):
+        self.auth_client.logout()
+        response = self.auth_client.get(reverse("logged-user"))
+        self.assertEqual(response.status_code, 403)
