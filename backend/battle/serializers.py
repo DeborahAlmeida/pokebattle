@@ -150,14 +150,15 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
         return instance
 
 
-class BattleSerializer(serializers.ModelSerializer):
+class BattleSerializer(serializers.Serializer):
     creator = UserSerializer()
     opponent = UserSerializer()
     teams = TeamSerializer(many=True, read_only=True)
+    teste = UserSerializer(read_only=True)
 
     class Meta:
         model = Battle
-        fields = ("id", "creator", "opponent", "winner", "teams")
+        fields = ("id", "creator", "opponent", "winner", "teams", "teste")
 
 
 class BattleCreateSerializer(serializers.ModelSerializer):
