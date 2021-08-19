@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
  
 import CardPokemon from 'pages/CardPokemon.js';
-
-// {{pokemons_creator.pokemon_1.img_url}}
 
 function CardTeam(props){
     return (

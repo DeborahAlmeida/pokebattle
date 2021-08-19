@@ -6,7 +6,7 @@ import { apiUrls, getFromApi, createTeamUrl } from 'utils/api.js';
 
 import CardTeam from 'pages/CardTeam.js';
 
-function Home(){
+function BattleDetail(){
   const [user, setCurrentUser] = useState();
   const [battle, setBattle] = useState();
 
@@ -74,4 +74,4 @@ function Home(){
   );
 }
 
-export default Home;
+export default BattleDetail;
