@@ -407,7 +407,7 @@ h2{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 .logout{
     text-align: center;
@@ -529,4 +529,8 @@ h2{
 }
 .hidden-password-link{
     visibility: hidden;
+}
+.img_pokemon_card{
+    width: 70px;
+    height: 70px;
 }

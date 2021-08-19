@@ -3,7 +3,13 @@ import axios from "axios";
 const baseUrl = window.location.host;
 
 const apiUrls = {
-    battleDetail: (id) => (`api/battle/${id}`)
+    battleDetail: (id) => (`api/battle/${id}`),
+    currentUser: 'api/user/'
+}
+
+const createTeamUrl = (id) => {
+  const url = `http://${baseUrl}/team/${id}/create/` 
+  return url
 }
 
 const getFromApi = (urlApi) => {
@@ -15,4 +21,4 @@ const getFromApi = (urlApi) => {
     return response
 }
 
-export { apiUrls, getFromApi };
+export { apiUrls, getFromApi, createTeamUrl };
