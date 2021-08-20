@@ -13,12 +13,8 @@ function BattleDetail(){
   const { id } = useParams();
 
   useEffect(() => {
-    let abortController = new AbortController();
     getCurrentUserData()
     getTeamData()
-    return () => {
-      abortController.abort();
-    }
   }, []);
 
   const getCurrentUserData = async () => {
