@@ -28,7 +28,15 @@ function BattleDetail() {
   let currentUserTeam = null;
   let otherUserTeam = null;
   if (!battle) {
-    return '';
+    return (
+      <div className="battle_container_detail">
+        <img
+          alt="battle not found"
+          className="img_detail"
+          src="http://www.i2softbd.com/template/TPL-007/images/404-Page-Not-Found.png"
+        />
+      </div>
+    );
   }
   if (battle.teams.length === 1) {
     currentUserTeam = battle.teams[0].trainer.email === user.email ? battle.teams[0] : null;

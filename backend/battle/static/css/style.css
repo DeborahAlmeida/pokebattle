@@ -534,3 +534,9 @@ h2{
     width: 70px;
     height: 70px;
 }
+.battle_404{
+    background-color: white;
+    border:2px solid black;
+    width:1000px;
+    height:1000px;
+}
