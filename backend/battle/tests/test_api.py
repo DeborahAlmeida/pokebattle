@@ -329,7 +329,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             'ERROR: Select all pokemons')
 
 
-class LoggedUserEndpointTest(APITestCaseUtils):
+class CurrentUserEndpointTest(APITestCaseUtils):
 
     def test_endpoint_returns_current_user(self):
         response = self.auth_client.get(reverse("logged-user"))

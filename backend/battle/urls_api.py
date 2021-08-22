@@ -6,5 +6,5 @@ urlpatterns = [
     path("battle/<int:pk>/", endpoints.BattleDetail.as_view(), name="battle-detail"),
     path("battle/create/", endpoints.BattleCreate.as_view(), name="battle-create"),
     path("team/create/", endpoints.TeamCreate.as_view(), name="team-create"),
-    path("user/", endpoints.LoggedUser.as_view(), name="logged-user"),
+    path("user/", endpoints.CurrentUser.as_view(), name="logged-user"),
 ]

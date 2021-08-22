@@ -47,7 +47,7 @@ class TeamCreate(generics.CreateAPIView):
     permission_classes = [IsInBattle]
 
 
-class LoggedUser(APIView):
+class CurrentUser(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
