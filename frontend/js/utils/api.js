@@ -20,4 +20,16 @@ const getFromApi = (urlApi) => {
   return response;
 };
 
-export { apiUrls, getFromApi, createTeamUrl };
+const getCurrentUserData = async (setCurrentUser) => {
+  const user = await getFromApi(apiUrls.currentUser);
+  setCurrentUser(user);
+  return user;
+};
+
+const getTeamData = async (id, setBattle) => {
+  const data = await getFromApi(apiUrls.battleDetail(id));
+  setBattle(data);
+  return data;
+};
+
+export { apiUrls, getFromApi, createTeamUrl, getCurrentUserData, getTeamData };

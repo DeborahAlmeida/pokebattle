@@ -22,6 +22,7 @@
 
   <!-- Body Content -->
   {% block body %}
+
   {% if user.is_authenticated %}
     <div class="user">
         <a class ="anchor_user" href="{% url 'battle_list' %}">
@@ -32,7 +33,7 @@
             <img src="https://image.flaticon.com/icons/png/128/1053/1053210.png" width=40 height=40 alt="">
         </a>
     </div>
-    {% else %}
+  {% else %}
     <div class="user">
         <a class ="anchor_user" href="{% url 'signup' %}">
             <img class="img_user" width=50 height=50 src="https://www.greatmining.com/images/signup.png">
@@ -43,8 +44,10 @@
             LOGIN
         </a>
     </div>
-    {% endif %}
-  <div id='react-app'></div>{% endblock %}
+  {% endif %}
+  <div id='react-app'></div>
+
+  {% endblock %}
 
   <!-- django-js-reverse -->
   <script src="{% url 'js_reverse' %}" type="text/javascript"></script>

@@ -5,6 +5,7 @@ module.exports = {
   extends: ['vinta/recommended'],
   rules: {
     "default-param-last": "off",
+    "react/prop-types": "off",
   },
   env: {
     es6: true,

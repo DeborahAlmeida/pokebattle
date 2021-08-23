@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import CardTeam from 'pages/CardTeam';
-import { apiUrls, getFromApi, createTeamUrl } from 'utils/api';
+import CardTeam from 'components/CardTeam';
+import { createTeamUrl, getCurrentUserData, getTeamData } from 'utils/api';
+import { showTeams } from '../utils/battle-detail';
 
 function BattleDetail() {
   const [user, setCurrentUser] = useState();
@@ -11,22 +12,10 @@ function BattleDetail() {
   const { id } = useParams();
 
   useEffect(() => {
-    getCurrentUserData();
-    getTeamData();
+    getCurrentUserData(setCurrentUser);
+    getTeamData(id, setBattle);
   }, []);
 
-  const getCurrentUserData = async () => {
-    const user = await getFromApi(apiUrls.currentUser);
-    setCurrentUser(user);
-    return user;
-  };
-  const getTeamData = async () => {
-    const data = await getFromApi(apiUrls.battleDetail(id));
-    setBattle(data);
-    return data;
-  };
-  let currentUserTeam = null;
-  let otherUserTeam = null;
   if (!battle) {
     return (
       <div className="battle_container_detail">
@@ -38,14 +27,10 @@ function BattleDetail() {
       </div>
     );
   }
-  if (battle.teams.length === 1) {
-    currentUserTeam = battle.teams[0].trainer.email === user.email ? battle.teams[0] : null;
-    otherUserTeam = currentUserTeam === null ? battle.teams[0] : null;
-  } else if (battle.teams.length === 2) {
-    currentUserTeam =
-      battle.teams[0].trainer.email === user.email ? battle.teams[0] : battle.teams[1];
-    otherUserTeam = currentUserTeam === battle.teams[0] ? battle.teams[1] : battle.teams[0];
-  }
+  const teams = showTeams(battle, user);
+
+  const currentUserTeam = teams[0];
+  const otherUserTeam = teams[1];
 
   return (
     <div className="battle_container_detail">
