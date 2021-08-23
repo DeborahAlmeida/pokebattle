@@ -5,7 +5,8 @@ import Urls from './urls';
 const baseUrl = window.location.host;
 
 const createTeamUrl = (id) => {
-  const url = `http://${baseUrl}/team/${id}/create/`;
+  const urlTeam = Urls.team_create(id);
+  const url = `http://${baseUrl}${urlTeam}`;
   return url;
 };
 
