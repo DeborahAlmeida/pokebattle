@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
 import { createTeamUrl, getCurrentUserData, getTeamData } from 'utils/api';
+
 import { showTeams } from '../utils/battle-detail';
 
 function BattleDetail() {
