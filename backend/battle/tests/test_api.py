@@ -332,12 +332,12 @@ class CreateTeamEndpointTest(APITestCaseUtils):
 class CurrentUserEndpointTest(APITestCaseUtils):
 
     def test_endpoint_returns_current_user(self):
-        response = self.auth_client.get(reverse("logged-user"))
+        response = self.auth_client.get(reverse("current-user"))
         self.assertEqual(
             response.json()['email'],
             self.user_1.email)
 
     def test_endpoint_returns_error_if_user_is_not_logged(self):
         self.auth_client.logout()
-        response = self.auth_client.get(reverse("logged-user"))
+        response = self.auth_client.get(reverse("current-user"))
         self.assertEqual(response.status_code, 403)
