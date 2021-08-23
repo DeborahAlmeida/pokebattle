@@ -11,7 +11,6 @@ function BattleDetail() {
   const [battle, setBattle] = useState();
 
   const { id } = useParams();
-
   useEffect(() => {
     getCurrentUserData(setCurrentUser);
     getTeamData(id, setBattle);
