@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
-import { createTeamUrl, getCurrentUserData, getTeamData } from 'utils/api';
+import { createTeamUrl } from 'utils/api';
 
+import { fetchBattle } from '../actions/setBattle';
+import { setCurrentUser } from '../actions/setUser';
 import { showTeams } from '../utils/battle-detail';
 
-function BattleDetail() {
-  const [user, setCurrentUser] = useState();
-  const [battle, setBattle] = useState();
-
+function BattleDetail(props) {
   const { id } = useParams();
   useEffect(() => {
-    getCurrentUserData(setCurrentUser);
-    getTeamData(id, setBattle);
+    props.setCurrentUser();
+    props.fetchBattle(id);
   }, []);
-
+  const { battle } = props.battle;
+  const { user } = props.user;
   if (!battle) {
     return (
       <div className="battle_container_detail">
@@ -75,4 +76,16 @@ function BattleDetail() {
   );
 }
 
-export default BattleDetail;
+const mapStateToProps = (store) => ({
+  battle: store.battleState,
+  user: store.userState,
+});
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setCurrentUser: () => dispatch(setCurrentUser()),
+    fetchBattle: (battle) => dispatch(fetchBattle(battle)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BattleDetail);
