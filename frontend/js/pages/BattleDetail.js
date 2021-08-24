@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
-import { createTeamUrl, getCurrentUserData, getTeamData } from 'utils/api';
+import { createTeamUrl } from 'utils/api';
 
 import { fetchBattle } from '../actions/setBattle';
 import { setCurrentUser } from '../actions/setUser';
