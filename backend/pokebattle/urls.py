@@ -2,8 +2,6 @@ from django.conf.urls import url  # noqa
 from django.urls import path, include
 from django.contrib import admin
 import django_js_reverse.views
-from django.views.generic import TemplateView
-
 
 urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
@@ -11,8 +9,5 @@ urlpatterns = [
     path('', include('battle.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/', include('battle.urls_api')),
-    path(
-        "v2/battle/detail/<int:pk>/",
-        TemplateView.as_view(template_name="spa/spa_template.html"),
-        name="spa_template"),
+    path('v2/', include('battle.urls_v2')),
 ]
