@@ -18,15 +18,7 @@ function BattleDetail(props) {
   const { battle } = props.battle;
   const { user } = props.user;
   if (!battle) {
-    return (
-      <div className="battle_container_detail">
-        <img
-          alt="battle not found"
-          className="img_detail"
-          src="http://www.i2softbd.com/template/TPL-007/images/404-Page-Not-Found.png"
-        />
-      </div>
-    );
+    return '';
   }
   const teams = showTeams(battle, user);
 
@@ -42,7 +34,7 @@ function BattleDetail(props) {
         <>
           <img
             alt="trofeu"
-            className="img_detail"
+            className="img_detail_winner"
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">

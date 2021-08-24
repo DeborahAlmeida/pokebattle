@@ -6,4 +6,8 @@ urlpatterns = [
         "battle/detail/<int:pk>/",
         TemplateView.as_view(template_name="spa/spa_template.html"),
         name="spa_template"),
+    path(
+        "battle/list/",
+        TemplateView.as_view(template_name="spa/spa_template.html"),
+        name="spa_template_list"),
 ]
