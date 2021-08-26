@@ -12,7 +12,7 @@ const App = () => (
     <Router>
       <Switch>
         <Route component={BattleDetail} path={Urls.spa_template(':id')} />
-        <Route component={BattleList} path={Urls.spa_template_list()} />
+        <Route component={BattleList} path={Urls.battle_list_v2()} />
       </Switch>
     </Router>
   </SentryBoundary>

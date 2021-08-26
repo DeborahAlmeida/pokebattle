@@ -5,18 +5,21 @@ import { useParams } from 'react-router-dom';
 import CardTeam from 'components/CardTeam';
 import { createTeamUrl } from 'utils/api';
 
-import { fetchBattle } from '../actions/setBattle';
-import { setCurrentUser } from '../actions/setUser';
+import { getBattle } from '../actions/getBattle';
+import { getCurrentUser } from '../actions/getUser';
 import { showTeams } from '../utils/battle-detail';
 
 function BattleDetail(props) {
   const { id } = useParams();
-  useEffect(() => {
-    props.setCurrentUser();
-    props.fetchBattle(id);
-  }, []);
   const { battle } = props.battle;
   const { user } = props.user;
+  useEffect(() => {
+    if (!user) {
+      props.getCurrentUser();
+    }
+    props.getBattle(id);
+  }, []);
+
   if (!battle) {
     return '';
   }
@@ -75,8 +78,8 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setCurrentUser: () => dispatch(setCurrentUser()),
-    fetchBattle: (battle) => dispatch(fetchBattle(battle)),
+    getCurrentUser: () => dispatch(getCurrentUser()),
+    getBattle: (battle) => dispatch(getBattle(battle)),
   };
 };
 

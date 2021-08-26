@@ -1,19 +1,21 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import { fetchBattleList } from '../actions/getBattleList';
-import { setCurrentUser } from '../actions/setUser';
+import { getBattleList } from '../actions/getBattleList';
+import { getCurrentUser } from '../actions/getUser';
 import Urls from '../utils/urls';
 
 function BattleList(props) {
+  const { user } = props;
+  const { battles } = props.battles;
   useEffect(() => {
-    props.setCurrentUser();
-    props.fetchBattleList();
+    if (!user) {
+      props.getCurrentUser();
+    }
+    props.getBattleList();
   }, []);
-  const { user } = props.user;
-  const { battleList } = props.battles;
 
-  if (!battleList) {
+  if (!battles) {
     return (
       <div className="battle_container_detail">
         <h1>Your Battles</h1>
@@ -36,7 +38,7 @@ function BattleList(props) {
       <ul className="list_battle">
         <div className="settled">
           <h3>Settled battles</h3>
-          {battleList.map((battle) =>
+          {battles.map((battle) =>
             battle.winner ? (
               <li key={battle.id} className="item">
                 <a className="battle_settled" href={Urls.spa_template(battle.id)}>
@@ -49,7 +51,7 @@ function BattleList(props) {
 
         <div className="your_opponent">
           <h3>On goind Battles</h3>
-          {battleList.map((battle) =>
+          {battles.map((battle) =>
             !battle.winner ? (
               <li key={battle.id} className="item">
                 <a className="battle_ongoing" href={Urls.spa_template(battle.id)}>
@@ -65,14 +67,14 @@ function BattleList(props) {
 }
 
 const mapStateToProps = (store) => ({
-  battles: store.battleListState,
+  battles: store.battle,
   user: store.userState,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setCurrentUser: () => dispatch(setCurrentUser()),
-    fetchBattleList: () => dispatch(fetchBattleList()),
+    getCurrentUser: () => dispatch(getCurrentUser()),
+    getBattleList: () => dispatch(getBattleList()),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(BattleList);
