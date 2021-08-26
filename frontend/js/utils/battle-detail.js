@@ -1,4 +1,4 @@
-const showTeams = (battle, user) => {
+const orderTeamsByCurrentUser = (battle, user) => {
   let currentUserTeam = null;
   let otherUserTeam = null;
   if (battle.teams.length === 1) {
@@ -9,7 +9,10 @@ const showTeams = (battle, user) => {
       battle.teams[0].trainer.email === user.email ? battle.teams[0] : battle.teams[1];
     otherUserTeam = currentUserTeam === battle.teams[0] ? battle.teams[1] : battle.teams[0];
   }
-  return [currentUserTeam, otherUserTeam];
+  return {
+    current: currentUserTeam,
+    other: otherUserTeam,
+  };
 };
 
-export { showTeams };
+export { orderTeamsByCurrentUser };

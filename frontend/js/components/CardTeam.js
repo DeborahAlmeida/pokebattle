@@ -5,9 +5,9 @@ import CardPokemon from 'components/CardPokemon';
 function CardTeam({ pokemons }) {
   return (
     <div className="content_card">
-      <CardPokemon pokemon={pokemons[0]} />
-      <CardPokemon pokemon={pokemons[1]} />
-      <CardPokemon pokemon={pokemons[2]} />
+      {pokemons.map((pokemon) => {
+        return <CardPokemon key={pokemon.name} pokemon={pokemon} />;
+      })}
     </div>
   );
 }

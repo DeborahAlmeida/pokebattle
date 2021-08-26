@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
-import { createTeamUrl, getCurrentUserData, getTeamData } from 'utils/api';
+import { getFromApi, getCurrentUserData, getBattleData } from 'utils/api';
 
-import { showTeams } from '../utils/battle-detail';
+import { orderTeamsByCurrentUser } from '../utils/battle-detail';
+import Urls from '../utils/urls';
 
 function BattleDetail() {
   const [user, setCurrentUser] = useState();
@@ -13,7 +14,7 @@ function BattleDetail() {
   const { id } = useParams();
   useEffect(() => {
     getCurrentUserData(setCurrentUser);
-    getTeamData(id, setBattle);
+    getBattleData(id, setBattle);
   }, []);
 
   if (!battle) {
@@ -27,10 +28,7 @@ function BattleDetail() {
       </div>
     );
   }
-  const teams = showTeams(battle, user);
-
-  const currentUserTeam = teams[0];
-  const otherUserTeam = teams[1];
+  const { current, other } = orderTeamsByCurrentUser(battle, user);
 
   return (
     <div className="battle_container_detail">
@@ -54,21 +52,21 @@ function BattleDetail() {
       <div className="pokemons_info">
         <div>
           <p className="text_trainer">Your pokemons</p>
-          {currentUserTeam === null ? (
+          {current === null ? (
             <a
               className="button_battle button_battle_detail"
-              href={createTeamUrl(battle.id)}
+              href={getFromApi(Urls.team_create(battle.id))}
               role="button"
             >
               Create your team
             </a>
           ) : (
-            <CardTeam pokemons={currentUserTeam.pokemons} />
+            <CardTeam pokemons={current.pokemons} />
           )}
         </div>
         <div>
           <p className="text_trainer">Opposing pokemons</p>
-          {otherUserTeam === null ? 'No pokemons' : <CardTeam pokemons={otherUserTeam.pokemons} />}
+          {other === null ? 'No pokemons' : <CardTeam pokemons={other.pokemons} />}
         </div>
       </div>
     </div>
