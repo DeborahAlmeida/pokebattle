@@ -4,8 +4,8 @@ import { battleListReducer } from './battleListReducer';
 import { battleReducer } from './battleReducer';
 import { userReducer } from './userReducer';
 
-export const Reducers = combineReducers({
-  battleState: battleReducer,
-  userState: userReducer,
+export const reducers = combineReducers({
+  battle: battleReducer,
+  user: userReducer,
   battleListState: battleListReducer,
 });
