@@ -1,9 +1,9 @@
 from django.conf.urls import url  # noqa
 from django.urls import path, include
 from django.contrib import admin
-import django_js_reverse.views
 from django.views.generic import TemplateView
 
+import django_js_reverse.views
 
 urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
