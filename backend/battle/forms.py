@@ -30,7 +30,7 @@ class BattleForm(forms.ModelForm):
         fields = ['creator', 'opponent', ]
 
     def __init__(self, *args, **kwargs):
-        super(BattleForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields['creator'].widget = forms.HiddenInput()
 
     def clean_opponent(self):
