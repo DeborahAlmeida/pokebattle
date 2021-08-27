@@ -1,10 +1,9 @@
 from celery.utils.log import get_task_logger
 
-from pokebattle import celery_app
-
 from battle.models import Battle
 from battle.battles.battle import run_battle, set_winner
 
+from pokebattle import celery_app
 
 logger = get_task_logger(__name__)
 

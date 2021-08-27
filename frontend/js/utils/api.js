@@ -12,16 +12,14 @@ const getFromApi = (urlApi) => {
   return response;
 };
 
-const getCurrentUserData = async (setCurrentUser) => {
+const getCurrentUserData = async () => {
   const user = await getFromApi(Urls.api_current_user());
-  setCurrentUser(user);
   return user;
 };
 
-const getBattleData = async (id, setBattle) => {
+const getTeamData = async (id) => {
   const data = await getFromApi(Urls.api_battle_detail(id));
-  setBattle(data);
   return data;
 };
 
-export { getFromApi, getCurrentUserData, getBattleData };
+export { getFromApi, getCurrentUserData, getTeamData };

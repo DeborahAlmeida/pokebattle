@@ -1,5 +1,6 @@
 from django.conf.urls import include
-from django.urls import path
+from django.urls import path, reverse_lazy
+
 from .views import (
     Home,
     BattleView,
@@ -14,7 +15,6 @@ from .views import (
     PasswordCreateCompleteView,
 
 )
-from django.urls import reverse_lazy
 
 urlpatterns = [
     path("", Home.as_view(), name="home"),
