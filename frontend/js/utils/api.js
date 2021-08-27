@@ -5,7 +5,11 @@ import Urls from './urls';
 const baseUrl = window.location.host;
 
 const getFromApi = (urlApi) => {
-  const url = `http://${baseUrl}${urlApi}`;
+  let pokeProtocol = 'https';
+  if (baseUrl === 'localhost:8000') {
+    pokeProtocol = 'http';
+  }
+  const url = `${pokeProtocol}://${baseUrl}${urlApi}`;
   const response = axios.get(url).then((res) => {
     return res.data;
   });
