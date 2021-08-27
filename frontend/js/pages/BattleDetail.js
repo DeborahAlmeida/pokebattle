@@ -4,30 +4,25 @@ import { useParams } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
 
-import { fetchBattle } from '../actions/setBattle';
-import { setCurrentUser } from '../actions/setUser';
+import { getBattle } from '../actions/getBattle';
+import { getCurrentUser } from '../actions/getUser';
 import { getFromApi } from '../utils/api';
 import { orderTeamsByCurrentUser } from '../utils/battle-detail';
 import Urls from '../utils/urls';
 
 function BattleDetail(props) {
   const { id } = useParams();
-  useEffect(() => {
-    props.setCurrentUser();
-    props.fetchBattle(id);
-  }, []);
   const { battle } = props.battle;
   const { user } = props.user;
+  useEffect(() => {
+    if (!user) {
+      props.getCurrentUser();
+    }
+    props.getBattle(id);
+  }, []);
+
   if (!battle) {
-    return (
-      <div className="battle_container_detail">
-        <img
-          alt="battle not found"
-          className="img_detail"
-          src="http://www.i2softbd.com/template/TPL-007/images/404-Page-Not-Found.png"
-        />
-      </div>
-    );
+    return '';
   }
   const { current, other } = orderTeamsByCurrentUser(battle, user);
 
@@ -40,7 +35,7 @@ function BattleDetail(props) {
         <>
           <img
             alt="trofeu"
-            className="img_detail"
+            className="img_detail_winner"
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">
@@ -81,8 +76,8 @@ const mapStateToProps = (store) => ({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    setCurrentUser: () => dispatch(setCurrentUser()),
-    fetchBattle: (battle) => dispatch(fetchBattle(battle)),
+    getCurrentUser: () => dispatch(getCurrentUser()),
+    getBattle: (battle) => dispatch(getBattle(battle)),
   };
 };
 

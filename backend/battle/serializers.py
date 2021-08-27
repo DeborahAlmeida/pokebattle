@@ -153,6 +153,7 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
 class BattleSerializer(serializers.ModelSerializer):
     creator = UserSerializer()
     opponent = UserSerializer()
+    winner = UserSerializer()
     teams = TeamSerializer(many=True, read_only=True)
 
     class Meta:

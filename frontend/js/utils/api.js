@@ -22,4 +22,9 @@ const getTeamData = async (id) => {
   return data;
 };
 
-export { getFromApi, getCurrentUserData, getTeamData };
+const getBattles = async () => {
+  const data = await getFromApi(Urls.api_battle_list());
+  return data;
+};
+
+export { getFromApi, getCurrentUserData, getTeamData, getBattles };
