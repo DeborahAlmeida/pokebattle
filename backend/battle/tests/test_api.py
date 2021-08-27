@@ -19,44 +19,44 @@ class APITestCaseUtils(APITestCase):
 class ListBattleEndpointTest(APITestCaseUtils):
 
     def test_login_user_can_acess_battle_list(self):
-        response = self.auth_client.get(reverse('battle-list'))
+        response = self.auth_client.get(reverse('api_battle_list'))
         self.assertEqual(response.status_code, 200)
 
     def test_endpoint_returns_empty_list(self):
-        response = self.auth_client.get(reverse('battle-list'))
+        response = self.auth_client.get(reverse('api_battle_list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
 
     def test_endpoint_returns_one_battle_in_list(self):
         battle = baker.make('battle.Battle', creator=self.user_1)
-        response = self.auth_client.get(reverse('battle-list'))
+        response = self.auth_client.get(reverse('api_battle_list'))
         matching_battles = BattleSerializer([battle], many=True)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(matching_battles.data, response.json())
 
     def test_endpoint_returns_few_battle_ids(self):
         battles = baker.make('battle.Battle', creator=self.user_1, _quantity=3)
-        response = self.auth_client.get(reverse('battle-list'))
+        response = self.auth_client.get(reverse('api_battle_list'))
         matching_battles = BattleSerializer(battles, many=True)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(matching_battles.data, response.json())
 
     def test_endpoint_returns_a_lot_battle_ids(self):
         battles = baker.make('battle.Battle', creator=self.user_1, _quantity=100)
-        response = self.auth_client.get(reverse('battle-list'))
+        response = self.auth_client.get(reverse('api_battle_list'))
         matching_battles = BattleSerializer(battles, many=True)
         self.assertEqual(response.status_code, 200)
         self.assertCountEqual(matching_battles.data, response.json())
 
     def test_endpoint_returns_an_error_when_the_user_is_not_logged(self):
         self.auth_client.logout()
-        response = self.client.get(reverse('battle-list'))
+        response = self.client.get(reverse('api_battle_list'))
         self.assertEqual(response.status_code, 403)
 
     def test_endpoint_diff_to_verify_it_returns_exactly_len_of_battle_list(self):
         battles = baker.make('battle.Battle', creator=self.user_1, _quantity=10)
 
-        response_initial = self.auth_client.get(reverse('battle-list'))
+        response_initial = self.auth_client.get(reverse('api_battle_list'))
 
         self.assertCountEqual(BattleSerializer(battles, many=True).data, response_initial.json())
 
@@ -64,7 +64,7 @@ class ListBattleEndpointTest(APITestCaseUtils):
 
         all_battles = Battle.objects.filter(creator=self.user_1)
 
-        response_updated = self.auth_client.get(reverse('battle-list'))
+        response_updated = self.auth_client.get(reverse('api_battle_list'))
 
         self.assertCountEqual(
             BattleSerializer(all_battles, many=True).data,
@@ -75,21 +75,21 @@ class DeatilBattleEndpointTest(APITestCaseUtils):
 
     def test_logged_user_can_acess_battle_detail(self):
         battle = baker.make("battle.Battle", creator=self.user_1, opponent=self.opponent)
-        response = self.auth_client.get(reverse('battle-detail', kwargs={'pk': battle.id}))
+        response = self.auth_client.get(reverse('api_battle_detail', kwargs={'pk': battle.id}))
         self.assertEqual(response.status_code, 200)
 
     def test_endpoint_returns_404_status(self):
-        response = self.auth_client.get(reverse('battle-detail', kwargs={'pk': 1}))
+        response = self.auth_client.get(reverse('api_battle_detail', kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 404)
 
     def test_endpoint_returns_404_status_when_acess_invalid_battle(self):
         battle = baker.make("battle.Battle")
-        response = self.auth_client.get(reverse('battle-detail', kwargs={'pk': battle.id}))
+        response = self.auth_client.get(reverse('api_battle_detail', kwargs={'pk': battle.id}))
         self.assertEqual(response.status_code, 404)
 
     def test_endpoint_returns_an_error_when_the_user_is_not_logged(self):
         self.auth_client.logout()
-        response = self.auth_client.get(reverse('battle-detail', kwargs={'pk': 1}))
+        response = self.auth_client.get(reverse('api_battle_detail', kwargs={'pk': 1}))
         self.assertEqual(response.status_code, 403)
 
 
@@ -100,7 +100,7 @@ class CreateBattleEndpointTest(APITestCaseUtils):
             "creator": self.user_1.id,
             "opponent": self.opponent.email,
         }
-        response = self.auth_client.post(reverse('battle-create'), battle_data)
+        response = self.auth_client.post(reverse('api_battle_create'), battle_data)
         battle = Battle.objects.filter(creator=self.user_1, opponent=self.opponent)
         self.assertEqual(response.status_code, 201)
         self.assertTrue(battle)
@@ -110,7 +110,7 @@ class CreateBattleEndpointTest(APITestCaseUtils):
             "creator": self.user_1.id,
             "opponent": self.user_1.email,
         }
-        response = self.auth_client.post(reverse('battle-create'), battle_data)
+        response = self.auth_client.post(reverse('api_battle_create'), battle_data)
         self.assertEqual(
             response.json()['creator'][0],
             "ERROR: You can't challenge yourself.")
@@ -120,7 +120,7 @@ class CreateBattleEndpointTest(APITestCaseUtils):
             "creator": self.user_1.id,
             "opponent": "",
         }
-        response = self.auth_client.post(reverse('battle-create'), battle_data)
+        response = self.auth_client.post(reverse('api_battle_create'), battle_data)
         self.assertEqual(
             response.json()['opponent'][0],
             'This field may not be blank.')
@@ -132,7 +132,7 @@ class CreateBattleEndpointTest(APITestCaseUtils):
             "opponent": self.opponent.email,
         }
 
-        self.auth_client.post(reverse("battle-create"), battle_data)
+        self.auth_client.post(reverse("api_battle_create"), battle_data)
 
         mock_templated_mail.assert_called_with(
             template_name="invite_challenge",
@@ -167,7 +167,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         self.auth_client.post(
-            reverse("team-create"), pokemons_data_opponnent, follow=True)
+            reverse("api_team_create"), pokemons_data_opponnent, follow=True)
         self.assertTrue(Team.objects.get(battle=battle, trainer=self.opponent))
 
         pokemons_data = {
@@ -181,7 +181,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         self.auth_client.post(
-            reverse("team-create"), pokemons_data, follow=True)
+            reverse("api_team_create"), pokemons_data, follow=True)
 
         task_mock.assert_called_with(battle.id)
 
@@ -202,7 +202,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         self.auth_client.post(
-            reverse("team-create"), pokemons_data_opponnent, follow=True)
+            reverse("api_team_create"), pokemons_data_opponnent, follow=True)
         self.assertTrue(Team.objects.get(battle=battle, trainer=self.opponent))
 
         pokemons_data = {
@@ -216,7 +216,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         self.auth_client.post(
-            reverse("team-create"), pokemons_data, follow=True)
+            reverse("api_team_create"), pokemons_data, follow=True)
 
         battle_updated = Battle.objects.get(creator=self.user_1, opponent=self.opponent)
 
@@ -241,7 +241,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         response = self.auth_client.post(
-            reverse("team-create"), pokemons_data, follow=True)
+            reverse("api_team_create"), pokemons_data, follow=True)
         self.assertEqual(response.status_code, 201)
 
         team_user = Team.objects.get(battle=self.battle, trainer=self.user_1)
@@ -270,7 +270,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         response = self.auth_client.post(
-            reverse("team-create"),
+            reverse("api_team_create"),
             pokemons_data, follow=True)
 
         self.assertEqual(
@@ -286,7 +286,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "pokemon_3": 'pidgeot',
         }
         response = self.auth_client.post(reverse(
-            "team-create"), pokemons_data, follow=True)
+            "api_team_create"), pokemons_data, follow=True)
 
         self.assertEqual(
             response.json()['non_field_errors'][0],
@@ -305,7 +305,7 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         response = self.auth_client.post(
-            reverse("team-create"),
+            reverse("api_team_create"),
             pokemons_data,
             follow=True)
         self.assertEqual(
@@ -321,9 +321,23 @@ class CreateTeamEndpointTest(APITestCaseUtils):
             "position_pkn_3": 3,
         }
         response = self.auth_client.post(
-            reverse("team-create"),
+            reverse("api_team_create"),
             pokemons_data,
             follow=True)
         self.assertEqual(
             response.json()['non_field_errors'][0],
             'ERROR: Select all pokemons')
+
+
+class CurrentUserEndpointTest(APITestCaseUtils):
+
+    def test_endpoint_returns_current_user(self):
+        response = self.auth_client.get(reverse("api_current_user"))
+        self.assertEqual(
+            response.json()['email'],
+            self.user_1.email)
+
+    def test_endpoint_returns_error_if_user_is_not_logged(self):
+        self.auth_client.logout()
+        response = self.auth_client.get(reverse("api_current_user"))
+        self.assertEqual(response.status_code, 403)

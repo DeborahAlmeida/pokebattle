@@ -5,6 +5,9 @@ module.exports = {
   extends: ['vinta/recommended'],
   rules: {
     "default-param-last": "off",
+    "react/prop-types": "off",
+    "react/destructuring-assignment": 'off',
+    'sonarjs/no-small-switch': 'off',
   },
   env: {
     es6: true,

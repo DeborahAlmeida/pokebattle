@@ -277,8 +277,8 @@ h2{
 .subtitle_detail{
     font-size: 16px;
     font-weight: normal;
-    margin-top: -10px;
-    margin-bottom: 30px;
+    margin-top: -5px;
+    margin-bottom: 20px;
 }
 .img_detail{
     margin-top: -10px; 
@@ -407,7 +407,7 @@ h2{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 .logout{
     text-align: center;
@@ -529,4 +529,15 @@ h2{
 }
 .hidden-password-link{
     visibility: hidden;
+}
+.img_pokemon_card{
+    width: 70px;
+    height: 70px;
+}
+
+.img_detail_winner{
+    margin-top: -10px; 
+    margin-bottom: 10px;
+    width:40px;
+    height:40px;
 }
