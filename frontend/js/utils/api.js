@@ -27,4 +27,4 @@ const getBattles = async () => {
   return data;
 };
 
-export { getFromApi, getCurrentUserData, getTeamData, getBattles };
+export { getCurrentUserData, getTeamData, getBattles };

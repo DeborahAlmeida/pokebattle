@@ -6,7 +6,6 @@ import CardTeam from 'components/CardTeam';
 
 import { getBattle } from '../actions/getBattle';
 import { getCurrentUser } from '../actions/getUser';
-import { getFromApi } from '../utils/api';
 import { orderTeamsByCurrentUser } from '../utils/battle-detail';
 import Urls from '../utils/urls';
 
@@ -14,6 +13,7 @@ function BattleDetail(props) {
   const { id } = useParams();
   const { battle } = props.battle;
   const { user } = props.user;
+
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
@@ -24,6 +24,7 @@ function BattleDetail(props) {
   if (!battle) {
     return '';
   }
+
   const { current, other } = orderTeamsByCurrentUser(battle, user);
 
   return (
@@ -51,7 +52,7 @@ function BattleDetail(props) {
           {current === null ? (
             <a
               className="button_battle button_battle_detail"
-              href={getFromApi(Urls.team_create(battle.id))}
+              href={Urls.team_create(battle.id)}
               role="button"
             >
               Create your team
