@@ -1,7 +1,7 @@
 django==3.2.0
 celery[redis]==4.4.2
 django-model-utils
-django-webpack-loader
+django-webpack-loader==0.7.0
 django-js-reverse
 django-import-export
 python-decouple
