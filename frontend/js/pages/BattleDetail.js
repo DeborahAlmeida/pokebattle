@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
 
@@ -50,13 +50,9 @@ function BattleDetail(props) {
         <div>
           <p className="text_trainer">Your pokemons</p>
           {current === null ? (
-            <a
-              className="button_battle button_battle_detail"
-              href={Urls.team_create(battle.id)}
-              role="button"
-            >
+            <Link className="button_battle button_battle_detail" to={Urls.team_create(battle.id)}>
               Create your team
-            </a>
+            </Link>
           ) : (
             <CardTeam pokemons={current.pokemons} />
           )}

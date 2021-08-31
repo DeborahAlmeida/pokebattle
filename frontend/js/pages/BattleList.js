@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { getBattleList } from '../actions/getBattleList';
 import { getCurrentUser } from '../actions/getUser';
@@ -41,9 +42,9 @@ function BattleList(props) {
           {battles.map((battle) =>
             battle.winner ? (
               <li key={battle.id} className="item">
-                <a className="battle_settled" href={Urls.battle_detail_v2(battle.id)}>
+                <Link className="battle_settled" to={Urls.battle_detail_v2(battle.id)}>
                   Battle ID {battle.id}
-                </a>
+                </Link>
               </li>
             ) : null
           )}
@@ -54,9 +55,9 @@ function BattleList(props) {
           {battles.map((battle) =>
             !battle.winner ? (
               <li key={battle.id} className="item">
-                <a className="battle_ongoing" href={Urls.battle_detail_v2(battle.id)}>
+                <Link className="battle_ongoing" to={Urls.battle_detail_v2(battle.id)}>
                   Battle ID {battle.id}
-                </a>
+                </Link>
               </li>
             ) : null
           )}
