@@ -24,14 +24,20 @@ function BattleDetail(props) {
   if (!battle) {
     return '';
   }
-
-  const { current, other } = orderTeamsByCurrentUser(battle, user);
+  const battleDetail = battle.entities.battle[id];
+  const trainerDetail = battle.entities.user;
+  const pokemonsDetail = battle.entities.pokemon;
+  const { current, other } = orderTeamsByCurrentUser(battleDetail, user, trainerDetail);
 
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
-      <h2 className="subtitle_detail">Creator: {battle.creator ? battle.creator.email : ''}</h2>
-      <h2 className="subtitle_detail">Opponent: {battle.opponent ? battle.opponent.email : ''}</h2>
+      <h2 className="subtitle_detail">
+        Creator: {battleDetail.creator ? trainerDetail[battleDetail.creator].email : ''}
+      </h2>
+      <h2 className="subtitle_detail">
+        Opponent: {battleDetail.opponent ? trainerDetail[battleDetail.opponent].email : ''}
+      </h2>
       {battle.winner ? (
         <>
           <img
@@ -40,7 +46,7 @@ function BattleDetail(props) {
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">
-            The winner is {battle.winner ? battle.winner.email : ''}
+            The winner is {battleDetail.winner ? trainerDetail[battleDetail.winner].email : ''}
           </h2>
         </>
       ) : (
@@ -52,13 +58,13 @@ function BattleDetail(props) {
           {current === null ? (
             <a
               className="button_battle button_battle_detail"
-              href={Urls.team_create(battle.id)}
+              href={Urls.team_create(battleDetail.id)}
               role="button"
             >
               Create your team
             </a>
           ) : (
-            <CardTeam pokemons={current.pokemons} />
+            <CardTeam pokemonsDetail={pokemonsDetail} pokemonsIds={current.pokemons} />
           )}
         </div>
         <div>

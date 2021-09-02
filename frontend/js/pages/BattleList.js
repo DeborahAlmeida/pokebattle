@@ -27,6 +27,8 @@ function BattleList(props) {
       </div>
     );
   }
+  const battleArray = Object.values(battles.entities.battle);
+
   return (
     <div className="battle_container_detail">
       <h1>Your Battles</h1>
@@ -38,7 +40,7 @@ function BattleList(props) {
       <ul className="list_battle">
         <div className="settled">
           <h3>Settled battles</h3>
-          {battles.map((battle) =>
+          {battleArray.map((battle) =>
             battle.winner ? (
               <li key={battle.id} className="item">
                 <a className="battle_settled" href={Urls.battle_detail_v2(battle.id)}>
@@ -51,7 +53,7 @@ function BattleList(props) {
 
         <div className="your_opponent">
           <h3>On goind Battles</h3>
-          {battles.map((battle) =>
+          {battleArray.map((battle) =>
             !battle.winner ? (
               <li key={battle.id} className="item">
                 <a className="battle_ongoing" href={Urls.battle_detail_v2(battle.id)}>

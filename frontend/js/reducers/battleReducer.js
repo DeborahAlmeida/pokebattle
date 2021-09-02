@@ -15,3 +15,5 @@ export const battleReducer = (state = initialState, action) => {
       return state;
   }
 };
+
+// const battles = new schema.Entity('');
