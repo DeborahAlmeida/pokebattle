@@ -10,6 +10,8 @@ import { orderTeamsByCurrentUser } from '../utils/battle-detail';
 import Urls from '../utils/urls';
 
 function BattleDetail(props) {
+  const { loading } = props.battle;
+  const { error } = props.battle;
   const { id } = useParams();
   const { battle } = props.battle;
   const { user } = props.user;
@@ -21,6 +23,18 @@ function BattleDetail(props) {
     props.getBattle(id);
   }, []);
 
+  if (loading) {
+    return (
+      <img
+        alt="loading"
+        className="img_loading"
+        src="https://media0.giphy.com/media/3oEjI6SIIHBdRxXI40/200.gif"
+      />
+    );
+  }
+  if (error) {
+    return 'Ocurred an error';
+  }
   if (!battle) {
     return '';
   }
