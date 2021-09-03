@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
 
@@ -13,22 +13,28 @@ function BattleDetail(props) {
   const { id } = useParams();
   const { battle } = props.battle;
   const { user } = props.user;
-
+  const fetchedBattle = props.location.query;
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
     }
-    props.getBattle(id);
+    if (!fetchedBattle) {
+      props.getBattle(id);
+    }
   }, []);
 
-  if (!battle) {
+  if (!battle && !fetchedBattle) {
     return '';
   }
-  const battleDetail = battle.entities.battle[id];
-  const trainerDetail = battle.entities.user;
-  const pokemonsDetail = battle.entities.pokemon;
+  let pokemonsList = null;
+  const battleDetail = fetchedBattle ? fetchedBattle.battle : battle.entities.battle[id];
+  const trainerDetail = fetchedBattle ? fetchedBattle.battleUsers : battle.entities.user;
+  if (fetchedBattle) {
+    pokemonsList = fetchedBattle.pokemons ? fetchedBattle.pokemons : null;
+  } else if (battle.entities) {
+    pokemonsList = battle.entities.pokemon ? battle.entities.pokemon : null;
+  }
   const { current, other } = orderTeamsByCurrentUser(battleDetail, user, trainerDetail);
-
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
@@ -38,7 +44,7 @@ function BattleDetail(props) {
       <h2 className="subtitle_detail">
         Opponent: {battleDetail.opponent ? trainerDetail[battleDetail.opponent].email : ''}
       </h2>
-      {battle.winner ? (
+      {battleDetail.winner ? (
         <>
           <img
             alt="trofeu"
@@ -56,20 +62,23 @@ function BattleDetail(props) {
         <div>
           <p className="text_trainer">Your pokemons</p>
           {current === null ? (
-            <a
+            <Link
               className="button_battle button_battle_detail"
-              href={Urls.team_create(battleDetail.id)}
-              role="button"
+              to={Urls.team_create(battleDetail.id)}
             >
               Create your team
-            </a>
+            </Link>
           ) : (
-            <CardTeam pokemonsDetail={pokemonsDetail} pokemonsIds={current.pokemons} />
+            <CardTeam pokemonsDetail={pokemonsList} pokemonsIds={current.pokemons} />
           )}
         </div>
         <div>
           <p className="text_trainer">Opposing pokemons</p>
-          {other === null ? 'No pokemons' : <CardTeam pokemons={other.pokemons} />}
+          {other === null ? (
+            'No pokemons'
+          ) : (
+            <CardTeam pokemonsDetail={pokemonsList} pokemonsIds={other.pokemons} />
+          )}
         </div>
       </div>
     </div>

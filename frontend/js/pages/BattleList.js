@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { getBattleList } from '../actions/getBattleList';
 import { getCurrentUser } from '../actions/getUser';
@@ -8,7 +9,6 @@ import Urls from '../utils/urls';
 function BattleList(props) {
   const { user } = props.user;
   const { battles } = props.battles;
-
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
@@ -28,6 +28,8 @@ function BattleList(props) {
     );
   }
   const battleArray = Object.values(battles.entities.battle);
+  const pokemons = battles.entities.pokemon;
+  const battleUsers = battles.entities.user;
 
   return (
     <div className="battle_container_detail">
@@ -43,9 +45,15 @@ function BattleList(props) {
           {battleArray.map((battle) =>
             battle.winner ? (
               <li key={battle.id} className="item">
-                <a className="battle_settled" href={Urls.battle_detail_v2(battle.id)}>
+                <Link
+                  className="battle_settled"
+                  to={{
+                    pathname: Urls.battle_detail_v2(battle.id),
+                    query: { battle, pokemons, battleUsers },
+                  }}
+                >
                   Battle ID {battle.id}
-                </a>
+                </Link>
               </li>
             ) : null
           )}
@@ -56,9 +64,15 @@ function BattleList(props) {
           {battleArray.map((battle) =>
             !battle.winner ? (
               <li key={battle.id} className="item">
-                <a className="battle_ongoing" href={Urls.battle_detail_v2(battle.id)}>
+                <Link
+                  className="battle_ongoing"
+                  to={{
+                    pathname: Urls.battle_detail_v2(battle.id),
+                    query: { battle, pokemons, battleUsers },
+                  }}
+                >
                   Battle ID {battle.id}
-                </a>
+                </Link>
               </li>
             ) : null
           )}
