@@ -2,11 +2,11 @@ import React from 'react';
 
 import CardPokemon from 'components/CardPokemon';
 
-function CardTeam(props) {
+function CardTeam({ pokemons }) {
   return (
     <div className="content_card">
-      {props.pokemonsIds.map((pokemon) => {
-        return <CardPokemon key={pokemon} pokemon={props.pokemonsDetail[pokemon]} />;
+      {pokemons.map((pokemon) => {
+        return <CardPokemon key={pokemon.name} pokemon={pokemon} />;
       })}
     </div>
   );

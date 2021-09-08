@@ -8,7 +8,7 @@ import * as schema from '../utils/schema';
 function getBattle(battleId) {
   return (dispatch) =>
     getTeamData(battleId).then((battleData) => {
-      const normalizedBattle = normalize(battleData, schema.battle);
+      const normalizedBattle = normalize(battleData, schema.battleSchema);
       return dispatch({ type: BATTLE_DETAIL, payload: normalizedBattle });
     });
 }

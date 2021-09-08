@@ -1,3 +1,4 @@
+import { denormalize } from 'normalizr';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
@@ -7,44 +8,40 @@ import CardTeam from 'components/CardTeam';
 import { getBattle } from '../actions/getBattle';
 import { getCurrentUser } from '../actions/getUser';
 import { orderTeamsByCurrentUser } from '../utils/battle-detail';
+import { denormalizeBattleData } from '../utils/denormalize';
 import Urls from '../utils/urls';
 
 function BattleDetail(props) {
   const { id } = useParams();
-  const { battle } = props.battle;
-  const { user } = props.user;
-  const fetchedBattle = props.location.query;
+  const { battle, battles, user } = props;
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
     }
-    if (!fetchedBattle) {
+  }, []);
+
+  useEffect(() => {
+    if (!battles) {
       props.getBattle(id);
     }
   }, []);
 
-  if (!battle && !fetchedBattle) {
-    return '';
+  if (!battle && !battles) {
+    return 'loading';
   }
-  let pokemonsList = null;
-  const battleDetail = fetchedBattle ? fetchedBattle.battle : battle.entities.battle[id];
-  const trainerDetail = fetchedBattle ? fetchedBattle.battleUsers : battle.entities.user;
-  if (fetchedBattle) {
-    pokemonsList = fetchedBattle.pokemons ? fetchedBattle.pokemons : null;
-  } else if (battle.entities) {
-    pokemonsList = battle.entities.pokemon ? battle.entities.pokemon : null;
-  }
-  const { current, other } = orderTeamsByCurrentUser(battleDetail, user, trainerDetail);
+  const denormalizedData = denormalizeBattleData(id, battles, battle);
+  const { current, other } = orderTeamsByCurrentUser(denormalizedData, user);
+
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
       <h2 className="subtitle_detail">
-        Creator: {battleDetail.creator ? trainerDetail[battleDetail.creator].email : ''}
+        Creator: {denormalizedData.creator ? denormalizedData.creator.email : ''}
       </h2>
       <h2 className="subtitle_detail">
-        Opponent: {battleDetail.opponent ? trainerDetail[battleDetail.opponent].email : ''}
+        Opponent: {denormalizedData.opponent ? denormalizedData.opponent.email : ''}
       </h2>
-      {battleDetail.winner ? (
+      {denormalizedData.winner ? (
         <>
           <img
             alt="trofeu"
@@ -52,7 +49,7 @@ function BattleDetail(props) {
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">
-            The winner is {battleDetail.winner ? trainerDetail[battleDetail.winner].email : ''}
+            The winner is {denormalizedData.winner ? denormalizedData.winner.email : ''}
           </h2>
         </>
       ) : (
@@ -62,23 +59,16 @@ function BattleDetail(props) {
         <div>
           <p className="text_trainer">Your pokemons</p>
           {current === null ? (
-            <Link
-              className="button_battle button_battle_detail"
-              to={Urls.team_create(battleDetail.id)}
-            >
+            <Link className="button_battle button_battle_detail" to={Urls.team_create(id)}>
               Create your team
             </Link>
           ) : (
-            <CardTeam pokemonsDetail={pokemonsList} pokemonsIds={current.pokemons} />
+            <CardTeam pokemons={current.pokemons} />
           )}
         </div>
         <div>
           <p className="text_trainer">Opposing pokemons</p>
-          {other === null ? (
-            'No pokemons'
-          ) : (
-            <CardTeam pokemonsDetail={pokemonsList} pokemonsIds={other.pokemons} />
-          )}
+          {other === null ? 'No pokemons' : <CardTeam pokemons={other.pokemons} />}
         </div>
       </div>
     </div>
@@ -86,8 +76,8 @@ function BattleDetail(props) {
 }
 
 const mapStateToProps = (store) => ({
-  battle: store.battle,
-  user: store.user,
+  battle: store.battle.battle,
+  user: store.user.user,
 });
 
 const mapDispatchToProps = (dispatch) => {

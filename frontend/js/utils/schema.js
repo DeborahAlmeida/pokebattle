@@ -1,14 +1,14 @@
 import { schema } from 'normalizr';
 
-export const user = new schema.Entity('user');
+export const userSchema = new schema.Entity('user');
 
-export const pokemon = new schema.Entity('pokemon');
+export const pokemonSchema = new schema.Entity('pokemon');
 
-export const battle = new schema.Entity('battle', {
-  creator: user,
-  opponent: user,
-  winner: user,
-  teams: [{ trainer: user, pokemons: [pokemon] }],
+export const battleSchema = new schema.Entity('battle', {
+  creator: userSchema,
+  opponent: userSchema,
+  winner: userSchema,
+  teams: [{ trainer: userSchema, pokemons: [pokemonSchema] }],
 });
 
-export const battleList = new schema.Array(battle);
+export const battlesSchema = new schema.Array(battleSchema);
