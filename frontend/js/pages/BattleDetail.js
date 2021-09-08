@@ -1,4 +1,3 @@
-import { denormalize } from 'normalizr';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
