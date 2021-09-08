@@ -34,7 +34,6 @@ pylint:
     - no-self-use
     - no-member
     - too-many-ancestors
-    - django-not-configured
   options:
     max-line-length: 100
 
