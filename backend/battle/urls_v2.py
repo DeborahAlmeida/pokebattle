@@ -10,4 +10,8 @@ urlpatterns = [
         "battle/list/",
         TemplateView.as_view(template_name="spa/spa_template.html"),
         name="battle_list_v2"),
+    path(
+        "battle/create/",
+        TemplateView.as_view(template_name="spa/spa_template.html"),
+        name="battle_create_v2"),
 ]
