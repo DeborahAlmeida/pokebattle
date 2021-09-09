@@ -29,7 +29,7 @@ function BattleCreate(props) {
           }}
         >
           <Form>
-            <label htmlFor="opponent">Opponent:</label>
+            <p>Opponent:</p>
             <Field id="opponent" name="opponent" placeholder="opponent@gmail.com" type="email" />
             <button type="submit">Submit</button>
           </Form>

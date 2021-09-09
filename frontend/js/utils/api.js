@@ -48,11 +48,10 @@ const connectToApi = (urlApi, battleData) => {
     const response = axios
       .post(urlBattle, data, { headers: { 'X-CSRFToken': tokenCSRF } })
       .then((response) => {
-        console.log(response);
         return response;
       })
       .catch((error) => {
-        console.log(error);
+        return error;
       });
     return response;
   }
