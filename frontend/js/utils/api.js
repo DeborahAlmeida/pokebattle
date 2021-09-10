@@ -32,6 +32,7 @@ const getBattles = async () => {
 };
 
 const createBattle = async (battle) => {
+  console.log('chegou na função', battle);
   const data = await connectToApi(Urls.api_battle_create(), battle);
   return data;
 };
@@ -51,8 +52,11 @@ const connectToApi = (urlApi, battleData) => {
         return response;
       })
       .catch((error) => {
-        return error;
+        const errorMessage = Object.values(error.response.data);
+        console.log('>>>', errorMessage[0][0]);
+        return errorMessage;
       });
+    console.log('>>>>>>>>>>>> response', response);
     return response;
   }
   return null;

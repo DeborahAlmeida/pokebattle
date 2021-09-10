@@ -2,12 +2,24 @@ import { Formik, Field, Form } from 'formik';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
+import { createBattleAction } from '../actions/createBattle';
 import { getCurrentUser } from '../actions/getUser';
 import { createBattle } from '../utils/api';
 
+// function validateEmail(value) {
+//   let error;
+//   console.log('>>>>', value);
+//   if (!value) {
+//     error = 'This field is required';
+//   } else if (!/^[\w%+.-]+@[\d.a-z-]+\.[a-z]{2,4}$/i.test(value)) {
+//     error = 'Invalid email address';
+//   }
+//   return error;
+// }
+
 function BattleCreate(props) {
   const { user } = props;
-
+  console.log('props:', props);
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
@@ -25,14 +37,24 @@ function BattleCreate(props) {
             opponent: '',
           }}
           onSubmit={async (values) => {
-            await createBattle(values);
+            console.log('ta no submit');
+            props.createBattleAction(values);
           }}
         >
-          <Form>
-            <p>Opponent:</p>
-            <Field id="opponent" name="opponent" placeholder="opponent@gmail.com" type="email" />
-            <button type="submit">Submit</button>
-          </Form>
+          {({ errors, touched }) => (
+            <Form>
+              <p>Opponent:</p>
+              <Field
+                id="opponent"
+                name="opponent"
+                placeholder="opponent@gmail.com"
+                type="email"
+                // validate={validateEmail}
+              />
+              {/* {errors.opponent && touched.opponent && <div>{errors.opponent}</div>} */}
+              <button type="submit">Submit</button>
+            </Form>
+          )}
         </Formik>
       </div>
     );
@@ -42,11 +64,13 @@ function BattleCreate(props) {
 
 const mapStateToProps = (store) => ({
   user: store.user.user,
+  battle: store.battle,
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getCurrentUser: () => dispatch(getCurrentUser()),
+    createBattleAction: (battle) => dispatch(createBattleAction(battle)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(BattleCreate);
