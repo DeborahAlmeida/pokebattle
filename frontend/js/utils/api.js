@@ -32,7 +32,6 @@ const getBattles = async () => {
 };
 
 const createBattle = async (battle) => {
-  console.log('chegou na função', battle);
   const data = await connectToApi(Urls.api_battle_create(), battle);
   return data;
 };
@@ -52,16 +51,23 @@ const connectToApi = (urlApi, battleData) => {
         return response;
       })
       .catch((error) => {
-        const errorMessage = Object.values(error.response.data);
-        console.log('>>>', errorMessage[0][0]);
-        return errorMessage;
+        return handleError(error);
       });
-    console.log('>>>>>>>>>>>> response', response);
     return response;
   }
   return null;
 };
 
+const handleError = (error) => {
+  const errorMessage = Object.values(error.response.data);
+  if (error.response.status === 400) {
+    error.response.data = { detail: errorMessage[0][0] };
+  }
+  if (error.response.status === 403) {
+    error.response.data = { detail: 'You need to be logged' };
+  }
+  return error.response;
+};
 const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== '') {

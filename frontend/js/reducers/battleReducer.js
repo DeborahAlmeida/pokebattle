@@ -13,8 +13,10 @@ export const battleReducer = (state = initialState, action) => {
     case BATTLE_LIST:
       return { ...state, battles: action.payload };
     case BATTLE_CREATE:
-      console.log('>>> no reducer', action.payload);
-      return { ...state, battle: action.payload };
+      if (action.payload.status !== 201) {
+        return { ...state, battle: null, errorMessage: action.payload.data };
+      }
+      return { ...state, battle: action.payload, errorMessage: null };
     default:
       return state;
   }
