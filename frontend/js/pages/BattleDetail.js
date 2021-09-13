@@ -29,19 +29,19 @@ function BattleDetail(props) {
   if (!battle && !battles) {
     return 'loading';
   }
-  const denormalizedData = denormalizeBattleData(id, battles, battle);
-  const { current, other } = orderTeamsByCurrentUser(denormalizedData, user);
+  const battleDetail = denormalizeBattleData(id, battles, battle);
+  const { current, other } = orderTeamsByCurrentUser(battleDetail, user);
 
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
       <h2 className="subtitle_detail">
-        Creator: {denormalizedData.creator ? denormalizedData.creator.email : ''}
+        Creator: {battleDetail.creator ? battleDetail.creator.email : ''}
       </h2>
       <h2 className="subtitle_detail">
-        Opponent: {denormalizedData.opponent ? denormalizedData.opponent.email : ''}
+        Opponent: {battleDetail.opponent ? battleDetail.opponent.email : ''}
       </h2>
-      {denormalizedData.winner ? (
+      {battleDetail.winner ? (
         <>
           <img
             alt="trofeu"
@@ -49,7 +49,7 @@ function BattleDetail(props) {
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">
-            The winner is {denormalizedData.winner ? denormalizedData.winner.email : ''}
+            The winner is {battleDetail.winner ? battleDetail.winner.email : ''}
           </h2>
         </>
       ) : (

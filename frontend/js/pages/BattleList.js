@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { denormalize } from 'normalizr';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
@@ -71,16 +72,18 @@ function BattleList(props) {
 
 function mapStateToProps(store) {
   let battles = null;
-  if (store.battle.battles) {
+  const user = _.get(store, 'user.user', null);
+  const battlesData = _.get(store, 'battle.battles', null);
+  if (battlesData) {
     battles = denormalize(
-      store.battle.battles.result,
+      _.get(battlesData, 'result', null),
       battlesSchema,
-      store.battle.battles.entities
+      _.get(battlesData, 'entities', null)
     );
   }
   return {
     battles,
-    user: store.user.user,
+    user,
   };
 }
 const mapDispatchToProps = (dispatch) => {
