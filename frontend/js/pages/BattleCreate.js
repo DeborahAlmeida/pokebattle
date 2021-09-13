@@ -8,6 +8,17 @@ import { getCurrentUser } from '../actions/getUser';
 function BattleCreate(props) {
   const { user, errorMessage } = props;
 
+  const validate = (value) => {
+    let error = null;
+    if (!value) {
+      error = 'You need to choose an opponent';
+    } else if (value === user.email) {
+      error = 'You cannot choose yourself';
+    } else if (!/^[\w%+.-]+@[\d.a-z-]+\.[a-z]{2,4}$/i.test(value)) {
+      error = 'Invalid email address';
+    }
+    return error;
+  };
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
@@ -26,23 +37,27 @@ function BattleCreate(props) {
             props.createBattleAction(values);
           }}
         >
-          <Form>
-            <div className="div_trainer">
-              <p className="title_battle">Trainer</p>
-              <p className="subtitle_battle">Choose your opponent!</p>
-              <Field
-                className="input_opponent_v2"
-                id="opponent"
-                name="opponent"
-                placeholder="opponent@gmail.com"
-                type="email"
-              />
-              {errorMessage ? <p className="error_message_v2">{errorMessage.detail}</p> : null}
-              <button className="button_next" type="submit">
-                Next
-              </button>
-            </div>
-          </Form>
+          {({ errors, touched }) => (
+            <Form>
+              <div className="div_trainer">
+                <p className="title_battle">Trainer</p>
+                <p className="subtitle_battle">Choose your opponent!</p>
+                <Field
+                  className="input_opponent_v2"
+                  id="opponent"
+                  name="opponent"
+                  placeholder="opponent@gmail.com"
+                  type="email"
+                  validate={validate}
+                />
+                {errors.opponent && touched.opponent && <div>{errors.opponent}</div>}
+                {errorMessage ? <p className="error_message_v2">{errorMessage.detail}</p> : null}
+                <button className="button_next" type="submit">
+                  Next
+                </button>
+              </div>
+            </Form>
+          )}
         </Formik>
       </div>
     );
