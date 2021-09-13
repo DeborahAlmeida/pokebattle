@@ -31,7 +31,7 @@
     "file-loader": "~5.1.0",
     "imports-loader": "~0.8.0",
     "jquery": "~3.5.0",
-    "lodash": "~4.17.4",
+    "lodash": "^4.17.21",
     "marked": "~0.8.0",
     "normalizr": "^3.6.1",
     "popper.js": "~1.16.0",

@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams, Link } from 'react-router-dom';
@@ -74,10 +75,15 @@ function BattleDetail(props) {
   );
 }
 
-const mapStateToProps = (store) => ({
-  battle: store.battle.battle,
-  user: store.user.user,
-});
+function mapStateToProps(store) {
+  const battle = _.get(store, 'battle.battleDetail', null);
+  const user = _.get(store, 'user.data', null);
+
+  return {
+    battle,
+    user,
+  };
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {
