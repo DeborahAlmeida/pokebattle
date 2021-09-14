@@ -1,4 +1,5 @@
 import axios from 'axios';
+import _ from 'lodash';
 
 import Urls from './urls';
 
@@ -83,4 +84,49 @@ const getCookie = (name) => {
   return cookieValue;
 };
 
-export { getCurrentUserData, getTeamData, getBattles, createBattle, getCookie };
+const getPokemonFromApi = (pokemon) => {
+  const url = `https://pokeapi.co/api/v2/pokemon/${pokemon}`;
+  const response = axios.get(url).then((res) => {
+    const pokemonData = {
+      defense: _.get(res, 'data.stats[2].base_stat', null),
+      attack: _.get(res, 'data.stats[1].base_stat', null),
+      hp: _.get(res, 'data.stats[0].base_stat', null),
+      name: _.get(res, 'data.name', null),
+      imgUrl: _.get(res, 'data.sprites.front_default', null),
+      pokemonId: _.get(res, 'data.id', null),
+    };
+    return pokemonData;
+  });
+  return response;
+};
+// const getPokemonsFromApiConnect = (pokemons) => {
+//   console.log('>>>', pokemons);
+//   const pokemonsName = Object.values(pokemons);
+//   let pokemonsData = [];
+//   pokemonsName.map((pokemon) => {
+//     pokemonsData += getPokemonFromApi(pokemon).then((res) => {
+//       return res;
+//     });
+//     console.log('>>>>>', pokemonsData);
+//     return pokemonsData;
+//   });
+// };
+
+const getPokemonsFromApi = async (pokemons) => {
+  const pokemonsNames = Object.values(pokemons);
+  const pokemon1 = await getPokemonFromApi(pokemonsNames[0]);
+  const pokemon2 = await getPokemonFromApi(pokemonsNames[1]);
+  const pokemon3 = await getPokemonFromApi(pokemonsNames[2]);
+
+  return { pokemon1, pokemon2, pokemon3 };
+};
+
+export {
+  getCurrentUserData,
+  getTeamData,
+  getBattles,
+  createBattle,
+  getCookie,
+  getPokemonFromApi,
+  getPokemonsFromApi,
+};

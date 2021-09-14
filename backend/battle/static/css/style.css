@@ -547,3 +547,18 @@ h2{
 .input_opponent_v2{
     width:300px
 }
+.pokemon_container{
+    display: flex;
+    height:24px;
+}
+.error_msg{
+    text-align: center;
+}
+.input_pokemon{
+    margin-bottom: 30px;
+    align-items: center;
+}
+.card_select{
+    display: flex;
+    flex-direction: column;
+}

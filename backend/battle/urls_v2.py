@@ -14,4 +14,12 @@ urlpatterns = [
         "battle/create/",
         TemplateView.as_view(template_name="spa/spa_template.html"),
         name="battle_create_v2"),
+    path(
+        "team/create/<int:pk>",
+        TemplateView.as_view(template_name="spa/spa_template.html"),
+        name="team_create_v2"),
+    path(
+        "team/pokemons/order/",
+        TemplateView.as_view(template_name="spa/spa_template.html"),
+        name="team_pokemons_v2"),
 ]

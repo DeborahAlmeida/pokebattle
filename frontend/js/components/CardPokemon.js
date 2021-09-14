@@ -1,9 +1,10 @@
 import React from 'react';
 
 function CardPokemon({ pokemon }) {
+  console.log("chegando no card", pokemon)
   return (
     <div className="card_pokemon">
-      <img alt="pokemon" className="img_pokemon_card" src={pokemon.img_url} />
+      <img alt="pokemon" className="img_pokemon_card" src={pokemon.img_url ? pokemon.img_url : pokemon.imgUrl} />
       <p>{pokemon.name}</p>
       <div className="base_stats">
         <div className="base_stats_title">
