@@ -7,5 +7,5 @@ import { userReducer } from './userReducer';
 export const reducers = combineReducers({
   battle: battleReducer,
   user: userReducer,
-  pokemons: teamReducer,
+  team: teamReducer,
 });

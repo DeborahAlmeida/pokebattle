@@ -2,9 +2,14 @@ import { Formik, Field, Form } from 'formik';
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { SortableContainer, SortableElement, arrayMove } from 'react-sortable-hoc';
+import { useParams } from 'react-router-dom';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
-import { changePokemonsIndex, createTeamAction } from '../actions/createTeam';
+import {
+  changePokemonsIndex,
+  getPokemonsFromApiAction,
+  createTeamAction,
+} from '../actions/createTeam';
 import { getCurrentUser } from '../actions/getUser';
 import CardPokemon from '../components/CardPokemon';
 import { getPokemonFromApi } from '../utils/api';
@@ -17,14 +22,16 @@ const SortableList = SortableContainer(({ items }) => {
   return (
     <div className="card_select">
       {pokemonsValues.map((value, index) => (
-        <SortableItem key={value.name} index={index} value={value} />
+        <SortableItem key={index} index={index} value={value} />
       ))}
     </div>
   );
 });
 
 function TeamCreate(props) {
-  const { user, pokemons } = props;
+  const { user, pokemons, errorMessage } = props;
+  console.log('>>>> errorMessage', errorMessage);
+  const { id } = useParams();
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const data = { oldIndex, newIndex, pokemons };
@@ -61,7 +68,7 @@ function TeamCreate(props) {
             pokemon3: '',
           }}
           onSubmit={async (values) => {
-            props.createTeamAction(values);
+            props.getPokemonsFromApiAction(values);
           }}
         >
           {({ errors, touched }) => (
@@ -117,10 +124,25 @@ function TeamCreate(props) {
                     {errors.pokemon3 && touched.pokemon3 && <div>{errors.pokemon3}</div>}
                   </div>
                 </div>
-                <button className="button_next" type="submit">
-                  Next
+                <button className="button_pkns" type="submit">
+                  Confirm
                 </button>
-                {pokemons ? <SortableList items={pokemons} onSortEnd={onSortEnd} /> : null}
+                {pokemons ? (
+                  <div className="div_card_pkn">
+                    <p>Select the order of your pokemons</p>
+                    <SortableList items={pokemons} onSortEnd={onSortEnd} />
+                    <button
+                      className="button_pkns"
+                      type="submit"
+                      onClick={() => props.createTeamAction({ pokemons, id, user })}
+                    >
+                      Create Team
+                    </button>
+                    {errorMessage ? (
+                      <p className="error_message_v2">{errorMessage.detail}</p>
+                    ) : null}
+                  </div>
+                ) : null}
                 <div />
               </div>
             </Form>
@@ -134,15 +156,17 @@ function TeamCreate(props) {
 
 const mapStateToProps = (store) => ({
   user: _.get(store, 'user.user', null),
-  pokemons: _.get(store, 'pokemons.pokemons', null),
+  pokemons: _.get(store, 'team.pokemons', null),
+  errorMessage: _.get(store, 'team.errorMessage', null),
 });
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getCurrentUser: () => dispatch(getCurrentUser()),
-    createTeamAction: (pokemons) => dispatch(createTeamAction(pokemons)),
+    getPokemonsFromApiAction: (pokemons) => dispatch(getPokemonsFromApiAction(pokemons)),
     changePokemonsIndex: (oldIndex, newIndex, pokemons) =>
       dispatch(changePokemonsIndex(oldIndex, newIndex, pokemons)),
+    createTeamAction: (team) => dispatch(createTeamAction(team)),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(TeamCreate);

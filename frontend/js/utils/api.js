@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ErrorMessage } from 'formik';
 import _ from 'lodash';
 
 import Urls from './urls';
@@ -33,18 +34,21 @@ const getBattles = async () => {
 };
 
 const createBattle = async (battle) => {
-  const data = await connectToApi(Urls.api_battle_create(), battle);
+  const battleData = {
+    creator: _.get(battle, 'creator', null),
+    opponent: _.get(battle, 'opponent', null),
+  };
+  const data = await connectToApi(Urls.api_battle_create(), battleData);
   return data;
 };
 
-const connectToApi = (urlApi, battleData) => {
+const connectToApi = (urlApi, data) => {
   const tokenCSRF = getCookie('csrftoken');
 
   if (tokenCSRF) {
     const battleProtocol = baseUrl === 'localhost:8000' ? baseProtocolHTTP : baseProtocolHTTPS;
 
     const urlBattle = `${battleProtocol}://${baseUrl}${urlApi}`;
-    const data = { creator: battleData.creator, opponent: battleData.opponent };
 
     const response = axios
       .post(urlBattle, data, { headers: { 'X-CSRFToken': tokenCSRF } })
@@ -61,6 +65,7 @@ const connectToApi = (urlApi, battleData) => {
 
 const handleError = (error) => {
   const errorMessage = Object.values(error.response.data);
+  console.log('TA AQUI NO ERRO', errorMessage[0][0]);
   if (error.response.status === 400) {
     error.response.data = { detail: errorMessage[0][0] };
   }
@@ -99,18 +104,6 @@ const getPokemonFromApi = (pokemon) => {
   });
   return response;
 };
-// const getPokemonsFromApiConnect = (pokemons) => {
-//   console.log('>>>', pokemons);
-//   const pokemonsName = Object.values(pokemons);
-//   let pokemonsData = [];
-//   pokemonsName.map((pokemon) => {
-//     pokemonsData += getPokemonFromApi(pokemon).then((res) => {
-//       return res;
-//     });
-//     console.log('>>>>>', pokemonsData);
-//     return pokemonsData;
-//   });
-// };
 
 const getPokemonsFromApi = async (pokemons) => {
   const pokemonsNames = Object.values(pokemons);
@@ -121,6 +114,22 @@ const getPokemonsFromApi = async (pokemons) => {
   return { pokemon1, pokemon2, pokemon3 };
 };
 
+const createTeam = async (team) => {
+  const teamData = {
+    battle: _.get(team, 'id', null),
+    trainer: String(_.get(team, 'user.id', null)),
+    pokemon_1: _.get(team, 'pokemons.pokemon1.name', null),
+    pokemon_2: _.get(team, 'pokemons.pokemon2.name', null),
+    pokemon_3: _.get(team, 'pokemons.pokemon3.name', null),
+    position_pkn_1: 1,
+    position_pkn_2: 2,
+    position_pkn_3: 3,
+  };
+  console.log('>>>>>>>>>>>> ta chegando aqui na api', teamData);
+  const data = await connectToApi(Urls.api_team_create(), teamData);
+  return data;
+};
+
 export {
   getCurrentUserData,
   getTeamData,
@@ -129,4 +138,5 @@ export {
   getCookie,
   getPokemonFromApi,
   getPokemonsFromApi,
+  createTeam,
 };
