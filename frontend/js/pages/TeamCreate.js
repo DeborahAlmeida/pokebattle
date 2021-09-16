@@ -2,7 +2,7 @@ import { Formik, Field, Form } from 'formik';
 import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
 import {
@@ -13,6 +13,7 @@ import {
 import { getCurrentUser } from '../actions/getUser';
 import CardPokemon from '../components/CardPokemon';
 import { getPokemonFromApi } from '../utils/api';
+import Urls from '../utils/urls';
 
 const SortableItem = SortableElement(({ value }) => <CardPokemon pokemon={value} />);
 
@@ -136,6 +137,13 @@ function TeamCreate(props) {
                     >
                       Create Team
                     </button>
+                    {/* <Link
+                      className="button_pkns"
+                      to={Urls.battle_list_v2()}
+                      onClick={() => props.createTeamAction({ pokemons, id, user })}
+                    >
+                      Create Team
+                    </Link> */}
                     {errorMessage ? (
                       <p className="error_message_v2">{errorMessage.detail}</p>
                     ) : null}

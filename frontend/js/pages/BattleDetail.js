@@ -26,7 +26,6 @@ function BattleDetail(props) {
   }
 
   const { current, other } = orderTeamsByCurrentUser(battle, user);
-
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
