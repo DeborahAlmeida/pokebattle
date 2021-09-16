@@ -65,7 +65,6 @@ const connectToApi = (urlApi, data) => {
 
 const handleError = (error) => {
   const errorMessage = Object.values(error.response.data);
-  console.log('TA AQUI NO ERRO', errorMessage[0][0]);
   if (error.response.status === 400) {
     error.response.data = { detail: errorMessage[0][0] };
   }
@@ -125,7 +124,6 @@ const createTeam = async (team) => {
     position_pkn_2: 2,
     position_pkn_3: 3,
   };
-  console.log('>>>>>>>>>>>> ta chegando aqui na api', teamData);
   const data = await connectToApi(Urls.api_team_create(), teamData);
   return data;
 };

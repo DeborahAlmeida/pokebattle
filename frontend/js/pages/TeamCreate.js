@@ -17,7 +17,6 @@ import { getPokemonFromApi } from '../utils/api';
 const SortableItem = SortableElement(({ value }) => <CardPokemon pokemon={value} />);
 
 const SortableList = SortableContainer(({ items }) => {
-  console.log('>>>>>>> vlores', items);
   const pokemonsValues = Object.values(items);
   return (
     <div className="card_select">
@@ -30,7 +29,6 @@ const SortableList = SortableContainer(({ items }) => {
 
 function TeamCreate(props) {
   const { user, pokemons, errorMessage } = props;
-  console.log('>>>> errorMessage', errorMessage);
   const { id } = useParams();
 
   const onSortEnd = ({ oldIndex, newIndex }) => {

@@ -16,8 +16,6 @@ function changePokemonsIndex(data) {
 }
 
 function createTeamAction(data) {
-  console.log('ta chegando na acitoncreate team', data);
-
   return (dispatch) =>
     createTeam(data).then((response) => {
       return dispatch({ type: TEAM_CREATE, payload: response });
