@@ -4,18 +4,19 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from pokemon.models import Pokemon
 from battle.permissions import IsInBattle
 from battle.models import Battle
 from battle.serializers import (
     BattleSerializer,
     BattleCreateSerializer,
+    PokemonSerializer,
     TeamCreateSerializer,
     UserSerializer
 )
 
 
-class BattletList(generics.ListCreateAPIView):
+class BattlesList(generics.ListCreateAPIView):
     serializer_class = BattleSerializer
     permission_classes = [IsAuthenticated]
 
@@ -56,3 +57,9 @@ class CurrentUser(APIView):
             context={'request': request}
         )
         return Response(serializer.data)
+
+
+class PokemonsList(generics.ListAPIView):
+    serializer_class = PokemonSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Pokemon.objects.all()
