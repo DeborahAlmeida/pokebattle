@@ -114,12 +114,17 @@ const getPokemonsFromApi = async (pokemons) => {
 };
 
 const createTeam = async (team) => {
+  let teamArray = team.pokemons;
+  const validateObject = _.get(team, 'pokemons.pokemon3.name', null);
+  if (validateObject) {
+    teamArray = Object.values(team.pokemons);
+  }
   const teamData = {
     battle: _.get(team, 'id', null),
     trainer: String(_.get(team, 'user.id', null)),
-    pokemon_1: _.get(team, 'pokemons.pokemon1.name', null),
-    pokemon_2: _.get(team, 'pokemons.pokemon2.name', null),
-    pokemon_3: _.get(team, 'pokemons.pokemon3.name', null),
+    pokemon_1: _.get(teamArray, '[0].name', null),
+    pokemon_2: _.get(teamArray, '[1].name', null),
+    pokemon_3: _.get(teamArray, '[2].name', null),
     position_pkn_1: 1,
     position_pkn_2: 2,
     position_pkn_3: 3,
