@@ -23,7 +23,7 @@ const SortableList = SortableContainer(({ items }) => {
   return (
     <div className="card_select">
       {pokemonsValues.map((value, index) => (
-        <SortableItem key={index} index={index} value={value} />
+        <SortableItem key={value} index={index} value={value} />
       ))}
     </div>
   );

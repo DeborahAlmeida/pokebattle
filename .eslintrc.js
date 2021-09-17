@@ -8,6 +8,7 @@ module.exports = {
     "react/prop-types": "off",
     "react/destructuring-assignment": 'off',
     'sonarjs/no-small-switch': 'off',
+    'camelcase': 'off',
   },
   env: {
     es6: true,
