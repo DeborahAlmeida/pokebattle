@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 
 function CardPokemon({ pokemon }) {
-  const pokemonSpecifics = _.get(pokemon, 'pokemon', null);
+  const pokemonSpecifics = _.get(pokemon, 'pokemon', pokemon);
   return (
     <div className="card_pokemon">
       {pokemonSpecifics.name ? (

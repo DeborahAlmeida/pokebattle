@@ -9,6 +9,7 @@ import {
   changePokemonsIndex,
   getPokemonsFromApiAction,
   createTeamAction,
+  getPokemonListAction,
 } from '../actions/createTeam';
 import { getCurrentUser } from '../actions/getUser';
 import CardPokemon from '../components/CardPokemon';
@@ -29,9 +30,8 @@ const SortableList = SortableContainer(({ items }) => {
 });
 
 function TeamCreate(props) {
-  const { user, pokemons, errorMessage } = props;
+  const { user, pokemons, errorMessage, pokemonList, team } = props;
   const { id } = useParams();
-
   const onSortEnd = ({ oldIndex, newIndex }) => {
     const data = { oldIndex, newIndex, pokemons };
     props.changePokemonsIndex(data);
@@ -55,6 +55,10 @@ function TeamCreate(props) {
     if (!user) {
       props.getCurrentUser();
     }
+  }, []);
+
+  useEffect(() => {
+    props.getPokemonListAction();
   }, []);
 
   if (user) {
@@ -81,11 +85,23 @@ function TeamCreate(props) {
                     <Field
                       className="input_pokemon_1_v2"
                       id="pokemon1"
+                      list="pokemons"
                       name="pokemon1"
                       placeholder="pikachu"
                       type="text"
                       validate={validate}
                     />
+                    <datalist id="pokemons" name="pokemon_1">
+                      {pokemonList
+                        ? pokemonList.map((pokemon) => {
+                            return (
+                              <option key={pokemon.name} value={pokemon.name}>
+                                {pokemon.name}
+                              </option>
+                            );
+                          })
+                        : null}
+                    </datalist>
                   </div>
                   <div className="error_msg">
                     {errors.pokemon1 && touched.pokemon1 && <div>{errors.pokemon1}</div>}
@@ -94,14 +110,27 @@ function TeamCreate(props) {
                 <div className="input_pokemon">
                   <div className="pokemon_container">
                     <p>Pokemon 2:</p>
+
                     <Field
                       className="input_pokemon_2_v2"
                       id="pokemon2"
+                      list="pokemons"
                       name="pokemon2"
                       placeholder="beedrill"
                       type="text"
                       validate={validate}
                     />
+                    <datalist id="pokemons" name="pokemon_2">
+                      {pokemonList
+                        ? pokemonList.map((pokemon) => {
+                            return (
+                              <option key={pokemon.name} value={pokemon.name}>
+                                {pokemon.name}
+                              </option>
+                            );
+                          })
+                        : null}
+                    </datalist>
                   </div>
                   <div className="error_msg">
                     {errors.pokemon2 && touched.pokemon2 && <div>{errors.pokemon2}</div>}
@@ -113,11 +142,23 @@ function TeamCreate(props) {
                     <Field
                       className="input_pokemon_3_v2"
                       id="pokemon3"
+                      list="pokemons"
                       name="pokemon3"
                       placeholder="bulbasaur"
                       type="text"
                       validate={validate}
                     />
+                    <datalist id="pokemons" name="pokemon_3">
+                      {pokemonList
+                        ? pokemonList.map((pokemon) => {
+                            return (
+                              <option key={pokemon.name} value={pokemon.name}>
+                                {pokemon.name}
+                              </option>
+                            );
+                          })
+                        : null}
+                    </datalist>
                   </div>
                   <div className="error_msg">
                     {errors.pokemon3 && touched.pokemon3 && <div>{errors.pokemon3}</div>}
@@ -137,13 +178,22 @@ function TeamCreate(props) {
                     >
                       Create Team
                     </button>
-                    {/* <Link
-                      className="button_pkns"
-                      to={Urls.battle_list_v2()}
-                      onClick={() => props.createTeamAction({ pokemons, id, user })}
-                    >
-                      Create Team
-                    </Link> */}
+                    {pokemons ? (
+                      team ? (
+                        <div className="result_v2_team">
+                          <p>Team created sucessfully</p>
+                          <Link
+                            className="button_battle button_battle_detail"
+                            to={Urls.battle_list_v2()}
+                          >
+                            See your battles
+                          </Link>
+                        </div>
+                      ) : errorMessage ? null : (
+                        'Waiting your submit'
+                      )
+                    ) : null}
+
                     {errorMessage ? (
                       <p className="error_message_v2">{errorMessage.detail}</p>
                     ) : null}
@@ -164,6 +214,8 @@ const mapStateToProps = (store) => ({
   user: _.get(store, 'user.user', null),
   pokemons: _.get(store, 'team.pokemons', null),
   errorMessage: _.get(store, 'team.errorMessage', null),
+  pokemonList: _.get(store, 'team.pokemonList', null),
+  team: _.get(store, 'team.team', null),
 });
 
 const mapDispatchToProps = (dispatch) => {
@@ -173,6 +225,7 @@ const mapDispatchToProps = (dispatch) => {
     changePokemonsIndex: (oldIndex, newIndex, pokemons) =>
       dispatch(changePokemonsIndex(oldIndex, newIndex, pokemons)),
     createTeamAction: (team) => dispatch(createTeamAction(team)),
+    getPokemonListAction: () => dispatch(getPokemonListAction()),
   };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(TeamCreate);

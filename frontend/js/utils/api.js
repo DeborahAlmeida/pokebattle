@@ -133,6 +133,11 @@ const createTeam = async (team) => {
   return data;
 };
 
+const getPokemonList = async () => {
+  const data = await getFromApi(Urls.api_pokemon_list());
+  return data;
+};
+
 export {
   getCurrentUserData,
   getTeamData,
@@ -142,4 +147,5 @@ export {
   getPokemonFromApi,
   getPokemonsFromApi,
   createTeam,
+  getPokemonList,
 };

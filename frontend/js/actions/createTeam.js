@@ -1,6 +1,6 @@
-import { getPokemonsFromApi, createTeam } from 'utils/api';
+import { getPokemonsFromApi, createTeam, getPokemonList } from 'utils/api';
 
-import { TEAM_CREATE, GET_POKEMONS_FROM_API } from '../constants';
+import { TEAM_CREATE, GET_POKEMONS_FROM_API, POKEMON_LIST } from '../constants';
 import { changeIndex } from '../utils/pokemons';
 
 function getPokemonsFromApiAction(data) {
@@ -21,4 +21,11 @@ function createTeamAction(data) {
       return dispatch({ type: TEAM_CREATE, payload: response });
     });
 }
-export { getPokemonsFromApiAction, changePokemonsIndex, createTeamAction };
+
+function getPokemonListAction() {
+  return (dispatch) =>
+    getPokemonList().then((response) => {
+      return dispatch({ type: POKEMON_LIST, payload: response });
+    });
+}
+export { getPokemonsFromApiAction, changePokemonsIndex, createTeamAction, getPokemonListAction };

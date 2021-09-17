@@ -543,6 +543,8 @@ h2{
 }
 .error_message_v2{
     margin-top:20px;
+    width:500px;
+    text-align: center;
 }
 .input_opponent_v2{
     width:300px
@@ -573,4 +575,8 @@ h2{
 }
 .text_pkn{
     text-align: center;
+}
+.result_v2_team{
+    display: flex;
+    flex-direction: column;
 }
