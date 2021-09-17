@@ -12,7 +12,8 @@ from services.battle import (
     has_positions_fields_with_duplicate_values,
     has_different_contenders,
     fetch_opponent_or_create_if_doesnt_exist,
-    send_invite_email_or_send_password_email
+    send_invite_email_or_send_password_email,
+    has_pokemons_fields_with_duplicate_values,
 )
 
 from users.models import User
@@ -34,9 +35,18 @@ class PokemonSerializer(serializers.ModelSerializer):
         fields = ("id", "pokemon_id", "name", "img_url", "attack", "defense", "hp")
 
 
+class PokemonTeamSerializer(serializers.ModelSerializer):
+    pokemon = PokemonSerializer()
+
+    class Meta:
+        model = PokemonTeam
+
+        fields = ('team', 'pokemon', 'order', )
+
+
 class TeamSerializer(serializers.ModelSerializer):
     trainer = UserSerializer()
-    pokemons = PokemonSerializer(many=True)
+    pokemons = PokemonTeamSerializer(source='teams', many=True)
 
     class Meta:
         model = Team
@@ -104,6 +114,10 @@ class TeamCreateSerializer(serializers.Serializer):  # pylint: disable=abstract-
         valid = has_positions_fields_with_duplicate_values(attrs)
         if valid is not True:
             raise serializers.ValidationError('ERROR: You cannot add the same position')
+
+        valid = has_pokemons_fields_with_duplicate_values(attrs)
+        if valid is not True:
+            raise serializers.ValidationError('ERROR: You cannot add the same pokemon')
 
         save_pokemons_if_they_dont_exist(
             [

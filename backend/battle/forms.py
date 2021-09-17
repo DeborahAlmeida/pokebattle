@@ -17,6 +17,7 @@ from services.battle import (
     has_positions_fields_missing_values,
     has_pokemon_sum_valid,
     has_positions_fields_with_duplicate_values,
+    has_pokemons_fields_with_duplicate_values,
 )
 
 POSITION_CHOICES = [(1, 1), (2, 2), (3, 3)]
@@ -113,6 +114,10 @@ class TeamForm(forms.ModelForm):
         valid = has_positions_fields_with_duplicate_values(cleaned_data)
         if valid is not True:
             raise forms.ValidationError('ERROR: You cannot add the same position')
+
+        valid = has_pokemons_fields_with_duplicate_values(cleaned_data)
+        if valid is not True:
+            raise forms.ValidationError('ERROR: You cannot add the same pokemon')
 
         save_pokemons_if_they_dont_exist(
             [

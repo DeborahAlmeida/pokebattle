@@ -79,3 +79,11 @@ def has_positions_fields_with_duplicate_values(data):
     if positions != {1, 2, 3}:
         return False
     return True
+
+
+def has_pokemons_fields_with_duplicate_values(data):
+    if data['pokemon_1'] == (data['pokemon_2'] or data['pokemon_3']):
+        return False
+    if data['pokemon_2'] == data['pokemon_3']:
+        return False
+    return True

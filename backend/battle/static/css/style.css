@@ -543,7 +543,40 @@ h2{
 }
 .error_message_v2{
     margin-top:20px;
+    width:500px;
+    text-align: center;
 }
 .input_opponent_v2{
     width:300px
+}
+.pokemon_container{
+    display: flex;
+    height:24px;
+}
+.error_msg{
+    text-align: center;
+}
+.input_pokemon{
+    margin-bottom: 30px;
+    align-items: center;
+}
+.card_select{
+    display: flex;
+    flex-direction: column;
+}
+.button_pkns{
+    margin-bottom: 30px;
+}
+.div_card_pkn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.text_pkn{
+    text-align: center;
+}
+.result_v2_team{
+    display: flex;
+    flex-direction: column;
 }
