@@ -1,5 +1,5 @@
+/* eslint-disable camelcase */
 import axios from 'axios';
-import { ErrorMessage } from 'formik';
 import _ from 'lodash';
 
 import Urls from './urls';
