@@ -1,38 +1,47 @@
+import _ from 'lodash';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 import CardTeam from 'components/CardTeam';
 
 import { getBattle } from '../actions/getBattle';
 import { getCurrentUser } from '../actions/getUser';
 import { orderTeamsByCurrentUser } from '../utils/battle-detail';
+import { denormalizeBattleData } from '../utils/denormalize';
 import Urls from '../utils/urls';
 
 function BattleDetail(props) {
   const { id } = useParams();
-  const { battle } = props.battle;
-  const { user } = props.user;
-
+  const { battle, battles, user } = props;
   useEffect(() => {
     if (!user) {
       props.getCurrentUser();
     }
-    props.getBattle(id);
   }, []);
 
-  if (!battle) {
-    return '';
-  }
+  useEffect(() => {
+    if (!battles) {
+      props.getBattle(id);
+    }
+  }, []);
 
-  const { current, other } = orderTeamsByCurrentUser(battle, user);
+  if (!battle && !battles) {
+    return 'loading';
+  }
+  const battleDetail = denormalizeBattleData(id, battles, battle);
+  const { current, other } = orderTeamsByCurrentUser(battleDetail, user);
 
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
-      <h2 className="subtitle_detail">Creator: {battle.creator ? battle.creator.email : ''}</h2>
-      <h2 className="subtitle_detail">Opponent: {battle.opponent ? battle.opponent.email : ''}</h2>
-      {battle.winner ? (
+      <h2 className="subtitle_detail">
+        Creator: {battleDetail.creator ? battleDetail.creator.email : ''}
+      </h2>
+      <h2 className="subtitle_detail">
+        Opponent: {battleDetail.opponent ? battleDetail.opponent.email : ''}
+      </h2>
+      {battleDetail.winner ? (
         <>
           <img
             alt="trofeu"
@@ -40,7 +49,7 @@ function BattleDetail(props) {
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">
-            The winner is {battle.winner ? battle.winner.email : ''}
+            The winner is {battleDetail.winner ? battleDetail.winner.email : ''}
           </h2>
         </>
       ) : (
@@ -50,13 +59,9 @@ function BattleDetail(props) {
         <div>
           <p className="text_trainer">Your pokemons</p>
           {current === null ? (
-            <a
-              className="button_battle button_battle_detail"
-              href={Urls.team_create(battle.id)}
-              role="button"
-            >
+            <Link className="button_battle button_battle_detail" to={Urls.team_create(id)}>
               Create your team
-            </a>
+            </Link>
           ) : (
             <CardTeam pokemons={current.pokemons} />
           )}
@@ -70,10 +75,15 @@ function BattleDetail(props) {
   );
 }
 
-const mapStateToProps = (store) => ({
-  battle: store.battle,
-  user: store.user,
-});
+function mapStateToProps(store) {
+  const battle = _.get(store, 'battle.battleDetail', null);
+  const user = _.get(store, 'user.data', null);
+
+  return {
+    battle,
+    user,
+  };
+}
 
 const mapDispatchToProps = (dispatch) => {
   return {

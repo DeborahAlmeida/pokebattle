@@ -1,13 +1,16 @@
+import _ from 'lodash';
+import { denormalize } from 'normalizr';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { getBattleList } from '../actions/getBattleList';
 import { getCurrentUser } from '../actions/getUser';
+import { battlesSchema } from '../utils/schema';
 import Urls from '../utils/urls';
 
 function BattleList(props) {
-  const { user } = props.user;
-  const { battles } = props.battles;
+  const { user, battles } = props;
 
   useEffect(() => {
     if (!user) {
@@ -27,6 +30,7 @@ function BattleList(props) {
       </div>
     );
   }
+
   return (
     <div className="battle_container_detail">
       <h1>Your Battles</h1>
@@ -41,9 +45,9 @@ function BattleList(props) {
           {battles.map((battle) =>
             battle.winner ? (
               <li key={battle.id} className="item">
-                <a className="battle_settled" href={Urls.battle_detail_v2(battle.id)}>
+                <Link className="battle_settled" to={Urls.battle_detail_v2(battle.id)}>
                   Battle ID {battle.id}
-                </a>
+                </Link>
               </li>
             ) : null
           )}
@@ -54,9 +58,9 @@ function BattleList(props) {
           {battles.map((battle) =>
             !battle.winner ? (
               <li key={battle.id} className="item">
-                <a className="battle_ongoing" href={Urls.battle_detail_v2(battle.id)}>
+                <Link className="battle_ongoing" to={Urls.battle_detail_v2(battle.id)}>
                   Battle ID {battle.id}
-                </a>
+                </Link>
               </li>
             ) : null
           )}
@@ -66,11 +70,22 @@ function BattleList(props) {
   );
 }
 
-const mapStateToProps = (store) => ({
-  battles: store.battle,
-  user: store.user,
-});
-
+function mapStateToProps(store) {
+  let battles = null;
+  const user = _.get(store, 'user.user', null);
+  const battlesData = _.get(store, 'battle.battles', null);
+  if (battlesData) {
+    battles = denormalize(
+      _.get(battlesData, 'result', null),
+      battlesSchema,
+      _.get(battlesData, 'entities', null)
+    );
+  }
+  return {
+    battles,
+    user,
+  };
+}
 const mapDispatchToProps = (dispatch) => {
   return {
     getCurrentUser: () => dispatch(getCurrentUser()),
