@@ -4,11 +4,11 @@ import Urls from './urls';
 
 const baseUrl = window.location.host;
 
+const baseProtocolHTTPS = 'https';
+const baseProtocolHTTP = 'http';
+
 const getFromApi = (urlApi) => {
-  let pokeProtocol = 'https';
-  if (baseUrl === 'localhost:8000') {
-    pokeProtocol = 'http';
-  }
+  const pokeProtocol = baseUrl === 'localhost:8000' ? baseProtocolHTTP : baseProtocolHTTPS;
   const url = `${pokeProtocol}://${baseUrl}${urlApi}`;
   const response = axios.get(url).then((res) => {
     return res.data;
@@ -31,4 +31,56 @@ const getBattles = async () => {
   return data;
 };
 
-export { getCurrentUserData, getTeamData, getBattles };
+const createBattle = async (battle) => {
+  const data = await connectToApi(Urls.api_battle_create(), battle);
+  return data;
+};
+
+const connectToApi = (urlApi, battleData) => {
+  const tokenCSRF = getCookie('csrftoken');
+
+  if (tokenCSRF) {
+    const battleProtocol = baseUrl === 'localhost:8000' ? baseProtocolHTTP : baseProtocolHTTPS;
+
+    const urlBattle = `${battleProtocol}://${baseUrl}${urlApi}`;
+    const data = { creator: battleData.creator, opponent: battleData.opponent };
+
+    const response = axios
+      .post(urlBattle, data, { headers: { 'X-CSRFToken': tokenCSRF } })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        return handleError(error);
+      });
+    return response;
+  }
+  return null;
+};
+
+const handleError = (error) => {
+  const errorMessage = Object.values(error.response.data);
+  if (error.response.status === 400) {
+    error.response.data = { detail: errorMessage[0][0] };
+  }
+  if (error.response.status === 403) {
+    error.response.data = { detail: 'You need to be logged' };
+  }
+  return error.response;
+};
+const getCookie = (name) => {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (const element of cookies) {
+      const cookie = element.trim();
+      if (cookie.slice(0, Math.max(0, name.length + 1)) === `${name}=`) {
+        cookieValue = decodeURIComponent(cookie.slice(Math.max(0, name.length + 1)));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+};
+
+export { getCurrentUserData, getTeamData, getBattles, createBattle, getCookie };

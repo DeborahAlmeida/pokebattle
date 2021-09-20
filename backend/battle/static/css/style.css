@@ -541,3 +541,9 @@ h2{
     width:40px;
     height:40px;
 }
+.error_message_v2{
+    margin-top:20px;
+}
+.input_opponent_v2{
+    width:300px
+}

@@ -1,8 +1,9 @@
-import { BATTLE_DETAIL, BATTLE_LIST } from '../constants';
+import { BATTLE_CREATE, BATTLE_DETAIL, BATTLE_LIST } from '../constants';
 
 const initialState = {
   battle: null,
   battles: null,
+  errorMessage: null,
 };
 
 export const battleReducer = (state = initialState, action) => {
@@ -11,6 +12,11 @@ export const battleReducer = (state = initialState, action) => {
       return { ...state, battle: action.payload };
     case BATTLE_LIST:
       return { ...state, battles: action.payload };
+    case BATTLE_CREATE:
+      if (action.payload.status !== 201) {
+        return { ...state, battle: null, errorMessage: action.payload.data };
+      }
+      return { ...state, battle: action.payload, errorMessage: null };
     default:
       return state;
   }
