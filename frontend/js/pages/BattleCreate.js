@@ -1,12 +1,14 @@
 import { Formik, Field, Form } from 'formik';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { createBattleAction } from '../actions/createBattle';
 import { getCurrentUser } from '../actions/getUser';
+import Urls from '../utils/urls';
 
 function BattleCreate(props) {
-  const { user, errorMessage } = props;
+  const { user, errorMessage, battle } = props;
 
   const validate = (value) => {
     let error = null;
@@ -55,6 +57,12 @@ function BattleCreate(props) {
                 <button className="button_next" type="submit">
                   Next
                 </button>
+                {battle ? (
+                  <div className="battle_created">
+                    <p>Battle created sucessfully</p>
+                    <Link to={Urls.battle_list_v2()}>See your battles</Link>
+                  </div>
+                ) : null}
               </div>
             </Form>
           )}
