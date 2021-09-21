@@ -3,6 +3,5 @@ export const selectUserById = (userEntity, id) => {
 };
 
 export const selectPokemonById = (pokemonEntity, id) => {
-  console.log('>> aqui', pokemonEntity[id]);
   return pokemonEntity[id];
 };

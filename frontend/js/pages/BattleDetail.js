@@ -15,7 +15,6 @@ import Urls from '../utils/urls';
 function BattleDetail(props) {
   const { id } = useParams();
   const { battle, battles, currentUser, users } = props;
-  console.log('mds', props);
   useEffect(() => {
     if (!currentUser) {
       props.getCurrentUser();
@@ -24,7 +23,6 @@ function BattleDetail(props) {
 
   useEffect(() => {
     if (!battles) {
-      console.log('ta entrando aqui');
       props.getBattle(id);
     }
   }, []);
@@ -33,9 +31,7 @@ function BattleDetail(props) {
     return 'loading';
   }
   const battleDetail = battle ? battle[id] : battles[id];
-  // const battleDetail = denormalizeBattleData(id, battleList, battle);
   const { current, other } = orderTeamsByCurrentUser(battleDetail, currentUser, users);
-  console.log('>>>>>>>>>>>>> battleDetail', current);
 
   return (
     <div className="battle_container_detail">

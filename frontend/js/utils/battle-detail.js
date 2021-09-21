@@ -1,7 +1,6 @@
 import { selectUserById } from './selectors';
 
 const orderTeamsByCurrentUser = (battle, user, usersEntity) => {
-  console.log('>>>>>>>>>>>>>> users', usersEntity, user, battle);
   let currentUserTeam = null;
   let otherUserTeam = null;
   if (battle.teams.length === 1) {

@@ -83,14 +83,7 @@ function mapStateToProps(store) {
       return !battle.winner;
     });
   }
-  // console.log('>>>>', settledBattles, onGoingBattles);
-  // if (battlesData) {
-  //   battles = denormalize(
-  //     _.get(battlesData, 'result', null),
-  //     battlesSchema,
-  //     _.get(battlesData, 'entities', null)
-  //   );
-  // }
+  
   return {
     settledBattles,
     onGoingBattles,
