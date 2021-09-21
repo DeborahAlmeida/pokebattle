@@ -6,24 +6,23 @@ import { Link } from 'react-router-dom';
 
 import { getBattleList } from '../actions/getBattleList';
 import { getCurrentUser } from '../actions/getUser';
-import { battlesSchema } from '../utils/schema';
 import Urls from '../utils/urls';
 
 function BattleList(props) {
-  const { user, battles } = props;
+  const { currentUser, settledBattles, onGoingBattles } = props;
 
   useEffect(() => {
-    if (!user) {
+    if (!currentUser) {
       props.getCurrentUser();
     }
     props.getBattleList();
   }, []);
-  if (!battles) {
+  if (!(settledBattles && onGoingBattles)) {
     return (
       <div className="battle_container_detail">
         <h1>Your Battles</h1>
-        {!user ? (
-          <h2 className="subtitle">You need to be logged {user}</h2>
+        {!currentUser ? (
+          <h2 className="subtitle">You need to be logged</h2>
         ) : (
           <h2 className="subtitle">There are no battle in the database.</h2>
         )}
@@ -34,7 +33,7 @@ function BattleList(props) {
   return (
     <div className="battle_container_detail">
       <h1>Your Battles</h1>
-      {!user ? (
+      {!currentUser ? (
         <h2 className="subtitle">You need to be logged</h2>
       ) : (
         <h2 className="subtitle">Click to see more information</h2>
@@ -42,28 +41,28 @@ function BattleList(props) {
       <ul className="list_battle">
         <div className="settled">
           <h3>Settled battles</h3>
-          {battles.map((battle) =>
-            battle.winner ? (
+          {settledBattles.map((battle) => {
+            return (
               <li key={battle.id} className="item">
                 <Link className="battle_settled" to={Urls.battle_detail_v2(battle.id)}>
                   Battle ID {battle.id}
                 </Link>
               </li>
-            ) : null
-          )}
+            );
+          })}
         </div>
 
         <div className="your_opponent">
           <h3>On goind Battles</h3>
-          {battles.map((battle) =>
-            !battle.winner ? (
+          {onGoingBattles.map((battle) => {
+            return (
               <li key={battle.id} className="item">
                 <Link className="battle_ongoing" to={Urls.battle_detail_v2(battle.id)}>
                   Battle ID {battle.id}
                 </Link>
               </li>
-            ) : null
-          )}
+            );
+          })}
         </div>
       </ul>
     </div>
@@ -71,21 +70,34 @@ function BattleList(props) {
 }
 
 function mapStateToProps(store) {
-  let battles = null;
-  const user = _.get(store, 'user.user', null);
+  const currentUser = _.get(store, 'user.data', null);
   const battlesData = _.get(store, 'battle.battles', null);
+
+  let settledBattles;
+  let onGoingBattles;
   if (battlesData) {
-    battles = denormalize(
-      _.get(battlesData, 'result', null),
-      battlesSchema,
-      _.get(battlesData, 'entities', null)
-    );
+    settledBattles = Object.values(battlesData).filter((battle) => {
+      return battle.winner;
+    });
+    onGoingBattles = Object.values(battlesData).filter((battle) => {
+      return !battle.winner;
+    });
   }
+  // console.log('>>>>', settledBattles, onGoingBattles);
+  // if (battlesData) {
+  //   battles = denormalize(
+  //     _.get(battlesData, 'result', null),
+  //     battlesSchema,
+  //     _.get(battlesData, 'entities', null)
+  //   );
+  // }
   return {
-    battles,
-    user,
+    settledBattles,
+    onGoingBattles,
+    currentUser,
   };
 }
+
 const mapDispatchToProps = (dispatch) => {
   return {
     getCurrentUser: () => dispatch(getCurrentUser()),

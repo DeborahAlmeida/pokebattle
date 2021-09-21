@@ -9,37 +9,42 @@ import { getBattle } from '../actions/getBattle';
 import { getCurrentUser } from '../actions/getUser';
 import { orderTeamsByCurrentUser } from '../utils/battle-detail';
 import { denormalizeBattleData } from '../utils/denormalize';
+import { selectUserById } from '../utils/selectors';
 import Urls from '../utils/urls';
 
 function BattleDetail(props) {
   const { id } = useParams();
-  const { battle, battles, user } = props;
+  const { battle, battles, currentUser, users } = props;
+  console.log('mds', props);
   useEffect(() => {
-    if (!user) {
+    if (!currentUser) {
       props.getCurrentUser();
     }
   }, []);
 
   useEffect(() => {
     if (!battles) {
+      console.log('ta entrando aqui');
       props.getBattle(id);
     }
   }, []);
 
-  if (!battle && !battles) {
+  if (!battles && !battle) {
     return 'loading';
   }
-  const battleDetail = denormalizeBattleData(id, battles, battle);
-  const { current, other } = orderTeamsByCurrentUser(battleDetail, user);
+  const battleDetail = battle ? battle[id] : battles[id];
+  // const battleDetail = denormalizeBattleData(id, battleList, battle);
+  const { current, other } = orderTeamsByCurrentUser(battleDetail, currentUser, users);
+  console.log('>>>>>>>>>>>>> battleDetail', current);
 
   return (
     <div className="battle_container_detail">
       <h1>Battle information</h1>
       <h2 className="subtitle_detail">
-        Creator: {battleDetail.creator ? battleDetail.creator.email : ''}
+        Creator: {selectUserById(users, battleDetail.creator) || ''}
       </h2>
       <h2 className="subtitle_detail">
-        Opponent: {battleDetail.opponent ? battleDetail.opponent.email : ''}
+        Opponent: {selectUserById(users, battleDetail.opponent) || ''}
       </h2>
       {battleDetail.winner ? (
         <>
@@ -49,7 +54,7 @@ function BattleDetail(props) {
             src="https://image.flaticon.com/icons/png/512/2119/2119019.png"
           />
           <h2 className="subtitle_detail">
-            The winner is {battleDetail.winner ? battleDetail.winner.email : ''}
+            The winner is {selectUserById(users, battleDetail.winner) || ''}
           </h2>
         </>
       ) : (
@@ -77,11 +82,15 @@ function BattleDetail(props) {
 
 function mapStateToProps(store) {
   const battle = _.get(store, 'battle.battleDetail', null);
-  const user = _.get(store, 'user.data', null);
+  const currentUser = _.get(store, 'user.data', null);
+  const battles = _.get(store, 'battle.battles', null);
+  const users = _.get(store, 'battle.users', null);
 
   return {
+    battles,
     battle,
-    user,
+    currentUser,
+    users,
   };
 }
 
