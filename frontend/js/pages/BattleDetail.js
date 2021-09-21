@@ -8,7 +8,6 @@ import CardTeam from 'components/CardTeam';
 import { getBattle } from '../actions/getBattle';
 import { getCurrentUser } from '../actions/getUser';
 import { orderTeamsByCurrentUser } from '../utils/battle-detail';
-import { denormalizeBattleData } from '../utils/denormalize';
 import { selectUserById } from '../utils/selectors';
 import Urls from '../utils/urls';
 

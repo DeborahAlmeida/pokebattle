@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { denormalize } from 'normalizr';
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -83,7 +82,6 @@ function mapStateToProps(store) {
       return !battle.winner;
     });
   }
-  
   return {
     settledBattles,
     onGoingBattles,
